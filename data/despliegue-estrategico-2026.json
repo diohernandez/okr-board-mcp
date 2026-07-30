@@ -1,0 +1,5599 @@
+{
+  "doc": {
+    "id": "despliegue-estrategico-2026",
+    "type": "okr-board",
+    "title": "Despliegue Estratégico 2026",
+    "version": 1,
+    "updated_at": "2026-07-30T19:21:41.765Z",
+    "access": "domain",
+    "acl": [
+      {
+        "principal": "@dionisio",
+        "role": "owner"
+      }
+    ]
+  },
+  "pilares": [
+    {
+      "id": "p1",
+      "nombre": "Diversidad de Productos y Excelencia",
+      "desc": "Aumentar presencia y adopción de marca liderando categorías con buena performance digital.",
+      "okrIds": [
+        "o2"
+      ]
+    },
+    {
+      "id": "p2",
+      "nombre": "Integración Vertical",
+      "desc": "Priorizar la integración de procesos que agregan valor en la cadena de negocio.",
+      "okrIds": []
+    },
+    {
+      "id": "p3",
+      "nombre": "Rentabilidad",
+      "desc": "Empresa sana y sustentable, mentalidad de dueño en cada decisión.",
+      "okrIds": [
+        "o3"
+      ]
+    },
+    {
+      "id": "p4",
+      "nombre": "Mística Bidcom",
+      "desc": "Vivir los valores, apertura, cultura de transformación y superación.",
+      "okrIds": []
+    },
+    {
+      "id": "p5",
+      "nombre": "Experiencia de Cliente",
+      "desc": "Priorizar la expectativa del cliente en todo proceso que lo impacte.",
+      "okrIds": [
+        "o4"
+      ]
+    },
+    {
+      "id": "p6",
+      "nombre": "Excelencia Operacional",
+      "desc": "Máxima eficiencia, automatización y escalabilidad en procesos.",
+      "okrIds": []
+    },
+    {
+      "id": "p7",
+      "nombre": "Alianza Estratégica con MeLi",
+      "desc": "Acompañar a MeLi en iniciativas que apalanquen el crecimiento de Bidcom.",
+      "okrIds": [
+        "o1"
+      ]
+    },
+    {
+      "id": "p8",
+      "nombre": "Regionalización",
+      "desc": "Elevar el valor de marca diversificando presencia en otros países.",
+      "okrIds": []
+    }
+  ],
+  "negocios": [
+    {
+      "id": "ecommerce-ar",
+      "nombre": "Ecommerce Argentina"
+    },
+    {
+      "id": "agro",
+      "nombre": "Bidcom Agro"
+    }
+  ],
+  "plataformas": [
+    {
+      "id": "tecnologia",
+      "nombre": "Tecnología",
+      "area": "Tecnologia"
+    },
+    {
+      "id": "finanzas",
+      "nombre": "Finanzas",
+      "area": "Finanzas"
+    },
+    {
+      "id": "px",
+      "nombre": "PX",
+      "area": "PX"
+    },
+    {
+      "id": "marketing",
+      "nombre": "Marketing",
+      "area": "Marketing"
+    }
+  ],
+  "objetivos": [
+    {
+      "id": "o1",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Liderazgo e-commerce",
+      "texto": "Consolidar el liderazgo de Bidcom en el comercio electrónico argentino y mantener el posicionamiento de ser la empresa modelo de MercadoLibre Global."
+    },
+    {
+      "id": "o2",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Gadnic",
+      "texto": "Consolidar a Gadnic como la marca nativa digital referente en Argentina, transformando tendencias globales en productos funcionales y accesibles."
+    },
+    {
+      "id": "o3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Utilidad y eficiencia",
+      "texto": "Alcanzar una utilidad Neta de 32 Mio USD al cierre del ejercicio asegurando eficiencia operativa."
+    },
+    {
+      "id": "o4",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Experiencia de cliente",
+      "texto": "Ofrecer una experiencia de cliente extraordinaria, consistente y confiable en todos los canales de venta de Bidcom."
+    },
+    {
+      "id": "o5px",
+      "negocioId": "px",
+      "nombre": "Equipo de alto rendimiento",
+      "texto": "Consolidar un equipo de alto rendimiento, con las personas adecuadas en los roles correctos, que ejecuten con excelencia."
+    },
+    {
+      "id": "oagro1",
+      "negocioId": "agro",
+      "nombre": "Negocio rentable y escalable",
+      "texto": "Construir un negocio agro rentable y escalable."
+    },
+    {
+      "id": "oagro2",
+      "negocioId": "agro",
+      "nombre": "Integración al ecosistema Bidcom",
+      "texto": "Integrar BidcomAgro al ecosistema Bidcom de manera ágil y sin fricciones."
+    },
+    {
+      "id": "oagro3",
+      "negocioId": "agro",
+      "nombre": "Marca Brumby",
+      "texto": "Transformar a Brumby en una marca referente del agro argentino."
+    },
+    {
+      "id": "oagro4",
+      "negocioId": "agro",
+      "nombre": "Compañía referente del agro",
+      "texto": "Consolidar a BidcomAgro como una compañía referente del agro argentino."
+    },
+    {
+      "id": "oagro5",
+      "negocioId": "agro",
+      "nombre": "Experiencia de cliente Agro",
+      "texto": "Ofrecer una experiencia de cliente agro extraordinaria, cercana y confiable."
+    },
+    {
+      "id": "ofin1",
+      "negocioId": "finanzas",
+      "nombre": "Rentabilidad y valor del Grupo",
+      "texto": "Maximizar rentabilidad operativa y creación de valor del Grupo (E-tailer + Agro + Regional)."
+    },
+    {
+      "id": "ofin2",
+      "negocioId": "finanzas",
+      "nombre": "Resultados financieros y liquidez",
+      "texto": "Maximizar los resultados financieros del Grupo y sus accionistas, asegurando liquidez y eficiencia del capital de trabajo."
+    },
+    {
+      "id": "ofin3",
+      "negocioId": "finanzas",
+      "nombre": "Excelencia operacional de Finanzas",
+      "texto": "Elevar la excelencia operacional de Finanzas."
+    },
+    {
+      "id": "ofin4",
+      "negocioId": "finanzas",
+      "nombre": "Reporting y control de performance",
+      "texto": "Fortalecer el rol de Finanzas en reporting y como controller de performance de los negocios."
+    },
+    {
+      "id": "otec1",
+      "negocioId": "tecnologia",
+      "nombre": "Organización Data-Driven",
+      "texto": "Consolidar una organización Data-Driven mediante un ecosistema de datos confiable, gobernado y escalable para todas las unidades de negocio."
+    },
+    {
+      "id": "otec2",
+      "negocioId": "tecnologia",
+      "nombre": "Excelencia Operacional y Agilidad",
+      "texto": "Impulsar la Excelencia Operacional y la Agilidad mediante la evolución del ecosistema de productos tecnológicos."
+    },
+    {
+      "id": "otec3",
+      "negocioId": "tecnologia",
+      "nombre": "Performance y conversión E-commerce",
+      "texto": "Maximizar el performance y la conversión de las plataformas E-commerce Web propias para potenciar el crecimiento."
+    },
+    {
+      "id": "otec4",
+      "negocioId": "tecnologia",
+      "nombre": "Talento de los Squads",
+      "texto": "Fortalecer la capacidad de ejecución y la estructura de talento de los Squads de Tecnología."
+    },
+    {
+      "id": "otec5",
+      "negocioId": "tecnologia",
+      "nombre": "Operación tecnológica segura y eficiente",
+      "texto": "Construir una operación tecnológica segura y eficiente que potencie el crecimiento sostenible de Bidcom."
+    },
+    {
+      "id": "omkt1",
+      "negocioId": "marketing",
+      "nombre": "Crecimiento y eficiencia Ecommerce",
+      "texto": "Crecimiento +85% YoY GMV, con 10% net profit y eficiencia de P&L."
+    },
+    {
+      "id": "omkt2",
+      "negocioId": "marketing",
+      "nombre": "Crecimiento y eficiencia Marketplaces",
+      "texto": "Crecimiento +57% YoY GMV, con 10% net profit y eficiencia de P&L."
+    },
+    {
+      "id": "omkt3",
+      "negocioId": "marketing",
+      "nombre": "Eficiencia de inversión publicitaria",
+      "texto": "Mejorar la eficiencia de la inversión publicitaria para contribuir al EBITDA objetivo del 10%, habilitando crecimiento del +67% en revenue total de la compañía."
+    },
+    {
+      "id": "omkt4",
+      "negocioId": "marketing",
+      "nombre": "Conversión web y lifecycle marketing",
+      "texto": "Aumentar la conversión web +14pp YoY y la frecuencia de compra a 2, apalancando estrategias de personalización y lifecycle marketing con Salesforce."
+    },
+    {
+      "id": "omkt5",
+      "negocioId": "marketing",
+      "nombre": "Rebranding de Gadnic",
+      "texto": "Rebranding de Gadnic con definición de buyer persona y objetivo de aumentar a 15% el Top of Mind y el tráfico directo +10pp."
+    },
+    {
+      "id": "omkt6",
+      "negocioId": "marketing",
+      "nombre": "Social Commerce",
+      "texto": "Impulsar el canal de Social Commerce con aporte del 10% de la facturación web de Gadnic."
+    }
+  ],
+  "krs": [
+    {
+      "id": "k1",
+      "objId": "o1",
+      "desc": "Alcanzar una facturación anual con un 10% de Utilidad GNI",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": 7.66,
+        "prev": 7.8
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k2",
+      "objId": "o1",
+      "desc": "TGMV del sitio web propio (Bidcom + Gadnic) sobre el TGMV total",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 25,
+      "value": {
+        "mode": "literal",
+        "actual": 17.09,
+        "prev": 17.22
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k3",
+      "objId": "o1",
+      "desc": "TGMV marcas de terceros sobre el TGMV total",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 17.74,
+        "prev": 17.24
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k4",
+      "objId": "o1",
+      "desc": "Mantener el liderazgo en MercadoLibre Argentina en TGMV",
+      "sentido": "mayor",
+      "unidad": "M USD",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 91.9
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k5",
+      "objId": "o1",
+      "desc": "Incrementar la participación de FULL sobre el TGMV de MercadoLibre",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 35,
+      "value": {
+        "mode": "literal",
+        "actual": 33.02,
+        "prev": 23.06
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k5b",
+      "objId": "o1",
+      "desc": "Métrica Valiosa: TGMV Gadnic",
+      "sentido": "mayor",
+      "unidad": "M USD",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 134.57,
+        "prev": 130.21
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k6",
+      "objId": "o2",
+      "desc": "Reducir la tasa de devoluciones de los productos Gadnic",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 2.87
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k7",
+      "objId": "o2",
+      "desc": "Reducir la tasa de reclamos en garantía de los productos Gadnic",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.8,
+      "value": {
+        "mode": "literal",
+        "actual": 0.52
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k8",
+      "objId": "o2",
+      "desc": "Aumentar la calificación promedio ponderada del portafolio Gadnic en TSI",
+      "sentido": "mayor",
+      "unidad": "pts",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 4.63
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k9",
+      "objId": "o2",
+      "desc": "Incrementar la penetración de la marca Gadnic en MercadoLibre Argentina en TGMV",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 82.73,
+        "prev": 81.1
+      },
+      "boards": [
+        "direccion_general"
+      ]
+    },
+    {
+      "id": "k10",
+      "objId": "o2",
+      "desc": "Nuevos desarrollos de productos Gadnic con semáforo superior a 30 puntos",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 1000,
+      "value": {
+        "mode": "literal",
+        "actual": 619,
+        "prev": 0
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k11",
+      "objId": "o2",
+      "desc": "Mantener la reputación de Gadnic en Google My Business con calificación excelente",
+      "sentido": "mayor",
+      "unidad": "★",
+      "target": 4.8,
+      "value": {
+        "mode": "literal",
+        "actual": 4.8
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k12",
+      "objId": "o3",
+      "desc": "Alcanzar 32 Mio USD de Utilidad GNI Anual",
+      "sentido": "mayor",
+      "unidad": "M USD",
+      "target": 32,
+      "value": {
+        "mode": "literal",
+        "actual": 12.53,
+        "prev": 12.27
+      },
+      "boards": [
+        "comite"
+      ]
+    },
+    {
+      "id": "k13",
+      "objId": "o3",
+      "desc": "Asignar owner y presupuesto a los principales costos de estructura",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 7,
+      "value": {
+        "mode": "literal",
+        "actual": 11.57
+      },
+      "boards": [
+        "direccion_general"
+      ]
+    },
+    {
+      "id": "k14",
+      "objId": "o3",
+      "desc": "Reducir el lead time de lanzamiento de nuevos negocios Gadnic (Time to Market)",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 155,
+      "value": {
+        "mode": "literal",
+        "actual": 196
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k15",
+      "objId": "o3",
+      "desc": "Reducir la proporción de stock con aging 120-300 días sobre el valor landed del inventario",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 15,
+      "value": {
+        "mode": "literal",
+        "actual": 20
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k16",
+      "objId": "o3",
+      "desc": "Reducir la proporción de stock con aging mayor a 300 días sobre el valor landed",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 5,
+      "value": {
+        "mode": "literal",
+        "actual": 11
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k17",
+      "objId": "o3",
+      "desc": "Reducir el impacto de quiebres de stock sobre el TGMV proyectado",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 5,
+      "value": {
+        "mode": "literal",
+        "actual": 11
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k18",
+      "objId": "o3",
+      "desc": "Incrementar el recupero de valor de logística inversa y reprocesos sobre PVP original",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 65,
+      "value": {
+        "mode": "literal",
+        "actual": 0.97
+      },
+      "boards": [
+        "direccion_general"
+      ]
+    },
+    {
+      "id": "k19",
+      "objId": "o4",
+      "desc": "CSAT Atención al cliente",
+      "sentido": "mayor",
+      "unidad": "NPS",
+      "target": 94,
+      "value": {
+        "mode": "literal",
+        "actual": 86.52
+      },
+      "boards": []
+    },
+    {
+      "id": "k20",
+      "objId": "o4",
+      "desc": "CSAT Postventa",
+      "sentido": "mayor",
+      "unidad": "NPS",
+      "target": 90,
+      "value": {
+        "mode": "literal",
+        "actual": 32.85
+      },
+      "boards": []
+    },
+    {
+      "id": "k21",
+      "objId": "o4",
+      "desc": "NPS Bidcom",
+      "sentido": "mayor",
+      "unidad": "NPS",
+      "target": 90,
+      "value": {
+        "mode": "literal",
+        "actual": 61.86
+      },
+      "boards": []
+    },
+    {
+      "id": "k22",
+      "objId": "o4",
+      "desc": "Tasa de devoluciones total (ndev / SI total)",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 3.21
+      },
+      "boards": [
+        "direccion_general"
+      ]
+    },
+    {
+      "id": "k23",
+      "objId": "o4",
+      "desc": "Tasa de resolución de reclamos de postventa en SLA < 7 días",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 95,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k24",
+      "objId": "o4",
+      "desc": "OTD Same Day y Colectas",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 97,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k25",
+      "objId": "o4",
+      "desc": "Reputación Bidcom en Google",
+      "sentido": "mayor",
+      "unidad": "★",
+      "target": 4.7,
+      "value": {
+        "mode": "literal",
+        "actual": 4.6
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "k26",
+      "objId": "o5px",
+      "desc": "Rotación no deseada en roles claves (Qcol rotan / Qcol promedio anual)",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k27",
+      "objId": "o5px",
+      "desc": "% posiciones críticas cubiertas con talento evaluado",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 95,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k28",
+      "objId": "o5px",
+      "desc": "% de evaluaciones con acción asociada",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 90,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k29",
+      "objId": "o5px",
+      "desc": "Time-to-fill promedio en roles claves",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 30,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k30",
+      "objId": "o5px",
+      "desc": "Fulfill de Owners en equipos clave y rediseño organizacional",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": []
+    },
+    {
+      "id": "k31",
+      "objId": "o5px",
+      "desc": "eNPS",
+      "sentido": "mayor",
+      "unidad": "pts",
+      "target": 4,
+      "value": {
+        "mode": "literal",
+        "actual": 2.3
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka1",
+      "objId": "oagro1",
+      "desc": "Facturación Anual",
+      "sentido": "mayor",
+      "unidad": "M USD",
+      "target": 27,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka2",
+      "objId": "oagro1",
+      "desc": "EBITDA al cierre del ejercicio",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka3",
+      "objId": "oagro1",
+      "desc": "Margen bruto Agro",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 25,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka4",
+      "objId": "oagro1",
+      "desc": "P&L Agro mensual presentado antes del día 10",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka5",
+      "objId": "oagro1",
+      "desc": "Mantener incobrabilidad ponderada por debajo del 3%",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka6",
+      "objId": "oagro1",
+      "desc": "Antigüedad de inventario promedio",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 210,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka7",
+      "objId": "oagro1",
+      "desc": "Centros Integrales AgTech operativos a fin de Q4",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 45,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka8",
+      "objId": "oagro2",
+      "desc": "Determinar qué procesos deben centralizarse y qué procesos no",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka9",
+      "objId": "oagro2",
+      "desc": "Procesos medulares integrados en sistemas de información",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 50,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka10",
+      "objId": "oagro2",
+      "desc": "Controles manuales reemplazados por automáticos",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 50,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka11",
+      "objId": "oagro2",
+      "desc": "KPIs Revenue, GM, CM y CF reportados mensualmente",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka12",
+      "objId": "oagro2",
+      "desc": "SLAs operativos sin desvíos atribuibles a integración",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 80,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka13",
+      "objId": "oagro2",
+      "desc": "Control integrado de crédito y cobranzas + AR",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka14",
+      "objId": "oagro3",
+      "desc": "% Total de Facturación Brumby s/total Agro",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 15,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka15",
+      "objId": "oagro3",
+      "desc": "Margen bruto Brumby",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 18,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka16",
+      "objId": "oagro3",
+      "desc": "Desarrollo nuevos SKUs AgTech",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka17",
+      "objId": "oagro3",
+      "desc": "Propuesta Brumby (producto + servicios) lanzada y activa",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka18",
+      "objId": "oagro3",
+      "desc": "Activaciones específicas de Brumby en ferias del Agro",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka19",
+      "objId": "oagro4",
+      "desc": "Clientes Agro activos",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 500,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka20",
+      "objId": "oagro4",
+      "desc": "NPS Agro (Google + Satisfacción)",
+      "sentido": "mayor",
+      "unidad": "pts",
+      "target": 70,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka21",
+      "objId": "oagro4",
+      "desc": "Zonas T1 / T2 con cobertura comercial activa",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 8,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka22",
+      "objId": "oagro4",
+      "desc": "% Share de mercado DJI Agricultura",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 30,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka23",
+      "objId": "oagro4",
+      "desc": "Acelerar % adopción de tecnología DJI",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 6.5,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka24",
+      "objId": "oagro4",
+      "desc": "BidcomAgro como importador N1 de DJI Agricultura",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka25",
+      "objId": "oagro4",
+      "desc": "Participar en las tres ferias más importantes del agro argentino",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka26",
+      "objId": "oagro5",
+      "desc": "Bajar los tiempos de entrega de drones y maquinarias",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 30,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka27",
+      "objId": "oagro5",
+      "desc": "Tasa de reclamos",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka28",
+      "objId": "oagro5",
+      "desc": "NPS Postventa",
+      "sentido": "mayor",
+      "unidad": "pts",
+      "target": 70,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka29",
+      "objId": "oagro5",
+      "desc": "Resolución en primer contacto",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 75,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka30",
+      "objId": "oagro5",
+      "desc": "Canales de atención Agro dedicados operativos",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "ka31",
+      "objId": "oagro5",
+      "desc": "Rotación de equipo de trabajo",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 5,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf1",
+      "objId": "ofin1",
+      "desc": "Alianzas bancarias activas para canales propios en Argentina (web + Off)",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 12,
+      "value": {
+        "mode": "literal",
+        "actual": 7
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf2",
+      "objId": "ofin1",
+      "desc": "Alianzas bancarias activas para Bidcom Agro",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 9,
+      "value": {
+        "mode": "literal",
+        "actual": 6
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf3",
+      "objId": "ofin1",
+      "desc": "Owner y presupuesto definido para el 100% de los costos de la dirección de Finanzas",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": 70
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf4",
+      "objId": "ofin1",
+      "desc": "Costos de estructura de Finanzas sobre el GMV",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.5,
+      "value": {
+        "mode": "literal",
+        "actual": 0.7
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf5",
+      "objId": "ofin2",
+      "desc": "Mantener incobrabilidad ponderada de cuentas a cobrar a plazo por debajo del 3%",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": 10
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf6",
+      "objId": "ofin2",
+      "desc": "Incrementar los días promedio de pago a proveedores locales (DPO)",
+      "sentido": "mayor",
+      "unidad": "días",
+      "target": 45,
+      "value": {
+        "mode": "literal",
+        "actual": 15
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf7",
+      "objId": "ofin2",
+      "desc": "Incrementar los días promedio de pago a proveedores del exterior (DPO)",
+      "sentido": "mayor",
+      "unidad": "días",
+      "target": 120,
+      "value": {
+        "mode": "literal",
+        "actual": 80
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf8",
+      "objId": "ofin2",
+      "desc": "AGING del IIBB por sociedad",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 15,
+      "value": {
+        "mode": "literal",
+        "actual": 30
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf9",
+      "objId": "ofin2",
+      "desc": "AGING del IVA por sociedad",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 45,
+      "value": {
+        "mode": "literal",
+        "actual": 105
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf10",
+      "objId": "ofin3",
+      "desc": "Implementar un scorecard WOW y MOM de KPIs de la dirección de Finanzas con sus owners",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf11",
+      "objId": "ofin3",
+      "desc": "Cuentas corrientes de clientes y proveedores analizadas y reportadas 10 días posteriores al cierre de mes",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf12",
+      "objId": "ofin3",
+      "desc": "Conciliaciones de ventas informadas por plataformas de pago a las 24 hs (máx. 7 días)",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 80,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf13",
+      "objId": "ofin3",
+      "desc": "Conciliación bancaria finalizada 10 días posteriores al cierre de mes",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf14",
+      "objId": "ofin3",
+      "desc": "Cumplimiento de cierres contables mensuales e impositivos en todas las sociedades",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 16,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf15",
+      "objId": "ofin3",
+      "desc": "Documentar procesos core de cada equipo",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 14,
+      "value": {
+        "mode": "literal",
+        "actual": 2
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf16",
+      "objId": "ofin4",
+      "desc": "Confeccionar y lograr aprobación de los Presupuestos de Gastos de Estructura por Dirección",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf17",
+      "objId": "ofin4",
+      "desc": "Implementar y sostener rutina de performance mensual con presentación a Dirección antes del día 20 hábil",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 9,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf18",
+      "objId": "ofin4",
+      "desc": "Implementar proceso mensual de challenge por unidad (E-tailer, Agro, Regional)",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 6,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kf19",
+      "objId": "ofin4",
+      "desc": "Implementar y sostener rutina de reporting mensual de resultados financieros antes del día 15 hábil",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 9,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt1",
+      "objId": "otec1",
+      "desc": "Argentina: disponibilizar como \"Fuente de Verdad\" los principales indicadores clave (GMV, ASP, TSI, TRX, CM, Utilidad GNI, EBITDA, Aging, DDI, etc.)",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 20,
+      "value": {
+        "mode": "literal",
+        "actual": 4
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt2",
+      "objId": "otec1",
+      "desc": "Regional y Agro: disponibilizar como \"Fuente de Verdad\" los principales indicadores clave",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt3",
+      "objId": "otec1",
+      "desc": "Calidad de procesos: margen de error inferior al 5% en procesos automatizados medulares",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 5,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt4",
+      "objId": "otec1",
+      "desc": "Integración sistémica: procesos medulares integrados con la Capa de Gobernanza de datos y documentados",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 90,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt5",
+      "objId": "otec1",
+      "desc": "Adopción de usuarios: Key Users operando reportes y análisis con la Capa de Gobernanza",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 90,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt6",
+      "objId": "otec2",
+      "desc": "Finalizar el 90% de los Sprints con al menos un release a producción que aporte valor (Lead Time)",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 90,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt7",
+      "objId": "otec2",
+      "desc": "Argentina y Regional: lanzar la herramienta de Pricing y migrar procesos pausados por rentabilidad mínima",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt8",
+      "objId": "otec2",
+      "desc": "Argentina: culminar despliegue del WMS y lanzamiento del TMS",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt9",
+      "objId": "otec2",
+      "desc": "Argentina: implementación de CRM y vista 360 del cliente",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt10",
+      "objId": "otec2",
+      "desc": "Regional: lanzamiento de 4 canales de venta nuevos (Amazon, TikTok Shops, Liverpool, Walmart)",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 4,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt11",
+      "objId": "otec2",
+      "desc": "Incrementar el nivel de rebates obtenidos en MercadoLibre",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 6,
+      "value": {
+        "mode": "literal",
+        "actual": 4.7
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt12",
+      "objId": "otec3",
+      "desc": "Incrementar la tasa de conversión del sitio Bidcom",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": 1.33
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt13",
+      "objId": "otec3",
+      "desc": "Incrementar la tasa de conversión del sitio Gadnic sobre sesiones",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 2.08,
+      "value": {
+        "mode": "literal",
+        "actual": 1.6
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt14",
+      "objId": "otec3",
+      "desc": "Tasa de conversión nuevo checkout",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 28,
+      "value": {
+        "mode": "literal",
+        "actual": 20
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt15",
+      "objId": "otec3",
+      "desc": "Lanzamiento de Ecommerce México",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt16",
+      "objId": "otec3",
+      "desc": "Integrar Salesforce Personalization",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt17",
+      "objId": "otec3",
+      "desc": "Descontinuar Web/Checkout Legacy",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": 0.5
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt18",
+      "objId": "otec4",
+      "desc": "Asegurar que los 7 squads de tecnología operen con KPIs definidos y rocas trimestrales",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 7,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt19",
+      "objId": "otec4",
+      "desc": "Al menos 80% de cumplimiento de sus rocas trimestrales",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 80,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt20",
+      "objId": "otec4",
+      "desc": "Reducir el lead time de contratación para posiciones clave (PO, Devs, TLs)",
+      "sentido": "menor",
+      "unidad": "días",
+      "target": 45,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt21",
+      "objId": "otec4",
+      "desc": "Cobertura en posiciones críticas con talento evaluado y certificado por el área técnica",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 95,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt22",
+      "objId": "otec4",
+      "desc": "Integrantes de tecnología con evaluación de desempeño y feedback trimestral",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt23",
+      "objId": "otec5",
+      "desc": "Optimizar el gasto del sector (licencias, contratos, hardware) logrando ahorro en costos unitarios",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 20,
+      "value": {
+        "mode": "literal",
+        "actual": 5
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt24",
+      "objId": "otec5",
+      "desc": "Implementar una política de seguridad informática de al menos 5 hitos",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 5,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kt25",
+      "objId": "otec5",
+      "desc": "Garantizar disponibilidad operativa del 100% de los roles del sector para definir y estandarizar FRT y MTTR",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": 50
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt1",
+      "objId": "omkt1",
+      "desc": "Incrementar la tasa de conversión del sitio Bidcom",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": 1.33
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt2",
+      "objId": "omkt1",
+      "desc": "Incrementar la tasa de conversión del sitio Gadnic sobre sesiones",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 2.08,
+      "value": {
+        "mode": "literal",
+        "actual": 1.6
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt3",
+      "objId": "omkt1",
+      "desc": "Construcción de P&L de Ecommerce",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt4",
+      "objId": "omkt1",
+      "desc": "Asistente virtual de Ventas: participación en venta",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt5",
+      "objId": "omkt1",
+      "desc": "Eficiencia en tramos por cuotas (costo financiero)",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 6.3
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt6",
+      "objId": "omkt2",
+      "desc": "Construcción de P&L de Marketplaces",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt7",
+      "objId": "omkt3",
+      "desc": "Mantener el ACOS de MercadoLibre asegurando el crecimiento de revenue del canal +59% YoY",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 1.75,
+      "value": {
+        "mode": "literal",
+        "actual": 1.59
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt8",
+      "objId": "omkt3",
+      "desc": "Automatizar el prendido/apagado de PADS en Argentina con validación de reglas de negocio y monitoreo en tiempo real",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt9",
+      "objId": "omkt3",
+      "desc": "Mantener ACOS en eCommerce mientras se migra el modelo de optimización hacia profit (POAS)",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 6.15,
+      "value": {
+        "mode": "literal",
+        "actual": 5.95
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt10",
+      "objId": "omkt3",
+      "desc": "Alcanzar 100% de cobertura de tagging y señales necesarias para optimización por POAS en web",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt11",
+      "objId": "omkt3",
+      "desc": "Migrar la inversión de Performance a optimización basada en profit (POAS), manteniendo crecimiento del canal",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 50,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt12",
+      "objId": "omkt3",
+      "desc": "Reducir la participación del tráfico pago del 75% al 70% del total del e-commerce",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 70,
+      "value": {
+        "mode": "literal",
+        "actual": 75
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt13",
+      "objId": "omkt4",
+      "desc": "Incrementar la tasa de conversión del sitio Bidcom de 1,18% a 1,45%",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 1.45,
+      "value": {
+        "mode": "literal",
+        "actual": 1.18
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt14",
+      "objId": "omkt4",
+      "desc": "Incrementar la tasa de conversión del sitio Gadnic de 1,69% a 1,73%",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 1.73,
+      "value": {
+        "mode": "literal",
+        "actual": 1.69
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt15",
+      "objId": "omkt4",
+      "desc": "Implementar la base operativa de Salesforce Marketing Cloud y Data Cloud para habilitar automatizaciones lifecycle (carrito abandonado, winback, cross-sell)",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt16",
+      "objId": "omkt4",
+      "desc": "Implementar personalización onsite en Bidcom y Gadnic con al menos 2 casos de uso activos",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt17",
+      "objId": "omkt4",
+      "desc": "Aumentar la frecuencia de compra vía personalización onsite y canal directo",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 2,
+      "value": {
+        "mode": "literal",
+        "actual": 1.7
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt18",
+      "objId": "omkt4",
+      "desc": "Alcanzar usuarios contactables (opt-in) activos en CRM",
+      "sentido": "mayor",
+      "unidad": "miles",
+      "target": 600,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt19",
+      "objId": "omkt4",
+      "desc": "Clusterización de clientes en modelo RFM (Recencia, Frecuencia, Monetario)",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt20",
+      "objId": "omkt4",
+      "desc": "Implementar canal WhatsApp inbound/outbound integrado a CRM con al menos 1 caso de uso activo",
+      "sentido": "mayor",
+      "unidad": "",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": 0
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt21",
+      "objId": "omkt5",
+      "desc": "Aumentar los New Buyers progresivamente QoQ",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 2902026,
+      "value": {
+        "mode": "literal",
+        "actual": 1934684
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt22",
+      "objId": "omkt5",
+      "desc": "Aumentar Brand Awareness (resultados del Brand Lift de Google)",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 15,
+      "value": {
+        "mode": "literal",
+        "actual": 12.5
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt23",
+      "objId": "omkt5",
+      "desc": "Desarrollar un sistema visual adaptable (manual de marca) que garantice coherencia en todos los puntos de contacto",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": 30
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt24",
+      "objId": "omkt5",
+      "desc": "Definir el concepto madre, tono y claims para transformar a Gadnic de marca conocida a marca deseada",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": 20
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt25",
+      "objId": "omkt5",
+      "desc": "Estructurar el ecosistema de marcas y submarcas para asegurar una expansión escalable en Latinoamérica",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 100,
+      "value": {
+        "mode": "literal",
+        "actual": 20
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt26",
+      "objId": "omkt6",
+      "desc": "Eficientizar el TACOS de Social Commerce",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": 14
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt27",
+      "objId": "omkt6",
+      "desc": "Share de GMV de Social Commerce sobre Gadnic",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 10,
+      "value": {
+        "mode": "literal",
+        "actual": 5
+      },
+      "boards": [
+        "okr2026"
+      ]
+    },
+    {
+      "id": "kmkt28",
+      "objId": "omkt6",
+      "desc": "Implementar 3 líneas editoriales social-first que posicionen a Gadnic como referente en descubrimiento de productos",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 3,
+      "value": {
+        "mode": "literal",
+        "actual": 1
+      },
+      "boards": [
+        "okr2026"
+      ]
+    }
+  ],
+  "rocas": [
+    {
+      "id": "r1",
+      "nombre": "Proyecto CBT : Empezar a operar con modalidad Full en China y llegar a 100 ventas.",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k5"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r2",
+      "nombre": "Proceso de Ofertas. Restruturacion y rearmado del proceso de ofertas corriendo (Owner: Todos)",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": "OPS",
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r3",
+      "nombre": "Consolidar Tablero de Objetivos de Categories",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": null,
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r4",
+      "nombre": "Espacio de almacen: mantener nivel de ocupacion de 16.000m3 WoW.",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": null,
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k17"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r5",
+      "nombre": "Asegurar calidad de publicaciones. Workshop de Publicaciones Excelentes con armado de playbook.",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": null,
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r6",
+      "nombre": "Proyeccion de compras anualizada cash flow",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": "FIN",
+      "trimestre": "Q2",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r7",
+      "nombre": "1) Identificar y documentar las órdenes de exportación más rentables utilizando la razón social de SIMPLE para la Shipping Export Declaration, optimizando el resultado económico de las operaciones de comercio exterior.",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r8",
+      "nombre": "Proyeccion de ventas y compras 12 meses",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": "FIN",
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r9",
+      "nombre": "Proyeccion de compras semetral cash flow",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": "FIN",
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r10",
+      "nombre": "Reducir tiempo de respuesta canal preguntas ML",
+      "detalle": "",
+      "area": "Comercial",
+      "equipo": "OPS",
+      "trimestre": "Q2",
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [
+        "k19"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r11",
+      "nombre": "Piloto de generación de 20 videos de producto con IA. Acceso herramientas IA produccion contenido.",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": "MKT",
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r12",
+      "nombre": "Producción de 4.300 entregables de catálogo. Cumplimiento de la cuota trimestral de piezas (artes, clips, videos y fichas) manteniendo el estándar de excelencia.",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": null,
+      "trimestre": "Q3",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kt12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r13",
+      "nombre": "Desarrollo interno de herramienta para generar internamente Videos Horizontales de Producto 100% con IA.",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": "MKT",
+      "trimestre": "Q3",
+      "estado": "frenada",
+      "columna": "Bloqueado",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r14",
+      "nombre": "Implementación Hardware y Software de Estudio: Desplegar nuevo sistema y equipamiento en el estudio propio para la creación escalable de originales de foto producto,",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": "MKT",
+      "trimestre": "Q4",
+      "estado": "frenada",
+      "columna": "Bloqueado",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r15",
+      "nombre": "Producción de 4.600 entregables de catálogo. Cumplimiento de la cuota trimestral de piezas (artes, clips, videos y fichas) manteniendo el estándar de excelencia.",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": null,
+      "trimestre": "Q1",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "kt12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r16",
+      "nombre": "Producción de entregables de catálogo. Cumplimiento de la cuota trimestral de piezas (artes, clips, videos y fichas) manteniendo el estándar de excelencia.",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": null,
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "kt12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r17",
+      "nombre": "Nuevo panel fichas catalogo integracion clickup",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": "MKT",
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r18",
+      "nombre": "Actualizacion de Catalogo a Nuevo Portafolio de Arquitectura Marca Gadnic",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": "MKT",
+      "trimestre": "Q4",
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [
+        "kt13"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r19",
+      "nombre": "Producción de 4.000 entregables de catálogo. Cumplimiento de la cuota trimestral de piezas (artes, clips, videos y fichas) manteniendo el estándar de excelencia.",
+      "detalle": "",
+      "area": "Marketing",
+      "equipo": null,
+      "trimestre": "Q4",
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [
+        "kt12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r20",
+      "nombre": "Price Brain v2",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r21",
+      "nombre": "Price Brain v3",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r22",
+      "nombre": "Nuevo sitio Bidcom Agro (AGRO)",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "AGR",
+      "trimestre": "Q3",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r23",
+      "nombre": "One Pager con KPI Completo",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": null,
+      "trimestre": "Q3",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kt1"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r24",
+      "nombre": "100% pedidos trackeados MC Aurora Quadminds",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "OPS",
+      "trimestre": "Q2",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k24"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r25",
+      "nombre": "Implementar MVP Odoo Agro",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "AGR",
+      "trimestre": "Q3",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "ka9"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r26",
+      "nombre": "Profit Lab (Ex Teller)",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q3",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r27",
+      "nombre": "Price Brain: Promotions (Ofertas corriendo)",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q3",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r28",
+      "nombre": "Price Brain: Central de promociones",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q4",
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r29",
+      "nombre": "Implementar Price Setter/Brain v1",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k12"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r30",
+      "nombre": "PIM en CMS",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k2"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r31",
+      "nombre": "Actualizar ML",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k4"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r32",
+      "nombre": "Actualizar ML V2",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q3",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k4"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r33",
+      "nombre": "Page Builder",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "COM",
+      "trimestre": "Q2",
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k2"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r34",
+      "nombre": "Implementar pago por transferencia(MKT)",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "MKT",
+      "trimestre": "Q3",
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [
+        "kt14"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r35",
+      "nombre": "DAM + Panel de imágenes",
+      "detalle": "",
+      "area": "Tecnologia",
+      "equipo": "MKT",
+      "trimestre": "Q4",
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [
+        "k2"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r36",
+      "nombre": "Implementar Conciliador nuevo (Aprobación proyecto +Lógica + Conexiones)",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "kf13"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r37",
+      "nombre": "Controlar Balance MP Argentina",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "kf13"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r38",
+      "nombre": "Conciliacion de cuentas corrientes con proveedores de China",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "kf11"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r39",
+      "nombre": "Cierre mensual de la Cuenta particulares socios",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "kf14"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r40",
+      "nombre": "Sistematizacion de caja",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r41",
+      "nombre": "Cierre mensual de CC Proveedores. Analisis Progresivo por proveedor.",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "kf11"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r42",
+      "nombre": "Tener alianzas con los Bancos Tier1 100% y con el 75% de los Bancos medianos",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kf1"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r43",
+      "nombre": "Armar Cash Flow",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r44",
+      "nombre": "Automatizar proceso de registración de cuentas corrientes en aguila para agilizar la registración de cuentas por cobrar para poder mejorar la gestión de la cobranza (mejorar DSO)",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kf11"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r45",
+      "nombre": "Registración automatica de movimientos financieros",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kf10"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r46",
+      "nombre": "Configuración del conciliador + capacitaciones",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kf13"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r47",
+      "nombre": "Hacer conexiones de Conciliador",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kf13"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r48",
+      "nombre": "Cruzar reportes de operaciones para controlar Balance MP Argentina",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "kf13"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r49",
+      "nombre": "Proyectar Ingresos y egresos con un porcentaje de asertividad de 90%",
+      "detalle": "",
+      "area": "Finanzas",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Pendientes",
+      "krIds": [
+        "kf17"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r50",
+      "nombre": "Implementar comunicaciones transaccionales con los clientes vía WhatsApp. Envío de mensajes de utility y mkt",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k19"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r51",
+      "nombre": "Definir que es son los productos voluminosos, cotizarlos, diseñarlo, y comprarlo los insumos necesarios",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r52",
+      "nombre": "Implementación de aurora en Caldas",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": "Leandro Przylucki",
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k24"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r53",
+      "nombre": "Proyecto separación voluminosos",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k17"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r54",
+      "nombre": "Para: Logística-soporte en Control de stock de Pañol para hacer compras correctasNecesito: Soporte en la Gestión integral de inventario, inventarios cíclicos y control de stock pañol Cuando: Junio 2026",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k17"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r55",
+      "nombre": "Conexión eléctrica grupo electrogeno 220KVA Caldas",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r56",
+      "nombre": "Reforma de baños hombres PB Caldas",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r57",
+      "nombre": "Mudanza equipo ingeniería 2do piso CALDAS",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r58",
+      "nombre": "Nuevos puestos de trabajo - EE",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k27"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r59",
+      "nombre": "Optimizar el proceso de consulta de stock, ingreso y disponibilidad de reemplazos ante productos demorados /rebotados, alineados con el proceso actual del equipo de backoffice.",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k17"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r60",
+      "nombre": "Corregir el histórico de guías/ actualizaciones de Producteca.",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r61",
+      "nombre": "Reorganización física del sector para procesar 500 un./día sin cruces.",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k24"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r62",
+      "nombre": "Armar el forcast de la sucursal",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r63",
+      "nombre": "Impletación nuevo organigrama con foco en eficiencia operativa",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k27"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r64",
+      "nombre": "Integrar la información entre CiberService y Master mediante identificadores y estructuras normalizadas para permitir trazabilidad de cambios y garantías Q3",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "no_iniciada",
+      "columna": "Prioridades Q3",
+      "krIds": [
+        "k7"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r65",
+      "nombre": "[ Desarrollo de informes técnicos para garantizar que el cliente reciba información clara y completa sobre sus reparaciones.] Relevamiento de la resolusión de los casos de service",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k23"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r66",
+      "nombre": "Terminar el baño de hombres de planta baja de caldas",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r67",
+      "nombre": "Terminar obra GIDETEC detección incendios Caldas",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r68",
+      "nombre": "Relvamiento del Sector para la reorganizacin fisica",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k24"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r69",
+      "nombre": "Guía de Criterios de Aceptación: Manual visual de estándares para clasificar categorías",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k22"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r70",
+      "nombre": "Definir y publicar forecast anual 2026 de sucursal con crecimiento proyectado del +25% vs ventas 2025, distribuido por estacionalidad mensual.",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r71",
+      "nombre": "[Impletación nuevo organigrama con foco en eficiencia operativa] -> Feedback a los lideres",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [
+        "k28"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r72",
+      "nombre": "Hacer el relevamiento de la integración",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "en_progreso",
+      "columna": "En curso",
+      "krIds": [],
+      "pilarIds": []
+    },
+    {
+      "id": "r73",
+      "nombre": "Diseñar y ejecutar un proceso de control diario del SLA de armado y despacho para las órdenes de los marketplaces utilizando como base el reporte estructurado por Inteligencia operativa.",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k24",
+        "k23"
+      ],
+      "pilarIds": []
+    },
+    {
+      "id": "r74",
+      "nombre": "Dashboard de \"Aging\" de Devoluciones: Visibilidad en tiempo real de unidades sin procesar.",
+      "detalle": "",
+      "area": "Operaciones",
+      "equipo": null,
+      "trimestre": null,
+      "estado": "completada",
+      "columna": "Terminado",
+      "krIds": [
+        "k22"
+      ],
+      "pilarIds": []
+    }
+  ],
+  "kpis": [
+    {
+      "id": "kpi1",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "GMV (Ventas Totales)",
+      "sentido": "mayor",
+      "unidad": "U$S",
+      "target": 350000000,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi2",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Margen Bruto",
+      "sentido": "mayor",
+      "unidad": "U$S",
+      "target": 87500000,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi3",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Margen Operativo",
+      "sentido": "mayor",
+      "unidad": "U$S",
+      "target": 35000000,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi4",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Ciclo de Conversión de Caja (CCC)",
+      "sentido": "menor",
+      "unidad": "Días",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi5",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% Mercadería con Aging > 120 días",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi6",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Financiamiento Ponderado vs. ETA",
+      "sentido": "menor",
+      "unidad": "Días",
+      "target": 0.01,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi7",
+      "pilarId": "p3",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tasa de Incobrabilidad de Créditos",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.01,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi8",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Costo Estructura / Margen Bruto",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.75,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi9",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Transacciones / cantidad de empleados",
+      "sentido": "mayor",
+      "unidad": "Trx",
+      "target": 12000,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi10",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Margen Bruto Perdido por Quiebres de Stock (MBPQ)",
+      "sentido": "menor",
+      "unidad": "U$S",
+      "target": 7000000,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi11",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% recupero económico de inventario (devoluciones y fallas)",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.7,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi12",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Valor recuperado / cantidad de empleados ST",
+      "sentido": "mayor",
+      "unidad": "U$S",
+      "target": 49000,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi13",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Disponibilidad y estabilidad de sistemas críticos",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.99,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi14",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% procesos core estandarizados y documentados",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi15",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% procesos core automatizados o con IA",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.5,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi16",
+      "pilarId": "p6",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Time to Market de nuevos productos",
+      "sentido": "menor",
+      "unidad": "Días",
+      "target": 70,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi17",
+      "pilarId": "p5",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tasa de devoluciones",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.03,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi18",
+      "pilarId": "p5",
+      "negocioId": "ecommerce-ar",
+      "nombre": "OTIF (On Time, In Full)",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.98,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi19",
+      "pilarId": "p5",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tiempo promedio de resolución de reclamos",
+      "sentido": "menor",
+      "unidad": "Hs",
+      "target": 24,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi20",
+      "pilarId": "p5",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tasa de recompra",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.3,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi21",
+      "pilarId": "p5",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tasa de respuesta < 1h",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.99,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi22",
+      "pilarId": "p5",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Calificación promedio de compradores (1 a 10)",
+      "sentido": "mayor",
+      "unidad": "Pts",
+      "target": 9,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi23",
+      "pilarId": "p1",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% de ventas de productos nuevos (<6 meses)",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.15,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi24",
+      "pilarId": "p1",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Nº lanzamientos con rentabilidad positiva",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 600,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi25",
+      "pilarId": "p1",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tasa de reclamos/devoluciones productos nuevos",
+      "sentido": "menor",
+      "unidad": "%",
+      "target": 0.05,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi26",
+      "pilarId": "p1",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Margen bruto promedio de nuevos productos",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.4,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi27",
+      "pilarId": "p7",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Share de categoría promedio ponderado",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.3,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi28",
+      "pilarId": "p7",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% de ventas en Fulfillment sobre el global",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.2,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi29",
+      "pilarId": "p7",
+      "negocioId": "ecommerce-ar",
+      "nombre": "% de Rebates",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.05,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi30",
+      "pilarId": "p7",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Tasa de Conversión promedio",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.02,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi31",
+      "pilarId": "p7",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Liderazgo en categorías",
+      "sentido": "mayor",
+      "unidad": "u",
+      "target": 50,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi37",
+      "pilarId": "p4",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Employee NPS correlacionado con Margen Operativo",
+      "sentido": "mayor",
+      "unidad": "Pts",
+      "target": 8,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi38",
+      "pilarId": "p4",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Índice de Alineación Cultural y Valores",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.8,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi39",
+      "pilarId": "p4",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Índice de Movilidad y Desarrollo Interno",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.1,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    },
+    {
+      "id": "kpi40",
+      "pilarId": "p4",
+      "negocioId": "ecommerce-ar",
+      "nombre": "Índice de Confianza Interna",
+      "sentido": "mayor",
+      "unidad": "%",
+      "target": 0.9,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      }
+    }
+  ],
+  "iniciativas": [
+    {
+      "id": "ini1",
+      "prioridad": 1,
+      "nombre": "PriceBrain",
+      "sponsor": "",
+      "owner": "Cynthia Barrios",
+      "equipo": "Tech - Squad CMS (Pricing)",
+      "pilarId": null,
+      "scopeIniciativa": "Maximizar el pricing de los productos, consolidando la lógica de negocio en un motor único.",
+      "hitos": [
+        {
+          "texto": "Lanzar la carga masiva batch (10-20+ precios) con recálculo de premium vía central de variables (Price Brain v2.5) en S3.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Unificar la lógica de pricing hoy repartida en 3 lugares (Pricing API, sheets comercial, módulos) en un único sistema de encolado.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Liberar Price Brain v3 con mapeo y reglas de precio por canal (WEB primero, Marketplaces externos en V2).",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        }
+      ],
+      "scopesQ": [
+        {
+          "quarter": "Q3 2026",
+          "texto": "Excel batch para 10-20+ precios a la vez + recálculo masivo de premium vía central de variables.\n\nUnificar la lógica de negocio hoy repartida en 3 lugares (Pricing API, sheets comercial, cada módulo nuevo) + sistema de encolado.\n\nMapeo de precios WEB vs Marketplaces + reglas de precio por canal. Arranca en paralelo al motor v2 (S3): primero Web, después Marketplaces externos (MeLi siempre V1, Web/MKP externos = V2)."
+        }
+      ],
+      "riesgos": "",
+      "riesgoSemaforo": null,
+      "rocaIds": [
+        "r20",
+        "r21",
+        "r26",
+        "r27",
+        "r28",
+        "r29"
+      ]
+    },
+    {
+      "id": "ini2",
+      "prioridad": 2,
+      "nombre": "Sales Force",
+      "sponsor": "",
+      "owner": "Sebastian Martinez",
+      "equipo": "Arquitecto de Solución Core, Developer Core, Administrador de Core Bidcom, Arquitecto Data Cloud, Desarrollador Data Cloud",
+      "pilarId": null,
+      "scopeIniciativa": "Implementar Salesforce en producción y lograr una vista 360 del cliente, maximizando adopción vía Personalization (Mkt) y Agentforce (Cx).",
+      "hitos": [
+        {
+          "texto": "Activar Data Cloud con usuarios de Salesforce y disponibilizar data de clientes en clusters de buyers.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Lanzar notificaciones de orden de trabajo lista a clientes vía Service Cloud.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Alcanzar el KPI de First Contact Resolution definido en los reportes de Salesforce.",
+          "sentido": "mayor",
+          "unidad": "%",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Go-live de Agentforce, con knowledge transfer de las consultoras completado.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        }
+      ],
+      "scopesQ": [
+        {
+          "quarter": "Q3 2026",
+          "texto": "Data Cloud: activación de usuarios Salesforce.\n\nDisponibilización de data de clientes en Data Cloud (clusters de buyers).\n\nNotificaciones de Orden de Trabajo lista a los clientes (Ciber Service).\n\nKPI First Contact Resolution en reportes Salesforce.\n\nGo-live de Agentforce.\n\nKnowledge transfer de las consultoras."
+        }
+      ],
+      "riesgos": "",
+      "riesgoSemaforo": null,
+      "rocaIds": []
+    },
+    {
+      "id": "ini3",
+      "prioridad": 3,
+      "nombre": "Squad Web",
+      "sponsor": "Agustin Cavalloti",
+      "owner": "Andrea",
+      "equipo": "Clara Herrero, Eli, Kevin, Magui, Nazarena Alonso, Fran, Hernan, Maximiliano Prez, Martín Contreras, Rodrigo Serrato, Maximiliano Cabrera Perla, Ignacio Villasuso, Valentina Maldonado, Fernando Calvitti, Agustin del Pino, Lorena Perugini",
+      "pilarId": null,
+      "scopeIniciativa": "Evolucionar y escalar el canal Web de Bidcom para maximizar su contribución al NMV.",
+      "hitos": [
+        {
+          "texto": "Llevar el logro proporcional de NMV Web de 59.6% a (target pendiente de definir) para fin de Q3 — baseline: board maestro Despliegue Estratégico.",
+          "sentido": "mayor",
+          "unidad": "%",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": 59.6
+          }
+        },
+        {
+          "texto": "Mejorar la conversión del funnel web (ej. checkout) en (target pendiente de definir).",
+          "sentido": "mayor",
+          "unidad": "%",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Entregar (cantidad pendiente de definir) iniciativas/mejoras priorizadas del roadmap Q3 del squad.",
+          "sentido": "mayor",
+          "unidad": "u",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        }
+      ],
+      "scopesQ": [],
+      "riesgos": "",
+      "riesgoSemaforo": null,
+      "rocaIds": [
+        "r30",
+        "r31",
+        "r32",
+        "r33",
+        "r34",
+        "r35"
+      ]
+    },
+    {
+      "id": "ini4",
+      "prioridad": 4,
+      "nombre": "Gobernanza de Datos",
+      "sponsor": "",
+      "owner": "Jana",
+      "equipo": "Tech - Gobernanza de Datos",
+      "pilarId": null,
+      "scopeIniciativa": "Consolidar y garantizar la calidad y confiabilidad de los datos de los procesos medulares para Bidcom, BidcomAgro y regional.",
+      "hitos": [
+        {
+          "texto": "Completar el One Pager con la primera ronda de KPIs de gobernanza de datos.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Formalizar el Modelo de Gobernanza y la Skill Matrix del equipo.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "(Target pendiente de definir) de los procesos medulares con datos validados/confiables.",
+          "sentido": "mayor",
+          "unidad": "%",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        }
+      ],
+      "scopesQ": [
+        {
+          "quarter": "Q3 2026",
+          "texto": "One Pager completo con la primera ronda de KPIs.\n\nSkill Matrix y Modelo de Gobernanza formalizados."
+        }
+      ],
+      "riesgos": "",
+      "riesgoSemaforo": null,
+      "rocaIds": [
+        "r23"
+      ]
+    },
+    {
+      "id": "ini5",
+      "prioridad": 5,
+      "nombre": "Odoo",
+      "sponsor": "",
+      "owner": "Fernando",
+      "equipo": "Tech - ERP (Odoo)",
+      "pilarId": null,
+      "scopeIniciativa": "Implementar y consolidar Odoo como ERP unificado de Bidcom.",
+      "hitos": [
+        {
+          "texto": "Completar el go-live de los módulos core (alcance pendiente de confirmar: finanzas / compras / inventario) para fin de Q3.",
+          "sentido": "mayor",
+          "unidad": "",
+          "target": 1,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Migrar (target pendiente de definir) de los procesos administrativos/operativos desde el sistema legacy a Odoo.",
+          "sentido": "mayor",
+          "unidad": "%",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        },
+        {
+          "texto": "Cerrar el primer mes post go-live con (cantidad pendiente de definir) incidencias críticas o menos.",
+          "sentido": "menor",
+          "unidad": "u",
+          "target": null,
+          "value": {
+            "mode": "literal",
+            "actual": null
+          }
+        }
+      ],
+      "scopesQ": [],
+      "riesgos": "",
+      "riesgoSemaforo": null,
+      "rocaIds": [
+        "r25"
+      ]
+    }
+  ],
+  "onePager": [
+    {
+      "id": "op1",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "NMV",
+      "sentido": "mayor",
+      "nombre": "NMV",
+      "unidad": "AR$ MM",
+      "target": 473195.28,
+      "value": {
+        "mode": "literal",
+        "actual": 207661.19
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 144106.98,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 119188.92
+            },
+            {
+              "nombre": "DJI",
+              "actual": 8577.39
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 14839.3
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 1501.37,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 1340.2
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 10.66
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 150.51
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 35552.87,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 30136.83
+            },
+            {
+              "nombre": "DJI",
+              "actual": 2066.25
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 2826.44
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 1817.96
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": -1874.61
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 580,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 542.71
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 37.29
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 16430.44,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 11298.58
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1676.58
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 3455.27
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 6281.82,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 4929.53
+            },
+            {
+              "nombre": "DJI",
+              "actual": 986.78
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 365.51
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 5289.09,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 2248.07
+            },
+            {
+              "nombre": "DJI",
+              "actual": 865.28
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 590.69
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 150.07
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": -8.06
+            },
+            {
+              "nombre": "Otros",
+              "actual": 1443.04,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 1027.67
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 138.62
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 276.75
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op2",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "GMV",
+      "sentido": "mayor",
+      "nombre": "GMV",
+      "unidad": "AR$ MM",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 225364.02
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 155322.77,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 127136.71
+            },
+            {
+              "nombre": "DJI",
+              "actual": 9769.69
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 16518.01
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 1898.35,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 1703.46
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 10.66
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 184.23
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 38823.36,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 32156.9
+            },
+            {
+              "nombre": "DJI",
+              "actual": 2368.28
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 3246.87
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 2222.8
+            },
+            {
+              "nombre": "Acc.Comerciales (cupón)",
+              "actual": -2018.04
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 846.55,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 785.53
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 61.03
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 17343.53,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 11893.44
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1824.82
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 3625.26
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 8001.5,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 6351.72
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1189.48
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 460.3
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 5872.86,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 2420.36
+            },
+            {
+              "nombre": "DJI",
+              "actual": 932.2
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 716.49
+            },
+            {
+              "nombre": "Recuperos",
+              "actual": 169.28
+            },
+            {
+              "nombre": "Acc. Comerciales",
+              "actual": -9.13
+            }
+          ]
+        },
+        {
+          "nombre": "Otros",
+          "actual": 1643.66,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 1191.48
+            },
+            {
+              "nombre": "DJI",
+              "actual": 138.62
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 313.56
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op3",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "NMV",
+      "sentido": "mayor",
+      "nombre": "NMV USD",
+      "unidad": "U$S M",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 144082.8
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 99896.66,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 82641.08
+            },
+            {
+              "nombre": "DJI",
+              "actual": 5938.62
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 10272.69
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 1044.27,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 931.54
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 7.51
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 105.22
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 24708.37,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 20942.73
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1436.07
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 1962.33
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 1261.52
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": -1293.72
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 399.44,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 373.6
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 25.83
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 11446.25,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 7872.11
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1168.3
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 2405.85
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 4364.96,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 3424.91
+            },
+            {
+              "nombre": "DJI",
+              "actual": 685.03
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 255.02
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 3666.56,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 1559.53
+            },
+            {
+              "nombre": "DJI",
+              "actual": 600.4
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 409.6
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 103.51
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": -5.59
+            },
+            {
+              "nombre": "Otros",
+              "actual": 999.13,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 710.04
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 96.71
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 192.38
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op4",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "ASP",
+      "sentido": "mayor",
+      "nombre": "ASP",
+      "unidad": "AR$",
+      "target": 118448,
+      "value": {
+        "mode": "literal",
+        "actual": 78205.35
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 437610.04,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 467049.56
+            },
+            {
+              "nombre": "DJI",
+              "actual": 10226755.68
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 792158.91
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 561971.91,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 622317.7
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 10663149
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 1143854.55
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 495798.75,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 579599.46
+            },
+            {
+              "nombre": "DJI",
+              "actual": 11369129.5
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 1544782.69
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 529892.76
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 0
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 723816.16,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 913708.45
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 4882654.09
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 863039.92,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 757511.71
+            },
+            {
+              "nombre": "DJI",
+              "actual": 11211339.05
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 3004634.61
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 347642.18,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 292405.98
+            },
+            {
+              "nombre": "DJI",
+              "actual": 10317058.59
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 328685.75
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 552169.34,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 485038.61
+            },
+            {
+              "nombre": "DJI",
+              "actual": 13890944.21
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 1117698.79
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 614997.05
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 0
+            }
+          ]
+        },
+        {
+          "nombre": "Otros",
+          "actual": 463606.94,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 462179.88
+            },
+            {
+              "nombre": "DJI",
+              "actual": 8836429.75
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 570233.85
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op5",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "ASP",
+      "sentido": "mayor",
+      "nombre": "ASP USD",
+      "unidad": "U$S",
+      "target": 80.98,
+      "value": {
+        "mode": "literal",
+        "actual": 54.07
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 304.87,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 322.94
+            },
+            {
+              "nombre": "DJI",
+              "actual": 7072.22
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 546.53
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 391.27,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 430.26
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 7514.55
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 795.41
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 345.39,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 400
+            },
+            {
+              "nombre": "DJI",
+              "actual": 7855.52
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 1065.72
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 366.13
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 0
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 502.39,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 627.46
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 3308.66
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 602.53,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 524.66
+            },
+            {
+              "nombre": "DJI",
+              "actual": 7767.45
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 2083.65
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 240.8,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 202.73
+            },
+            {
+              "nombre": "DJI",
+              "actual": 7123.27
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 224.87
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 384.49,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 335.1
+            },
+            {
+              "nombre": "DJI",
+              "actual": 9618.06
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 773.44
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 424.03
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 0
+            }
+          ]
+        },
+        {
+          "nombre": "Otros",
+          "actual": 322.59,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 319.79
+            },
+            {
+              "nombre": "DJI",
+              "actual": 6149.45
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 395.28
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op6",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "sentido": "mayor",
+      "nombre": "TSI",
+      "unidad": "u",
+      "target": 5062995,
+      "value": {
+        "mode": "literal",
+        "actual": 2661529
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 1940146,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 1784585
+            },
+            {
+              "nombre": "DJI",
+              "actual": 5877
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 133343
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 16341,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 15158
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 1
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 1182
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 423100,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 378832
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1294
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 13874
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 24574
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 0
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 4526,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 4217
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 309
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 111976,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 103119
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1046
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 7811
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 128336,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 117829
+            },
+            {
+              "nombre": "DJI",
+              "actual": 680
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 9827
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 57971,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 33187
+            },
+            {
+              "nombre": "DJI",
+              "actual": 425
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 3750
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 1701
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 0
+            }
+          ]
+        },
+        {
+          "nombre": "Otros",
+          "actual": 18908,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 15882
+            },
+            {
+              "nombre": "DJI",
+              "actual": 101
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 2925
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op7",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "sentido": "mayor",
+      "nombre": "TRX",
+      "unidad": "u",
+      "target": 3772665,
+      "value": {
+        "mode": "literal",
+        "actual": 2068158
+      },
+      "children": [
+        {
+          "nombre": "MercadoLibre",
+          "actual": 1634743,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 1512913
+            },
+            {
+              "nombre": "DJI",
+              "actual": 6042
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 373918
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 14778,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 13826
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 1
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 4421
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Web",
+          "actual": 286742,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 262136
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1412
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 73153
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 28622
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 80215
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 4005,
+              "children": [
+                {
+                  "nombre": "Gadnic",
+                  "actual": 3790
+                },
+                {
+                  "nombre": "DJI",
+                  "actual": 0
+                },
+                {
+                  "nombre": "Otras Marcas",
+                  "actual": 1502
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Marketplaces",
+          "actual": 93744,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 82373
+            },
+            {
+              "nombre": "DJI",
+              "actual": 1133
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 64597
+            }
+          ]
+        },
+        {
+          "nombre": "B2B",
+          "actual": 2344,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 1986
+            },
+            {
+              "nombre": "DJI",
+              "actual": 297
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 1824
+            }
+          ]
+        },
+        {
+          "nombre": "Canales Off",
+          "actual": 32758,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 21074
+            },
+            {
+              "nombre": "DJI",
+              "actual": 434
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 2943
+            },
+            {
+              "nombre": "Recuperos (REF, USA, PEX)",
+              "actual": 2793
+            },
+            {
+              "nombre": "Acciones Comerciales (cupón)",
+              "actual": 558
+            }
+          ]
+        },
+        {
+          "nombre": "Otros",
+          "actual": 8646,
+          "children": [
+            {
+              "nombre": "Gadnic",
+              "actual": 6714
+            },
+            {
+              "nombre": "DJI",
+              "actual": 252
+            },
+            {
+              "nombre": "Otras Marcas",
+              "actual": 3576
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op8",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "GrossProfit",
+      "sentido": "mayor",
+      "nombre": "Gross Profit",
+      "unidad": "AR$ MM",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 37849.03
+      },
+      "children": [
+        {
+          "nombre": "Sin Refurbish y Usados",
+          "actual": 16455.5,
+          "children": [
+            {
+              "nombre": "Meli",
+              "actual": 11484.66
+            },
+            {
+              "nombre": "Web",
+              "actual": 3095.49
+            },
+            {
+              "nombre": "Marketplaces",
+              "actual": 1566.63
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 308.72,
+              "children": [
+                {
+                  "nombre": "Meli",
+                  "actual": 168.36
+                },
+                {
+                  "nombre": "Web",
+                  "actual": 140.36
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Con Refurbish y Usados",
+          "actual": 36.53,
+          "children": [
+            {
+              "nombre": "Web",
+              "actual": 36.53
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op9",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "GrossProfit",
+      "sentido": "mayor",
+      "nombre": "Gross Profit",
+      "unidad": "U$S",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 26251.55
+      },
+      "children": [
+        {
+          "nombre": "Sin Refurbish y Usados",
+          "actual": 11282.03,
+          "children": [
+            {
+              "nombre": "Meli",
+              "actual": 7879.28
+            },
+            {
+              "nombre": "Web",
+              "actual": 2108.45
+            },
+            {
+              "nombre": "Marketplaces",
+              "actual": 1085.73
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 208.57,
+              "children": [
+                {
+                  "nombre": "Meli",
+                  "actual": 114.05
+                },
+                {
+                  "nombre": "Web",
+                  "actual": 94.52
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Con Refurbish y Usados",
+          "actual": 23.02,
+          "children": [
+            {
+              "nombre": "Web",
+              "actual": 23.02
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op10",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "NetProfit",
+      "sentido": "mayor",
+      "nombre": "Net Profit",
+      "unidad": "AR$ MM",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 17354.66
+      },
+      "children": [
+        {
+          "nombre": "Sin Refurbish y Usados",
+          "actual": 8057,
+          "children": [
+            {
+              "nombre": "Meli",
+              "actual": 5929.22
+            },
+            {
+              "nombre": "Web",
+              "actual": 1181.39
+            },
+            {
+              "nombre": "Marketplaces",
+              "actual": 822.64
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 123.75,
+              "children": [
+                {
+                  "nombre": "Meli",
+                  "actual": 69.52
+                },
+                {
+                  "nombre": "Web",
+                  "actual": 54.23
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Con Refurbish y Usados",
+          "actual": -19.34,
+          "children": [
+            {
+              "nombre": "Web",
+              "actual": -19.34
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op11",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "NetProfit",
+      "sentido": "mayor",
+      "nombre": "Net Profit",
+      "unidad": "U$SM",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 12034.24
+      },
+      "children": [
+        {
+          "nombre": "Sin Refurbish y Usados",
+          "actual": 5529.96,
+          "children": [
+            {
+              "nombre": "Meli",
+              "actual": 4071.88
+            },
+            {
+              "nombre": "Web",
+              "actual": 804.71
+            },
+            {
+              "nombre": "Marketplaces",
+              "actual": 569.71
+            },
+            {
+              "nombre": "Preventa",
+              "actual": 83.66,
+              "children": [
+                {
+                  "nombre": "Meli",
+                  "actual": 47.15
+                },
+                {
+                  "nombre": "Web",
+                  "actual": 36.51
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nombre": "Con Refurbish y Usados",
+          "actual": -19.34,
+          "children": [
+            {
+              "nombre": "Web",
+              "actual": -19.34
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op12",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Experiencia de Cliente",
+      "sentido": "mayor",
+      "nombre": "Devoluciones por fecha de devolución",
+      "unidad": "AR$ MM",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 6112
+      },
+      "children": [
+        {
+          "nombre": "Cantidad de devoluciones",
+          "actual": 77492
+        },
+        {
+          "nombre": "Tasa de devoluciones (Cant.)",
+          "actual": 0.03
+        },
+        {
+          "nombre": "Tasa de devoluciones (AR$)",
+          "actual": 0.03
+        }
+      ]
+    },
+    {
+      "id": "op13",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Experiencia de Cliente",
+      "sentido": "mayor",
+      "nombre": "Devoluciones por fecha de compra",
+      "unidad": "AR$ MM",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 4668
+      },
+      "children": [
+        {
+          "nombre": "Cantidad de devoluciones",
+          "actual": 63304
+        },
+        {
+          "nombre": "Tasa de devoluciones (Cant.)",
+          "actual": 0.03
+        },
+        {
+          "nombre": "Tasa de devoluciones (AR$)",
+          "actual": 0.02
+        }
+      ]
+    },
+    {
+      "id": "op14",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Excelencia Operacional",
+      "sentido": "menor",
+      "nombre": "Costo Estructura / NMV (AR$)",
+      "unidad": "%",
+      "target": 7,
+      "value": {
+        "mode": "literal",
+        "actual": 11.57
+      },
+      "children": []
+    },
+    {
+      "id": "op15",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Excelencia Operacional",
+      "sentido": "mayor",
+      "nombre": "% recupero económico de inventario a valor Costo Reposición (devoluciones y fallas)",
+      "unidad": "%",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": 0.97
+      },
+      "children": []
+    },
+    {
+      "id": "op16",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Diversidad de Productos y Excelencia",
+      "sentido": "mayor",
+      "nombre": "Reviews MercadoLibre",
+      "unidad": "★",
+      "target": 4.75,
+      "value": {
+        "mode": "literal",
+        "actual": 4.76
+      },
+      "children": []
+    },
+    {
+      "id": "op17",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Alianza Estratégica con MeLi",
+      "sentido": "mayor",
+      "nombre": "% ventas Fulfillment sobre el global (NMV)",
+      "unidad": "%",
+      "target": 35,
+      "value": {
+        "mode": "literal",
+        "actual": 23.06
+      },
+      "children": []
+    },
+    {
+      "id": "op18",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Alianza Estratégica con MeLi",
+      "sentido": "mayor",
+      "nombre": "% ventas Fulfillment sobre el global (TSI)",
+      "unidad": "%",
+      "target": 40,
+      "value": {
+        "mode": "literal",
+        "actual": 23.18
+      },
+      "children": []
+    },
+    {
+      "id": "op19",
+      "negocioId": "ecommerce-ar",
+      "grupo": "Rentabilidad",
+      "par": "GMV",
+      "sentido": "mayor",
+      "nombre": "GMV USD",
+      "unidad": "U$S M",
+      "target": null,
+      "value": {
+        "mode": "literal",
+        "actual": null
+      },
+      "children": []
+    }
+  ]
+}
