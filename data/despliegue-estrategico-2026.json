@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 1,
-    "updated_at": "2026-07-30T19:21:41.765Z",
+    "version": 2,
+    "updated_at": "2026-07-30T19:45:09.851Z",
     "access": "domain",
     "acl": [
       {
@@ -2278,8 +2278,8 @@
       "area": "Comercial",
       "equipo": null,
       "trimestre": null,
-      "estado": "no_iniciada",
-      "columna": "Prioridades Q3",
+      "estado": "completada",
+      "columna": "Terminado",
       "krIds": [
         "k5"
       ],
