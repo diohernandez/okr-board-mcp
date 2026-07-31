@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 16,
-    "updated_at": "2026-07-31T20:31:38.824Z",
+    "version": 17,
+    "updated_at": "2026-07-31T20:31:39.368Z",
     "access": "domain",
     "acl": [
       {
@@ -641,8 +641,11 @@
       "unidad": "★",
       "target": 4.7,
       "value": {
-        "mode": "literal",
-        "actual": 4.6
+        "mode": "metric",
+        "metric": "REVIEWS_AVG_RATE",
+        "filter": {
+          "period": "2026-06"
+        }
       },
       "boards": [
         "okr2026"
