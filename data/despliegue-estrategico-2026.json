@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 15,
-    "updated_at": "2026-07-31T19:49:19.084Z",
+    "version": 16,
+    "updated_at": "2026-07-31T20:31:38.824Z",
     "access": "domain",
     "acl": [
       {
@@ -3632,8 +3632,11 @@
       "unidad": "%",
       "target": 0.2,
       "value": {
-        "mode": "literal",
-        "actual": null
+        "mode": "metric",
+        "metric": "PCT_FF_NMV",
+        "filter": {
+          "period": "2026-06"
+        }
       }
     },
     {
