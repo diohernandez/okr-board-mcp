@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 14,
-    "updated_at": "2026-07-31T19:12:22.774Z",
+    "version": 15,
+    "updated_at": "2026-07-31T19:49:19.084Z",
     "access": "domain",
     "acl": [
       {
@@ -3740,33 +3740,33 @@
       "scopeIniciativa": "Maximizar el pricing de los productos, consolidando la lógica de negocio en un motor único.",
       "hitos": [
         {
+          "sentido": "mayor",
+          "target": 1,
           "texto": "Lanzar la carga masiva batch (10-20+ precios) con recálculo de premium vía central de variables (Price Brain v2.5) en S3.",
-          "sentido": "mayor",
           "unidad": "",
-          "target": 1,
           "value": {
-            "mode": "literal",
-            "actual": null
+            "actual": 10,
+            "mode": "literal"
           }
         },
         {
+          "sentido": "mayor",
+          "target": 1,
           "texto": "Unificar la lógica de pricing hoy repartida en 3 lugares (Pricing API, sheets comercial, módulos) en un único sistema de encolado.",
-          "sentido": "mayor",
           "unidad": "",
-          "target": 1,
           "value": {
-            "mode": "literal",
-            "actual": null
+            "actual": null,
+            "mode": "literal"
           }
         },
         {
-          "texto": "Liberar Price Brain v3 con mapeo y reglas de precio por canal (WEB primero, Marketplaces externos en V2).",
           "sentido": "mayor",
-          "unidad": "",
           "target": 1,
+          "texto": "Liberar Price Brain v3 con mapeo y reglas de precio por canal (WEB primero, Marketplaces externos en V2).",
+          "unidad": "",
           "value": {
-            "mode": "literal",
-            "actual": null
+            "actual": null,
+            "mode": "literal"
           }
         }
       ],
