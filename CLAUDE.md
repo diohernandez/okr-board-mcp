@@ -118,7 +118,8 @@ raíz deja todo compilado y los 60 tests verdes.
   métrica resuelta, y polling reflejando un write real del MCP sin recargar la página.
 - `scripts/` (raíz, no es un package): `bootstrap.ts` (M5, sin cambios de fondo — solo
   pasó a importar `from "core"`), `serve-frontend.ts` (estático para `apps/frontend`,
-  proceso separado de `packages/api` a propósito).
+  proceso separado de `packages/api` a propósito), `refresh-metrics.ts` (mecanismo de
+  refresh on-demand para KRs/KPIs en `mode:"metric"`, ver §2.2).
 
 **Auditoría de fidelidad HTML→spec (sesión 2026-07-31):** se comparó el HTML original
 recuperado (nunca se commiteó a git; recuperado de un blob dangling vía `git fsck`)
@@ -156,7 +157,9 @@ re-auditar esto salvo que se vuelva a tocar el bootstrap o la portación del HTM
   paramétricas (`GROSS_PROFIT_SIN_REFUSA_*`, `CURRENT_STOCK_COST_*`) matchean por
   prefijo, no por enumeración exacta (evita fabricar combinaciones no verificadas).
   Refrescar el snapshot es manual por ahora — la migración a una llamada en vivo es un
-  cambio de implementación detrás del mismo puerto, no toca el pipeline.
+  cambio de implementación detrás del mismo puerto, no toca el pipeline. Lo mismo aplica
+  a `data/metric-values-snapshot.json` (`MetricResolver`) — ver §2.2 para el mecanismo
+  de refresh on-demand construido para ambos.
 - **`tsconfig` usa `module`/`moduleResolution: "nodenext"`** (no `"commonjs"`/`"node"`):
   el SDK de MCP publica subpaths vía `exports` map (`@modelcontextprotocol/sdk/server`,
   etc.) que la resolución clásica de Node no entiende. No revertir esto sin volver a
@@ -196,6 +199,136 @@ re-auditar esto salvo que se vuelva a tocar el bootstrap o la portación del HTM
   ocultar. `Exportar JSON` y `preguntaFeedback` quedan sin gatear (no escriben dato
   gobernado). F4 (no implementada) es recablear estas mismas funciones al API, no
   reconstruir la UI.
+
+### 2.2 Migración literal→metric: piloto + primera pasada completa (sesión 2026-07-31)
+
+Hasta esta sesión, los 205 valores gobernables del spec (135 KRs + 35 KPIs + 19 nodos
+raíz de onePager) eran **100% `literal`** — cero conectados a la capa semántica, pese a
+que la tubería (`MetricCatalog`, `MetricResolver`) estaba lista desde F1. Esta sesión
+hizo dos pasadas: un piloto chico (2-3 ítems, confirmado con el usuario antes de tocar
+el spec real) y, después, una revisión sistemática de **los 135 KRs + 35 KPIs completos**
+contra el catálogo real del Analytics MCP (a pedido explícito del usuario: "alineá los
+que ya estén gobernados, los que necesiten definición no los sumes a refresh-metrics").
+
+**Mecanismo de refresh on-demand (`scripts/refresh-metrics.ts`, `npm run
+refresh-metrics`):** sin cron todavía, se dispara a mano. `list` lee el spec, agrupa los
+`value.mode==="metric"` por clave canónica (misma que usa `MetricResolver`) y avisa si
+una clave la comparten entidades de distinto tipo (`krs` vs `kpis` vs `onePager` — ver
+el hallazgo de escala más abajo, por qué esto importa). `apply <values.json>` mergea
+`{claveCanonica: numero}` en `data/metric-values-snapshot.json` sin pisar claves no
+incluidas (así conviven los fixtures de test con valores reales — ver el propio
+`source` del snapshot). La resolución real (`lookup`/`get_data_context`/
+`query_analytics` contra el Analytics MCP) la sigue haciendo Claude a mano: necesita
+generar/validar SQL, no es determinística, no tiene sentido scriptearla.
+
+**Migrados a `mode:"metric"` vía el servidor MCP real (commits reales, no simulados —
+"valor de kpi kpi1/kpi17 (metric)", "valor de k22 (metric)"):**
+- `k22` ("Tasa de devoluciones total") y `kpi17` ("Tasa de devoluciones", pilar
+  Postventa) → `RETURN_RATE_QTY`, `filter:{period:"2026-06"}`. **Con dato real**: 0.0217,
+  resuelto vía `query_analytics` contra
+  `onepager.onepager_returns_by_order_date_monthly` (`kpi_code =
+  'RETURN_RATE_QTY_BY_ORDER_DATE'`). Verificado en el API (`resolved["krs/k22/value"]`)
+  y en navegador real (Playwright): "ACTUAL 2.17 %" con badge DG en la pestaña OKRs de
+  Experiencia de Cliente.
+- `kpi1` ("GMV Ventas Totales") → `GMV`, `filter:{period:"2026-YTD"}`. **Sin dato
+  todavía** — ver pregunta abierta de moneda más abajo. `MetricResolver` devuelve `null`
+  con gracia (no rompe el board); no hay número visible hasta resolverlo.
+- `kpi28` ("% de ventas en Fulfillment sobre el global") → `PCT_FF_NMV`,
+  `filter:{period:"2026-06"}`. **Con dato real**: 0.2318 (23,18%), resuelto contra
+  `onepager_kpi_values` (`kpi_code LIKE 'PCT_FF_NMV%'`). Confirmado por `get_data_context`
+  que el denominador de `PCT_FF_NMV`/`PCT_FF_TSI` es **siempre el total global**, nunca
+  por canal — por eso `k5` ("FULL sobre el TGMV **de MercadoLibre**", un denominador
+  distinto) quedó afuera, ver más abajo.
+- `k25` ("Reputación Bidcom en Google") → `REVIEWS_AVG_RATE`, `filter:{period:"2026-06"}`.
+  **Con dato real**: 4.77 (★). Confirmado con una query real que `brand`/`channel` son
+  `NULL` en las 6 tablas mensuales más recientes de `onepager_kpi_reviews_monthly` — hoy
+  no hay desagregación por marca, solo un agregado único de toda la compañía. Por eso
+  `k11` (reputación específica de Gadnic) quedó afuera: no hay forma de aislar ese dato.
+- `kpi5` ("% Mercadería con Aging > 120 días") → `PCT_NMI_AGING` (sin filtro — es un
+  snapshot puntual, no una serie mensual: `onepager_kpi_aging` tiene una sola fila por
+  `kpi_code`, `year_month` siempre `NULL`). **Migrado, pero SIN dato en el snapshot
+  todavía**: la query real dio 0.7807 (78%), muy lejos del target existente (0.10 = 10%,
+  8x de gap). Puede ser un problema real de negocio o un mismatch de alcance con "%
+  Mercadería Parada" — no lo suficientemente claro como para publicarlo sin que alguien
+  lo confirme. Mismo patrón que `kpi1`: estructuralmente alineado, valor pendiente.
+
+**Migrados con dato real, listos para refrescar:** `k22`, `kpi17`, `kpi28`, `k25` (4 de
+205). **Migrados sin dato, pendientes de una decisión de negocio:** `kpi1`, `kpi5` (no
+están en `data/metric-values-snapshot.json` — `MetricResolver` devuelve `null` con
+gracia para ambos).
+
+**Excluidos de la migración (necesitan una definición nueva o no tienen equivalente
+gobernado — no se tocaron, siguen `literal`):**
+- **"Utilidad GNI" (`k1`, `k12`):** el término "GNI" no aparece en ningún lado del
+  diccionario/glosario del Analytics MCP (`get_data_context` completo, cero matches) —
+  no hay forma de saber a qué métrica gobernada corresponde sin inventarlo.
+- **Márgenes en U$S (`kpi2` Margen Bruto, `kpi3` Margen Operativo, y por extensión `k12`
+  "32 Mio USD Utilidad GNI"):** mismo problema de moneda que `kpi1` — los prefijos
+  `GROSS_PROFIT_*`/`NET_PROFIT_*` solo existen en ARS.
+- **TGMV (`k2`, `k3`, `k4`, `k5`, `k5b`, `k9`, `k17`):** "TGMV" no es una métrica
+  gobernada (el catálogo tiene `GMV`/`NMV`, no `TGMV`) y la mayoría son ratios
+  (canal-propio/total, terceros/total) que requerirían una definición nueva. `k5`
+  específicamente: pedía FULL sobre TGMV **de MercadoLibre**, pero `PCT_FF_NMV` está
+  definido con denominador global — no es el mismo cálculo (ver `kpi28` arriba, que sí
+  matcheó porque pide "sobre el global").
+- **Aging por rango (`k15` 120-300 días, `k16` >300 días):** el único aging gobernado
+  (`PCT_NMI_AGING`) es un único umbral fijo (>120 días); los rangos acotados
+  necesitarían una query nueva, no están pre-calculados.
+- **Recupero de logística inversa (`k18`, `kpi11`):** `RECOVERY_RATE` en el catálogo
+  significa "% del NMV por productos refaccionados/usados/con warranty extendida" — un
+  concepto de negocio distinto a "recupero de valor al procesar devoluciones/reprocesos
+  sobre PVP original". Nombre parecido, definición distinta — no es el mismo dato.
+- **Reputación Gadnic (`k11`):** ver arriba — `REVIEWS_AVG_RATE` no tiene desagregación
+  por marca hoy.
+- **Calificación compradores (`kpi22`):** pide escala 1-10, pero `REVIEWS_AVG_RATE` está
+  definido en escala 1-5 (estrellas) — no es la misma escala, probablemente otra fuente
+  de datos (rating de comprador de MercadoLibre, no reseñas de producto).
+- **OTIF/OTD/SLA (`kpi18`, `k23`, `k24`):** no existe ninguna métrica de puntualidad de
+  entrega en el catálogo (los `DDI_*` son velocidad de rotación de inventario, un
+  concepto distinto).
+- **Bidcom Agro (`ka1`–`ka31`):** confirmado por `get_data_context` — Agro es una unidad
+  de negocio separada (BU 3), **explícitamente excluida de todas las métricas de este
+  repo (ADR-0019)**. `channel='AGRO'` existe como dimensión dentro de e-commerce (un
+  segmento de productos agro vendido por los canales normales) pero es un concepto
+  distinto a la unidad de negocio Bidcom Agro que describen estos KRs.
+- **Todo lo demás** (`k6`–`k10`, `k13`, `k14`, `k19`–`k21`, `k26`–`k31`, `kf1`–`kf19`,
+  `kt1`–`kt25`, `kmkt1`–`kmkt28`, y la mayoría de los KPIs restantes): son KRs de
+  proceso/cualitativos (Implementar, Documentar, Lanzar…), de dominios que este
+  Analytics MCP no cubre (RRHH, CSAT/NPS por encuesta, ACOS/POAS de marketing, sistemas
+  de ticketing de soporte), o simplemente no tienen un equivalente gobernado evidente.
+  No se listan uno por uno acá — si en el futuro la capa semántica gana cobertura nueva
+  (encuestas, marketing, Agro), vale la pena repetir este escaneo.
+
+**Fix real encontrado y corregido:** `krValueToLegacy()` en `apps/frontend/index.html`
+hacía passthrough directo del valor resuelto, sin normalizar. Los KRs guardan "%" como
+número entero (`k1.target=10`) pero los KPIs lo guardan como fracción 0-1
+(`kpi17.target=0.03`) — inconsistencia preexistente en el spec (no introducida por esta
+sesión), invisible hasta ahora porque ningún KPI con target-fracción tenía `actual`
+real todavía. Como `k22` y `kpi17` comparten `metric`+`filter`, `MetricResolver` solo
+puede devolver un número — no puede servir "2.17" a uno y "0.0217" al otro con el
+diseño actual. Se resolvió guardando siempre el valor **crudo** (fracción 0-1, tal como
+lo define la capa semántica — ninguna escala inventada) y agregando un ×100 en
+`krValueToLegacy` **solo** para paths que empiezan con `krs/` y `unidad==='%'` (KPIs,
+hitos de iniciativas y onePager no se tocan).
+
+**Preguntas abiertas (no resolver sin el usuario):**
+- **Moneda de `kpi1`:** el catálogo gobernado solo tiene `GMV` en ARS (`GMV_%` en
+  `onepager_kpi_values`) — no existe `GMV_USD` (a diferencia de `NMV`, que sí tiene
+  `NMV_USD` vía `usd_ars_daily.selling_rate`). `kpi1` pide U$S, target 350M. Opciones
+  sobre la mesa: construir una conversión GMV→USD nueva (no validada aún como eval
+  canónico del Analytics MCP — sería una definición nueva, no inventarla sin más),
+  corregir unidad/target de `kpi1` a ARS, o migrar otro KPI en su lugar. Mismo problema
+  de fondo que `kpi2`/`kpi3` (ver exclusiones arriba).
+- **Valor de `kpi5` (aging):** `PCT_NMI_AGING` dio 78% contra un target de 10% (8x de
+  gap) — puede ser un problema real de stock parado, o un mismatch de alcance entre "%
+  Mercadería Parada" (la definición gobernada) y lo que el KPI realmente quiere medir.
+  Confirmar antes de agregarlo a `data/metric-values-snapshot.json`.
+- **Revisión más amplia de la convención "%":** el fix de escala tapa el caso concreto
+  de `RETURN_RATE_QTY` compartido entre `k22`/`kpi17` (y ahora también aplica en general
+  a cualquier KR "%" migrado — `k25` no lo necesitó por ser `★`, no `%`). No se auditaron
+  los KRs/KPIs restantes que **todavía son `literal`** para confirmar que siguen el mismo
+  patrón (entero en KRs, fracción en KPIs) antes de una futura migración de un campo "%"
+  — sobre todo si lo comparte un KR y un KPI como en el caso ya resuelto.
 
 ---
 
@@ -296,9 +429,15 @@ final). Algunas conviene hacerlas en el MVP; otras son para después. Evaluá y 
 - **Cache en `MetricCatalog`:** evita consultar la capa semántica en cada validación.
 - **Commit atómico real en el git `SpecStore`:** manejar la ventana entre chequeo de
   HEAD y commit (lock o retry). Es la única parte con cuidado de concurrencia real.
-- **Migración progresiva literal→metric:** a medida que la capa semántica exponga una
-  métrica (TGMV, utilidad GNI, devoluciones, aging…), convertí el KR correspondiente de
-  `literal` a `metric` con `set_kr_value`. Documentá qué KRs ya son gobernados.
+- **Migración progresiva literal→metric:** arrancada (sesión 2026-07-31, ver §2.2) — de
+  205 valores gobernables, 4 ya son `metric` con dato real (`k22`, `kpi17`, `kpi28`,
+  `k25`) y 2 más migrados sin dato pendientes de una decisión de negocio (`kpi1`
+  moneda, `kpi5` valor sorprendente). Se hizo un escaneo completo de los 135 KRs + 35
+  KPIs restantes contra el catálogo real — el resto queda `literal` a propósito, sin
+  equivalente gobernado limpio (lista completa y por qué en §2.2). Mecanismo de refresh
+  on-demand en `scripts/refresh-metrics.ts`. Si la capa semántica gana cobertura nueva
+  (encuestas, marketing, Agro), vale repetir el escaneo — revisando primero la
+  convención de escala/unidad si el campo es "%" y lo comparte un KR con un KPI.
 - **Confirmar el significado de `boards`** (`comite` / `direccion_general` / `okr2026`,
   hoy heredados de los flags `com`/`dg`/`okr2026` del HTML) con el equipo.
 - **Cerrar el hueco de CRUD de pilares/negocios/plataformas vía MCP:** hoy solo se

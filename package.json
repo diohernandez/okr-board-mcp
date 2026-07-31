@@ -8,6 +8,7 @@
     "build": "tsc -b",
     "test": "npm test --workspace=core && npm test --workspace=api",
     "bootstrap": "npm run build && node scripts/dist/bootstrap.js",
+    "refresh-metrics": "npm run build && node scripts/dist/refresh-metrics.js",
     "mcp": "npm run build && node packages/mcp/dist/src/server.js",
     "api": "npm run build && node packages/api/dist/src/server.js",
     "frontend": "npm run build && node scripts/dist/serve-frontend.js"

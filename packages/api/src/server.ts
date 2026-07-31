@@ -1,5 +1,5 @@
 // =============================================================================
-// API HTTP — superficie de lectura sobre core (F1)
+// API HTTP — superficie de lectura sobre core (F1) + preview efímera (ver abajo)
 //
 // Adaptador fino, igual que el MCP: NO reimplementa validación ni reglas de
 // negocio. Para lectura, esto alcanza con SpecStore.readHead() directo (no hace
@@ -10,6 +10,12 @@
 //
 // La resolución de métricas es 100% acá (server-side): el browser nunca ve un
 // filtro ni ejecuta una query, solo recibe el mapa `resolved` ya armado.
+//
+// /api/boards/:id/preview (PUT/GET/DELETE) NO es F4: no escribe nada a git, no
+// pasa por runWrite. Es un slot efímero en memoria (Map, se pierde al reiniciar
+// el proceso a propósito) donde el MCP publica el spec que ya validó con un
+// dry_run, para que el frontend real lo pueda renderizar con el mismo adaptador
+// y el mismo MetricResolver que usa el board de verdad — sin commitear nada.
 // =============================================================================
 
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
@@ -18,7 +24,7 @@ import { promisify } from "node:util";
 import { join } from "node:path";
 import {
   GitSpecStore, collectValues, NotFoundError, AuthzError, ConcurrencyError, ValidationFailed,
-  type KrValue,
+  type KrValue, type OkrBoardSpec, type SpecStore,
 } from "core";
 import { SnapshotMetricResolver, FileMetricValueSnapshotLoader, type MetricResolver } from "./metric-resolver";
 
@@ -54,29 +60,88 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
   res.end(JSON.stringify(body));
 }
 
-async function main() {
-  const ROOT = await repoRoot();
-  const store = new GitSpecStore({ repoDir: ROOT, committer: { name: "okr-board-api", email: "api@bidcom.local" } });
-  const resolver: MetricResolver = new SnapshotMetricResolver(
-    new FileMetricValueSnapshotLoader(join(ROOT, "data", "metric-values-snapshot.json")));
+function readBody(req: IncomingMessage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let raw = "";
+    req.on("data", (chunk) => { raw += chunk; });
+    req.on("end", () => resolve(raw));
+    req.on("error", reject);
+  });
+}
 
-  const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+// Separado de main() para poder testear el ruteo/HTTP real (server.listen(0) +
+// fetch) sin pasar por git ni por el MetricResolver real — mismo espíritu que
+// SpecStore/MetricResolver como puertos: acá el puerto es "cualquier cosa con la
+// forma de SpecStore/MetricResolver", así el test le pasa fakes.
+export function createRequestHandler(deps: { store: SpecStore; resolver: MetricResolver }) {
+  const { store, resolver } = deps;
+
+  // resolved: mismo path scheme que collectValues() ya usa para validar existencia
+  // de métrica en el pipeline de escritura — sin inventar una segunda convención de
+  // claves. Solo entradas mode:"metric" (las literales ya viajan completas en `spec`).
+  // Compartido entre el board real y el preview: ambos son "un spec, resolvé sus
+  // métricas", la única diferencia es de dónde sale el spec (git vs. el Map de abajo).
+  async function resolveMetrics(spec: OkrBoardSpec): Promise<Record<string, number | null>> {
+    const resolved: Record<string, number | null> = {};
+    const metricEntries = collectValues(spec).filter(e => e.value.mode === "metric");
+    await Promise.all(metricEntries.map(async e => {
+      const mv = e.value as Extract<KrValue, { mode: "metric" }>;
+      const { value } = await resolver.resolve(mv.metric, mv.filter);
+      resolved[e.path] = value;
+    }));
+    return resolved;
+  }
+
+  // Slot de preview efímero: en memoria, por docId, se pierde al reiniciar el
+  // proceso a propósito. Nunca se persiste a git ni pasa por runWrite/runDryRun acá
+  // (esa validación ya la corrió el MCP antes de publicar) — ver comentario de
+  // archivo. Un solo slot por doc: la preview más reciente reemplaza a la anterior.
+  const previewSpecs = new Map<string, OkrBoardSpec>();
+
+  return async function handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
     if (req.method === "OPTIONS") {
       res.writeHead(204, {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Methods": "GET, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       });
       res.end();
       return;
     }
-    if (req.method !== "GET") { sendJson(res, 405, { error: "method not allowed" }); return; }
 
     const url = new URL(req.url ?? "/", "http://localhost");
     const versionMatch = url.pathname.match(/^\/api\/boards\/([^/]+)\/version$/);
+    const previewMatch = url.pathname.match(/^\/api\/boards\/([^/]+)\/preview$/);
     const boardMatch = url.pathname.match(/^\/api\/boards\/([^/]+)$/);
 
     try {
+      if (previewMatch) {
+        const docId = previewMatch[1];
+        if (req.method === "PUT") {
+          const body = JSON.parse(await readBody(req) || "{}");
+          if (!body?.spec) { sendJson(res, 400, { error: "falta 'spec' en el body" }); return; }
+          previewSpecs.set(docId, body.spec as OkrBoardSpec);
+          sendJson(res, 200, { resolved: await resolveMetrics(body.spec) });
+          return;
+        }
+        if (req.method === "GET") {
+          const spec = previewSpecs.get(docId);
+          if (!spec) { sendJson(res, 404, { error: "no hay preview activo para este doc" }); return; }
+          sendJson(res, 200, { spec, resolved: await resolveMetrics(spec) });
+          return;
+        }
+        if (req.method === "DELETE") {
+          previewSpecs.delete(docId);
+          res.writeHead(204, { "Access-Control-Allow-Origin": "*" });
+          res.end();
+          return;
+        }
+        sendJson(res, 405, { error: "method not allowed" });
+        return;
+      }
+
+      if (req.method !== "GET") { sendJson(res, 405, { error: "method not allowed" }); return; }
+
       if (versionMatch) {
         const { version } = await store.readHead(versionMatch[1]);
         sendJson(res, 200, { version });
@@ -84,31 +149,32 @@ async function main() {
       }
       if (boardMatch) {
         const { spec, version } = await store.readHead(boardMatch[1]);
-
-        // resolved: mismo path scheme que collectValues() ya usa para validar
-        // existencia de métrica en el pipeline de escritura — sin inventar una
-        // segunda convención de claves. Solo entradas mode:"metric" (las
-        // literales ya viajan completas adentro de `spec`).
-        const resolved: Record<string, number | null> = {};
-        const metricEntries = collectValues(spec).filter(e => e.value.mode === "metric");
-        await Promise.all(metricEntries.map(async e => {
-          const mv = e.value as Extract<KrValue, { mode: "metric" }>;
-          const { value } = await resolver.resolve(mv.metric, mv.filter);
-          resolved[e.path] = value;
-        }));
-
-        sendJson(res, 200, { spec, resolved, version });
+        sendJson(res, 200, { spec, resolved: await resolveMetrics(spec), version });
         return;
       }
       sendJson(res, 404, { error: "ruta no encontrada" });
     } catch (e) {
       sendJson(res, statusFor(e), bodyFor(e));
     }
-  });
+  };
+}
 
+async function main() {
+  const ROOT = await repoRoot();
+  const store = new GitSpecStore({ repoDir: ROOT, committer: { name: "okr-board-api", email: "api@bidcom.local" } });
+  const resolver: MetricResolver = new SnapshotMetricResolver(
+    new FileMetricValueSnapshotLoader(join(ROOT, "data", "metric-values-snapshot.json")));
+
+  const server = createServer(createRequestHandler({ store, resolver }));
   server.listen(PORT, () => {
     console.log(`okr-board-api: escuchando en http://localhost:${PORT} (repo=${ROOT})`);
   });
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+// Guard de entrypoint: createRequestHandler se importa desde tests (server.listen(0)
+// + fetch, ver test/preview-endpoint.test.ts) sin querer levantar el server real en
+// el PORT de verdad — solo corre main() cuando este archivo es el que se ejecutó
+// directamente (`node dist/src/server.js`), no cuando otro módulo lo importa.
+if (require.main === module) {
+  main().catch(e => { console.error(e); process.exit(1); });
+}

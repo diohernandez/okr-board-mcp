@@ -34,13 +34,28 @@ import {
 const execFileAsync = promisify(execFile);
 const PRINCIPAL = process.env.OKR_MCP_PRINCIPAL ?? "@dionisio";
 
+// El MCP sigue sin escribirle nada al API en el sentido de M1-M7 (el pipeline de
+// escritura solo conoce GitSpecStore) — esto es un puente aparte, best-effort, para
+// que un dry_run se pueda ver en el renderer real (apps/frontend) sin commitear.
+// Si el API local no está corriendo, el dry_run igual funciona: solo no hay preview
+// navegable, ver pushPreview().
+const API_BASE = process.env.OKR_API_BASE ?? "http://localhost:8788";
+const FRONTEND_BASE = process.env.OKR_FRONTEND_BASE ?? "http://localhost:8789";
+
 // La raíz del repo se resuelve con git en vez de contar "../.." a mano: mover este
 // archivo entre paquetes (packages/mcp/dist/src/... vs. el dist/src/... de antes)
 // cambia cuántos niveles hacen falta, y un conteo equivocado no tira error — puede
 // escribir en un lugar levemente distinto del que lee, en silencio (ver plan de
 // monorepo, sección de riesgos).
+//
+// El comando git corre con cwd=__dirname (la carpeta real del archivo compilado en
+// disco), NO con el cwd heredado del proceso: un launcher externo (Claude Desktop)
+// puede spawnear el proceso con cwd="/" sin exponer forma de configurarlo, y
+// "git rev-parse" resuelto contra ese cwd fallaría (o, peor, resolvería el repo
+// equivocado si "/" fuera casualmente un repo). __dirname es estable sin importar
+// quién lance el proceso ni desde dónde.
 async function resolveRepoRoot(): Promise<string> {
-  const { stdout } = await execFileAsync("git", ["rev-parse", "--show-toplevel"]);
+  const { stdout } = await execFileAsync("git", ["rev-parse", "--show-toplevel"], { cwd: __dirname });
   return stdout.trim();
 }
 
@@ -76,15 +91,41 @@ function describeError(e: unknown): string {
   return `error inesperado: ${e instanceof Error ? e.message : String(e)}`;
 }
 
+// Publica el spec de un dry_run en el slot de preview efímero del API (nunca a
+// git) para que apps/frontend lo pueda renderizar con el renderer real. Best-effort
+// a propósito: si el API local no está levantado, el dry_run no debe fallar por
+// eso — el JSON del resultado ya es útil por sí solo, como antes de esto existir.
+async function pushPreview(docId: string, spec: unknown): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/boards/${docId}/preview`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ spec }),
+    });
+    return res.ok ? `${FRONTEND_BASE}/?preview=1` : null;
+  } catch {
+    return null;
+  }
+}
+// Limpia el preview tras un commit real: si quedaba una hipótesis vieja sin
+// confirmar para este doc, no tiene sentido que siga apareciendo como si fuera
+// la vista previa de un cambio distinto ya commiteado. Best-effort, igual que el push.
+async function clearPreview(docId: string): Promise<void> {
+  try { await fetch(`${API_BASE}/api/boards/${docId}/preview`, { method: "DELETE" }); } catch { /* noop */ }
+}
+
 // Las 9 tools de escritura comparten la misma forma: aplican un Change contra
 // runWrite, salvo que dry_run=true (M7), en cuyo caso corren la validación
-// completa y devuelven el spec resultante SIN commitear.
+// completa y devuelven el spec resultante SIN commitear. Si además el API local
+// está corriendo, dry_run publica una preview real navegable (ver pushPreview).
 async function handleWrite(docId: string, baseVersion: string, change: Change, dryRun: boolean): Promise<CallToolResult> {
   if (dryRun) {
     const { spec, valid, errors } = await runDryRun(deps, PRINCIPAL, docId, baseVersion, change);
-    return jsonResult({ valid, errors, spec });
+    const preview_url = valid ? await pushPreview(docId, spec) : null;
+    return jsonResult({ valid, errors, spec, preview_url });
   }
   const { version } = await runWrite(deps, PRINCIPAL, docId, baseVersion, change);
+  await clearPreview(docId);
   return jsonResult({ version });
 }
 

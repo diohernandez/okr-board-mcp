@@ -2153,11 +2153,18 @@ function mergeWithDefaults(saved){
 // A diferencia del renderer/despliegue_estrategico.html (M3, sin API detrás), acá un
 // value en mode:"metric" SÍ se resuelve: se busca en `resolved[path]` en vez de
 // devolver null fijo, porque ahora hay de dónde sacarlo (el API ya lo resolvió).
-function krValueToLegacy(value, path, resolved){
+// unidad: los KRs muestran "%" como número entero (target=10 -> "10%"), los KPIs
+// como fracción 0-1 (target=0.10 -> "10%" vía cumplimiento()*100). La capa gobernada
+// siempre devuelve la fracción cruda (0-1, tal como la define la capa semántica) —
+// para un KR con unidad "%" hay que escalarla x100 acá, el único lugar que conoce
+// ambas convenciones a la vez. Los KPIs no se tocan: ya reciben la fracción que esperan.
+function krValueToLegacy(value, path, resolved, unidad){
   if(value && value.mode === 'literal') return { actual: value.actual, prevActual: value.prev };
   if(value && value.mode === 'metric'){
     const resolvedValue = resolved ? resolved[path] : undefined;
-    return { actual: (resolvedValue === undefined) ? null : resolvedValue, prevActual: undefined };
+    let actual = (resolvedValue === undefined) ? null : resolvedValue;
+    if(actual !== null && unidad === '%' && path.startsWith('krs/')) actual = actual * 100;
+    return { actual, prevActual: undefined };
   }
   return { actual: null, prevActual: undefined };
 }
@@ -2170,17 +2177,17 @@ function boardsToLegacyFlags(boards){
   };
 }
 function adaptKr(kr, resolved){
-  const { actual, prevActual } = krValueToLegacy(kr.value, `krs/${kr.id}/value`, resolved);
+  const { actual, prevActual } = krValueToLegacy(kr.value, `krs/${kr.id}/value`, resolved, kr.unidad);
   return { id: kr.id, objId: kr.objId, desc: kr.desc, sentido: kr.sentido, unidad: kr.unidad,
     target: kr.target, actual, prevActual, ...boardsToLegacyFlags(kr.boards) };
 }
 function adaptKpi(kpi, resolved){
-  const { actual } = krValueToLegacy(kpi.value, `kpis/${kpi.id}/value`, resolved);
+  const { actual } = krValueToLegacy(kpi.value, `kpis/${kpi.id}/value`, resolved, kpi.unidad);
   return { id: kpi.id, pilarId: kpi.pilarId, negocioId: kpi.negocioId, nombre: kpi.nombre,
     sentido: kpi.sentido, unidad: kpi.unidad, target: kpi.target, actual };
 }
 function adaptHito(h, path, resolved){
-  const { actual } = krValueToLegacy(h.value, path, resolved);
+  const { actual } = krValueToLegacy(h.value, path, resolved, h.unidad);
   return { texto: h.texto, sentido: h.sentido, unidad: h.unidad, target: h.target, actual };
 }
 function adaptIniciativa(ini, resolved){
@@ -2190,7 +2197,7 @@ function adaptIniciativa(ini, resolved){
 }
 function adaptOnePagerItem(op, resolved){
   const { value, ...rest } = op;
-  const { actual } = krValueToLegacy(value, `onePager/${op.id}/value`, resolved);
+  const { actual } = krValueToLegacy(value, `onePager/${op.id}/value`, resolved, op.unidad);
   return { ...rest, actual };
 }
 function adaptSpecToLegacy(spec, resolved){
@@ -2223,6 +2230,14 @@ function localOnlyFields(){
 const API_BASE = "http://localhost:8788";
 const DOC_ID = "despliegue-estrategico-2026";
 
+// Modo preview (no es F4, no escribe nada): ?preview=1 hace que la carga y el
+// polling apunten a /api/boards/:id/preview en vez del board real. Ese endpoint
+// es un slot efímero en memoria que el MCP llena con el resultado de un dry_run
+// — ver packages/api/src/server.ts y packages/mcp/src/server.ts. Nunca toca
+// WRITE_ENABLED: es de solo lectura, un camino totalmente aparte del gateo de
+// escritura manual.
+const PREVIEW_MODE = new URLSearchParams(location.search).get('preview') === '1';
+
 // version del último spec cargado (token real de SpecStore, no un contador propio) —
 // la usa el polling (F3) para saber si hay algo nuevo sin traer el spec entero.
 let currentVersion = null;
@@ -2241,6 +2256,17 @@ async function loadData(){
     if(raw) return mergeWithDefaults(JSON.parse(raw));
   }catch(e){}
   return JSON.parse(JSON.stringify(defaultData));
+}
+
+// Devuelve el payload CRUDO ({spec, resolved}), sin adaptar, o null si no hay
+// preview activo (nada publicado, o ya se confirmó/descartó). Se devuelve crudo
+// (no legacy-adaptado) a propósito: pollPreview() necesita compararlo tal cual
+// llega para decidir si vale la pena re-renderizar — ver comentario ahí.
+async function loadPreviewData(){
+  const res = await fetch(`${API_BASE}/api/boards/${DOC_ID}/preview`);
+  if(res.status === 404) return null;
+  if(!res.ok) throw new Error('preview: respuesta inesperada del API (' + res.status + ')');
+  return await res.json();
 }
 
 // Polling (F3): pregunta solo la version (barata — un rev-parse del lado del API), y
@@ -2264,6 +2290,52 @@ async function pollForChanges(){
     }
   }catch(e){ /* red caída o API abajo: reintenta en el próximo tick, no rompe la vista actual */ }
 }
+
+// Poll del modo preview (más frecuente que POLL_MS: es una sesión activa de "estoy
+// mirando mi propio cambio", no el consumo pasivo del tablero real). Mientras no
+// hay preview activo, muestra el tablero real de fondo (loadData ya corrió antes
+// de arrancar este intervalo) para que la pantalla no quede vacía esperando.
+//
+// BUG real encontrado en la primera versión: acá se llamaba renderAll() en CADA
+// tick aunque el preview no hubiera cambiado. renderAll() resetea la sub-pestaña
+// a la que abre por default (mismo gap que ya existía en pollForChanges — ver su
+// comentario — pero ahí pasa desapercibido porque la version real casi no cambia;
+// acá, con polling cada 2s, volvía la vista al default constantemente y era
+// imposible quedarse parado en una pestaña. Fix: comparar contra el último
+// preview efectivamente pintado (lastPreviewRaw) y solo tocar el DOM si cambió.
+const PREVIEW_POLL_MS = 2000;
+let previewActive = false;
+let lastPreviewRaw = null;
+async function pollPreview(){
+  try{
+    const previewPayload = await loadPreviewData();
+    if(!previewPayload){
+      if(previewActive){
+        // el preview se limpió (se confirmó el commit real, o se descartó) -> volvemos
+        // a mostrar el tablero real, que si se confirmó ya refleja el cambio.
+        previewActive = false;
+        lastPreviewRaw = null;
+        const preservedNegocio = currentNegocio;
+        data = await loadData();
+        renderAll();
+        if(preservedNegocio && data.negocios.some(n => n.id === preservedNegocio)) setHorizon(preservedNegocio);
+      }
+      showPreviewBanner(false);
+      return;
+    }
+    const raw = JSON.stringify(previewPayload);
+    if(raw !== lastPreviewRaw){
+      lastPreviewRaw = raw;
+      previewActive = true;
+      const preservedNegocio = currentNegocio;
+      data = { ...adaptSpecToLegacy(previewPayload.spec, previewPayload.resolved), ...localOnlyFields() };
+      renderAll();
+      if(preservedNegocio && data.negocios.some(n => n.id === preservedNegocio)) setHorizon(preservedNegocio);
+    }
+    showPreviewBanner(true);
+  }catch(e){ /* red caída o API abajo: reintenta en el próximo tick, no rompe la vista actual */ }
+}
+
 function saveData(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -3836,7 +3908,40 @@ function applyWriteGate(){
 }
 applyWriteGate();
 
-loadData().then(loaded => { data = loaded; renderAll(); setInterval(pollForChanges, POLL_MS); });
+// Banner del modo preview: no sticky a propósito (ya hay uno sticky de solo-lectura
+// arriba; dos elementos sticky con top:0 se pisan entre sí). Un solo elemento creado
+// una vez, se actualiza en cada tick de pollPreview() en vez de recrearse.
+function showPreviewBanner(active){
+  if(!PREVIEW_MODE) return;
+  let el = document.getElementById('previewBanner');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'previewBanner';
+    el.style.cssText = 'text-align:center;padding:10px;font-weight:700;font-size:13px;';
+    document.body.prepend(el);
+  }
+  if(active){
+    el.style.background = '#7c2d12';
+    el.style.color = '#fed7aa';
+    el.innerHTML = '⚠️ VISTA PREVIA — cambio sin commitear (pedile a Claude que lo confirme, o volvé al tablero real) · '
+      + '<a href="?" style="color:#fed7aa;text-decoration:underline;">volver al tablero real</a>';
+  } else {
+    el.style.background = '#374151';
+    el.style.color = '#e5e7eb';
+    el.innerHTML = 'Modo vista previa — esperando un dry_run desde Claude Desktop. Mostrando el tablero real mientras tanto. '
+      + '<a href="?" style="color:#e5e7eb;text-decoration:underline;">volver al tablero real</a>';
+  }
+}
+
+if(PREVIEW_MODE){
+  loadData().then(loaded => {
+    data = loaded; renderAll();
+    pollPreview();
+    setInterval(pollPreview, PREVIEW_POLL_MS);
+  });
+} else {
+  loadData().then(loaded => { data = loaded; renderAll(); setInterval(pollForChanges, POLL_MS); });
+}
 </script>
 </body>
 </html>

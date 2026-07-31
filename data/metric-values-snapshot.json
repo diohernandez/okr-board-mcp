@@ -1,10 +1,13 @@
 {
-  "fetched_at": "2026-07-30T00:00:00-03:00",
-  "source": "DEMO — valores inventados para probar el MetricResolver localmente. NO son cifras reales de BigQuery/Analytics MCP. Reemplazar por una implementación en vivo (LiveMetricResolver) cuando se resuelva la conexión con la capa semántica (ver plan de monorepo, sección de riesgos).",
+  "fetched_at": "2026-07-31T20:32:20.041Z",
+  "source": "Mixto. NMV, NMV|PERIOD=2026-06, GROSS_PROFIT_SIN_REFUSA_WEB y TRX_TOTAL son fixtures DEMO (packages/api/test/metric-resolver.test.ts verifica sus valores exactos — no tocar sin actualizar ese test). RETURN_RATE_QTY|PERIOD=2026-06 es un valor real, resuelto vía Bidcom Analytics MCP (lookup + query_analytics contra BigQuery, kpi_code='RETURN_RATE_QTY_BY_ORDER_DATE' en onepager.onepager_returns_by_order_date_monthly) durante el piloto de migración literal->metric de k22/kpi17. Refresco manual on-demand — ver scripts/refresh-metrics.ts.",
   "values": {
     "NMV": 207661.19,
     "NMV|PERIOD=2026-06": 18500.5,
     "GROSS_PROFIT_SIN_REFUSA_WEB": 3095.49,
-    "TRX_TOTAL": 2068158
+    "TRX_TOTAL": 2068158,
+    "RETURN_RATE_QTY|PERIOD=2026-06": 0.0217,
+    "PCT_FF_NMV|PERIOD=2026-06": 0.2318,
+    "REVIEWS_AVG_RATE|PERIOD=2026-06": 4.77
   }
 }

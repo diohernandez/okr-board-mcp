@@ -1,5 +1,5 @@
 {
-  "$comment": "Contratos tools/list del MCP de autoría de tableros okr-board. Cada tool declara name, description e inputSchema (JSON Schema Draft 2020-12). Los upsert usan merge parcial: el inputSchema solo exige 'id'; la completitud y las reglas de negocio (integridad referencial, existencia de métrica gobernada) las valida el pipeline del MCP sobre el spec resultante, no el inputSchema. Toda escritura pasa por el pipeline compartido: authz -> concurrencia optimista (base_version vs HEAD) -> aplicar cambio acotado -> validar en cascada (schema, FKs, métrica) -> commit a git (o rechazo sin commit). Todas las tools de escritura aceptan 'dry_run' opcional (default false): si es true, corren authz + concurrencia + validación y devuelven el spec resultante SIN commitear.",
+  "$comment": "Contratos tools/list del MCP de autoría de tableros okr-board. Cada tool declara name, description e inputSchema (JSON Schema Draft 2020-12). Los upsert usan merge parcial: el inputSchema solo exige 'id'; la completitud y las reglas de negocio (integridad referencial, existencia de métrica gobernada) las valida el pipeline del MCP sobre el spec resultante, no el inputSchema. Toda escritura pasa por el pipeline compartido: authz -> concurrencia optimista (base_version vs HEAD) -> aplicar cambio acotado -> validar en cascada (schema, FKs, métrica) -> commit a git (o rechazo sin commit). Todas las tools de escritura aceptan 'dry_run' opcional (default false): si es true, corren authz + concurrencia + validación y devuelven el spec resultante SIN commitear, y ADEMÁS publican ese resultado como preview real (no ilustrativa) en apps/frontend si el API local está corriendo -- ver 'preview_url' en cada tool de escritura. Flujo recomendado ante un cambio: dry_run -> mostrarle al usuario el preview_url (o el resumen si no hay API corriendo) -> recién ahí preguntar si confirma el commit real (dry_run=false). No saltear directo a preguntar por el commit sin haber ofrecido ver el resultado primero.",
   "tools": [
     {
       "name": "get_board",
@@ -27,7 +27,7 @@
     },
     {
       "name": "upsert_roca",
-      "description": "Crea o actualiza una roca (prioridad trimestral) por id, con merge parcial: enviá solo los campos que cambian. Caso típico: marcar una roca como completada -> { id, estado:'completada', columna:'Terminado' }. Si la roca es nueva, el spec resultante debe validar contra el schema (nombre, estado, etc. requeridos) o la operación se rechaza. Devuelve { version } (nuevo token de versión), o { spec, valid, errors } si dry_run=true.",
+      "description": "Crea o actualiza una roca (prioridad trimestral) por id, con merge parcial: enviá solo los campos que cambian. Caso típico: marcar una roca como completada -> { id, estado:'completada', columna:'Terminado' }. Si la roca es nueva, el spec resultante debe validar contra el schema (nombre, estado, etc. requeridos) o la operación se rechaza. Devuelve { version } (nuevo token de versión), o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -52,13 +52,13 @@
               "pilarIds": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }, "description": "FK -> pilares.id. Validado por el pipeline." }
             }
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "set_kr_value",
-      "description": "Fija el valor actual de un KR. Es la operación clave para migrar un KR de 'literal' (cargado a mano) a 'metric' (gobernado por la capa semántica). Si mode='metric', el pipeline verifica que la métrica exista en el catálogo de la capa semántica y rechaza si no. No toca la metadata del KR (desc, target, etc.) — para eso usar upsert_kr. Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Fija el valor actual de un KR. Es la operación clave para migrar un KR de 'literal' (cargado a mano) a 'metric' (gobernado por la capa semántica). Si mode='metric', el pipeline verifica que la métrica exista en el catálogo de la capa semántica y rechaza si no. No toca la metadata del KR (desc, target, etc.) — para eso usar upsert_kr. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -93,13 +93,13 @@
               }
             ]
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "upsert_kr",
-      "description": "Crea o actualiza la METADATA de un KR (desc, objId, sentido, unidad, target, boards) con merge parcial. NO fija el valor: el campo 'value' se maneja aparte con set_kr_value (por eso no se acepta acá). Si el KR es nuevo, el spec resultante debe validar (incluye tener un value; fijalo con set_kr_value en la misma tanda). Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Crea o actualiza la METADATA de un KR (desc, objId, sentido, unidad, target, boards) con merge parcial. NO fija el valor: el campo 'value' se maneja aparte con set_kr_value (por eso no se acepta acá). Si el KR es nuevo, el spec resultante debe validar (incluye tener un value; fijalo con set_kr_value en la misma tanda). Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -125,13 +125,13 @@
               }
             }
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "upsert_objetivo",
-      "description": "Crea o actualiza un objetivo (OKR) por id, con merge parcial. 'negocioId' referencia un negocio o una plataforma; el pipeline valida que exista. Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Crea o actualiza un objetivo (OKR) por id, con merge parcial. 'negocioId' referencia un negocio o una plataforma; el pipeline valida que exista. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -150,13 +150,13 @@
               "texto": { "type": "string" }
             }
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "upsert_kpi",
-      "description": "Crea o actualiza la METADATA de un KPI de pilar (nombre, pilarId, negocioId, sentido, unidad, target) con merge parcial. NO fija el valor: usar set_kpi_value para eso. A diferencia de un KR, un KPI cuelga directamente de un pilar + negocio/plataforma, no de un objetivo. Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Crea o actualiza la METADATA de un KPI de pilar (nombre, pilarId, negocioId, sentido, unidad, target) con merge parcial. NO fija el valor: usar set_kpi_value para eso. A diferencia de un KR, un KPI cuelga directamente de un pilar + negocio/plataforma, no de un objetivo. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -178,13 +178,13 @@
               "target": { "type": ["number", "null"] }
             }
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "set_kpi_value",
-      "description": "Fija el valor actual de un KPI de pilar. Es la operación para migrar un KPI de 'literal' a 'metric' (gobernado). Si mode='metric', el pipeline verifica que la métrica exista y rechaza si no. No toca la metadata del KPI — para eso usar upsert_kpi. Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Fija el valor actual de un KPI de pilar. Es la operación para migrar un KPI de 'literal' a 'metric' (gobernado). Si mode='metric', el pipeline verifica que la métrica exista y rechaza si no. No toca la metadata del KPI — para eso usar upsert_kpi. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -219,13 +219,13 @@
               }
             ]
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "upsert_iniciativa",
-      "description": "Crea o actualiza una iniciativa (proyecto que sostiene una o más rocas) por id, con merge parcial. Los campos de array ('hitos', 'scopesQ', 'rocaIds') se reemplazan enteros cuando se envían, no se mergean elemento a elemento — no traen id propio en el modelo original. 'pilarId' es opcional (null si la iniciativa no está asignada a un pilar). Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Crea o actualiza una iniciativa (proyecto que sostiene una o más rocas) por id, con merge parcial. Los campos de array ('hitos', 'scopesQ', 'rocaIds') se reemplazan enteros cuando se envían, no se mergean elemento a elemento — no traen id propio en el modelo original. 'pilarId' es opcional (null si la iniciativa no está asignada a un pilar). Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -287,13 +287,13 @@
               "rocaIds": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }, "description": "FK -> rocas.id. Reemplaza el array entero. Validado por el pipeline." }
             }
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "upsert_onepager_item",
-      "description": "Crea o actualiza una fila del one pager financiero (NMV, GMV, ASP, TSI, TRX, Gross/Net Profit, etc.) por id, con merge parcial. 'children' (el desglose por canal/marca) se reemplaza entero cuando se envía — es solo lectura conceptual desde el MCP, no tiene ids propios por nodo. El valor de la fila (no de los children) puede migrar a 'metric' con este mismo tool. Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Crea o actualiza una fila del one pager financiero (NMV, GMV, ASP, TSI, TRX, Gross/Net Profit, etc.) por id, con merge parcial. 'children' (el desglose por canal/marca) se reemplaza entero cuando se envía — es solo lectura conceptual desde el MCP, no tiene ids propios por nodo. El valor de la fila (no de los children) puede migrar a 'metric' con este mismo tool. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -338,13 +338,13 @@
               }
             }
           },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     },
     {
       "name": "remove_entity",
-      "description": "Elimina una entidad por id. OPERACIÓN DESTRUCTIVA: por defecto (cascade=false) RECHAZA el borrado si dejaría una referencia colgando (ej: borrar un KR referenciado por una roca, un objetivo con KRs, un pilar con KPIs, o una roca referenciada por una iniciativa). Con cascade=true, además limpia o borra en cascada las entidades que apuntaban a la borrada. Cada borrado es un commit, así que 'git revert' es la red de seguridad. Confirmar con el usuario antes de ejecutar. Devuelve { version }, o { spec, valid, errors } si dry_run=true.",
+      "description": "Elimina una entidad por id. OPERACIÓN DESTRUCTIVA: por defecto (cascade=false) RECHAZA el borrado si dejaría una referencia colgando (ej: borrar un KR referenciado por una roca, un objetivo con KRs, un pilar con KPIs, o una roca referenciada por una iniciativa). Con cascade=true, además limpia o borra en cascada las entidades que apuntaban a la borrada. Cada borrado es un commit, así que 'git revert' es la red de seguridad. Confirmar con el usuario antes de ejecutar. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -355,7 +355,7 @@
           "entity_type": { "enum": ["pilar", "negocio", "plataforma", "objetivo", "kr", "roca", "kpi", "iniciativa", "onepager_item"] },
           "id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$" },
           "cascade": { "type": "boolean", "default": false, "description": "true = limpiar/borrar en cascada las referencias que apuntaban a la entidad borrada. false = rechazar si hay refs colgando." },
-          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear." }
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }
     }
