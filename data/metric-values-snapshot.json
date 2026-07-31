@@ -1,0 +1,10 @@
+{
+  "fetched_at": "2026-07-30T00:00:00-03:00",
+  "source": "DEMO — valores inventados para probar el MetricResolver localmente. NO son cifras reales de BigQuery/Analytics MCP. Reemplazar por una implementación en vivo (LiveMetricResolver) cuando se resuelva la conexión con la capa semántica (ver plan de monorepo, sección de riesgos).",
+  "values": {
+    "NMV": 207661.19,
+    "NMV|PERIOD=2026-06": 18500.5,
+    "GROSS_PROFIT_SIN_REFUSA_WEB": 3095.49,
+    "TRX_TOTAL": 2068158
+  }
+}

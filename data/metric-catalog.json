@@ -1,0 +1,24 @@
+{
+  "fetched_at": "2026-07-30T00:00:00-03:00",
+  "source": "Bidcom Analytics MCP get_data_context, §4 Diccionario de métricas (SKILL.md)",
+  "comment": "Snapshot sembrado a mano. 'exact' son códigos completos tal como aparecen en el diccionario. 'prefixes' son familias paramétricas (por canal/moneda/ubicación) donde enumerar cada combinación a mano sería frágil — se matchean por prefijo. Refrescar periódicamente volviendo a consultar get_data_context.",
+  "exact": [
+    "NMV", "NMV_USD", "GMV", "TSI", "ASP", "ASP_USD", "TRX", "PCT_FF_NMV", "PCT_FF_TSI",
+    "TRX_TOTAL", "TRX_WEB_STORE_TOTAL", "TRX_STORE_GADNIC_TOTAL", "TRX_STORE_BIDCOM_TOTAL",
+    "TRX_MERCADOLIBRE_TOTAL", "TRX_MERCADOLIBRE_PREORDER_TOTAL", "TRX_MELI_BIDCOM_TOTAL",
+    "TRX_MELI_BIDCOM_STORE_TOTAL", "TRX_MELI_SELLER_TOTAL", "TRX_MARKETPLACES_TOTAL",
+    "TRX_B2B_TOTAL", "TRX_OFF_TOTAL", "TRX_OTHERS_TOTAL", "TRX_WEB_PREORDER_TOTAL",
+    "RETURN_RATE_QTY", "RETURN_RATE_ARS", "RETURN_QTY", "RETURN_ARS",
+    "PCT_NMI_AGING", "NWC_AGING", "NWC_USD_AGING",
+    "LOCAL_DDI_WEIGHTED", "NATIONAL_DDI_WEIGHTED", "ZFLP_DDI_WEIGHTED", "DELIVERY_ORIGIN_DDI_WEIGHTED",
+    "NAC_EZFLP_ZFLP_DDI_WEIGHTED", "NAC_EZFLP_ZFLP_DELIVERY_DDI_WEIGHTED", "COMPLETE_DDI_WEIGHTED",
+    "RECOVERY_RATE", "REVIEWS_AVG_RATE", "STRUCTURE_COST_NMV"
+  ],
+  "prefixes": [
+    "CURRENT_STOCK_COST_",
+    "NET_PROFIT_REFUSA_",
+    "NET_PROFIT_SIN_REFUSA_",
+    "GROSS_PROFIT_REFUSA_",
+    "GROSS_PROFIT_SIN_REFUSA_"
+  ]
+}

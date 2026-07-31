@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bidcom.com.ar/schemas/okr-board.v1.json",
+  "title": "OKR Board Spec",
+  "description": "Contrato del documento vivo de tipo 'okr-board' (tablero de Despliegue Estratégico: pilares, OKRs, KRs, Rocas, KPIs de pilar, iniciativas y one pager financiero). Derivado del modelo de datos del reporte HTML existente. El spec guarda la definición y las referencias, no el HTML renderizado. Los valores medibles (KR, KPI, hitos de iniciativa, filas de one pager) pueden ser literales (cargados a mano) o gobernados (resueltos en vivo contra la capa semántica). NOTA: JSON Schema no valida integridad referencial (que un objId exista en objetivos, etc.) ni que una métrica gobernada exista en la capa semántica; esas validaciones las hace el MCP.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc", "pilares", "negocios", "plataformas", "objetivos", "krs", "rocas", "kpis", "iniciativas", "onePager"],
+  "properties": {
+    "doc": {
+      "type": "object",
+      "description": "Envelope de gobernanza del documento.",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "version", "updated_at", "access", "acl"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug", "description": "Identificador único del documento (ej: 'despliegue-estrategico-2026')." },
+        "type": { "const": "okr-board", "description": "Tipo de documento. Fija el schema aplicable." },
+        "title": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 1, "description": "Número de versión. Lo maneja el store (git); explícito para trazabilidad." },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "access": { "enum": ["domain"], "description": "Alcance base. 'domain' = solo cuentas @bidcom. La autorización fina vive en 'acl'." },
+        "acl": {
+          "type": "array",
+          "description": "Lista de control de acceso por documento.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["principal", "role"],
+            "properties": {
+              "principal": { "type": "string", "minLength": 1, "description": "Usuario o grupo (ej: '@dionisio', 'grupo:directorio')." },
+              "role": { "enum": ["owner", "editor", "viewer"] }
+            }
+          }
+        }
+      }
+    },
+
+    "pilares": {
+      "type": "array",
+      "description": "Pilares estratégicos de la compañía.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "nombre", "desc", "okrIds"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "nombre": { "type": "string", "minLength": 1 },
+          "desc": { "type": "string" },
+          "okrIds": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "description": "FK → objetivos.id." }
+        }
+      }
+    },
+
+    "negocios": {
+      "type": "array",
+      "description": "Unidades de negocio (ej: Ecommerce Argentina, Bidcom Agro).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "nombre"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "nombre": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+
+    "plataformas": {
+      "type": "array",
+      "description": "Plataformas / áreas transversales (Tecnología, Finanzas, PX, Marketing).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "nombre", "area"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "nombre": { "type": "string", "minLength": 1 },
+          "area": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+
+    "objetivos": {
+      "type": "array",
+      "description": "Objetivos (OKRs), colgados de un negocio o de una plataforma.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "negocioId", "nombre", "texto"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "negocioId": { "$ref": "#/$defs/slug", "description": "FK → negocios.id o plataformas.id." },
+          "nombre": { "type": "string", "minLength": 1 },
+          "texto": { "type": "string" }
+        }
+      }
+    },
+
+    "krs": {
+      "type": "array",
+      "description": "Key Results, colgados de un objetivo.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "objId", "desc", "sentido", "unidad", "target", "value"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "objId": { "$ref": "#/$defs/slug", "description": "FK → objetivos.id." },
+          "desc": { "type": "string", "minLength": 1 },
+          "sentido": { "enum": ["mayor", "menor"], "description": "'mayor' = más alto es mejor; 'menor' = más bajo es mejor." },
+          "unidad": { "type": "string", "description": "Unidad de medida (ej: '%', 'M USD', 'días', 'NPS', '★'). Puede ser cadena vacía." },
+          "target": { "type": ["number", "null"], "description": "Meta. null si el KR aún no tiene meta definida." },
+          "value": { "$ref": "#/$defs/krValue" },
+          "boards": {
+            "type": "array",
+            "description": "Tableros a los que pertenece el KR (reemplaza los flags com/dg/okr2026 del modelo original).",
+            "uniqueItems": true,
+            "items": { "enum": ["comite", "direccion_general", "okr2026"] }
+          }
+        }
+      }
+    },
+
+    "rocas": {
+      "type": "array",
+      "description": "Prioridades trimestrales (Rocas, estilo EOS).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "nombre", "detalle", "area", "equipo", "trimestre", "estado", "columna", "krIds", "pilarIds"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "nombre": { "type": "string", "minLength": 1 },
+          "detalle": { "type": "string", "description": "Puede ser cadena vacía." },
+          "area": { "type": "string" },
+          "equipo": { "type": ["string", "null"] },
+          "trimestre": { "type": ["string", "null"], "description": "Ej: 'Q2', 'Q3'. null si no está asignado." },
+          "estado": { "enum": ["no_iniciada", "en_progreso", "frenada", "completada"] },
+          "columna": { "type": "string", "description": "Columna del kanban. Abierto por decisión de diseño (ej: 'Prioridades Q3', 'Terminado', 'Pendientes')." },
+          "krIds": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "description": "FK → krs.id." },
+          "pilarIds": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "description": "FK → pilares.id." }
+        }
+      }
+    },
+
+    "kpis": {
+      "type": "array",
+      "description": "KPIs de salud de negocio colgados directamente de un pilar (a diferencia de los KR, no cuelgan de un objetivo/OKR puntual).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "pilarId", "negocioId", "nombre", "sentido", "unidad", "target", "value"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "pilarId": { "$ref": "#/$defs/slug", "description": "FK → pilares.id." },
+          "negocioId": { "$ref": "#/$defs/slug", "description": "FK → negocios.id o plataformas.id." },
+          "nombre": { "type": "string", "minLength": 1 },
+          "sentido": { "enum": ["mayor", "menor"] },
+          "unidad": { "type": "string", "description": "Puede ser cadena vacía." },
+          "target": { "type": ["number", "null"] },
+          "value": { "$ref": "#/$defs/krValue" }
+        }
+      }
+    },
+
+    "iniciativas": {
+      "type": "array",
+      "description": "Iniciativas de ejecución: proyectos que sostienen una o más rocas.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "prioridad", "nombre", "sponsor", "owner", "equipo", "pilarId", "scopeIniciativa", "hitos", "scopesQ", "riesgos", "riesgoSemaforo", "rocaIds"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "prioridad": { "type": "integer", "minimum": 1 },
+          "nombre": { "type": "string", "minLength": 1 },
+          "sponsor": { "type": "string", "description": "Puede ser cadena vacía." },
+          "owner": { "type": "string", "description": "Puede ser cadena vacía." },
+          "equipo": { "type": "string", "description": "Puede ser cadena vacía. Hoy suele ser una lista de nombres en un solo string." },
+          "pilarId": {
+            "description": "FK → pilares.id. null si la iniciativa todavía no está asignada a un pilar.",
+            "anyOf": [{ "$ref": "#/$defs/slug" }, { "type": "null" }]
+          },
+          "scopeIniciativa": { "type": "string", "description": "Puede ser cadena vacía." },
+          "hitos": {
+            "type": "array",
+            "description": "Checklist de hitos/entregables de la iniciativa. Sin id propio: se reemplaza el array entero al editar (no hay upsert por hito individual).",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["texto", "sentido", "unidad", "target", "value"],
+              "properties": {
+                "texto": { "type": "string", "minLength": 1 },
+                "sentido": { "enum": ["mayor", "menor"] },
+                "unidad": { "type": "string", "description": "Puede ser cadena vacía." },
+                "target": { "type": ["number", "null"] },
+                "value": { "$ref": "#/$defs/krValue" }
+              }
+            }
+          },
+          "scopesQ": {
+            "type": "array",
+            "description": "Notas de alcance por trimestre.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["quarter", "texto"],
+              "properties": {
+                "quarter": { "type": "string", "minLength": 1 },
+                "texto": { "type": "string" }
+              }
+            }
+          },
+          "riesgos": { "type": "string", "description": "Notas de riesgo en texto libre. Puede ser cadena vacía." },
+          "riesgoSemaforo": { "$ref": "#/$defs/semaforo" },
+          "rocaIds": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "description": "FK → rocas.id." }
+        }
+      }
+    },
+
+    "onePager": {
+      "type": "array",
+      "description": "Desglose financiero (NMV/GMV/ASP/TSI/TRX/Gross Profit/Net Profit, etc.) por canal y marca. El nodo raíz de cada fila es gobernable (value literal/metric); los 'children' son el desglose y se reemplazan en conjunto al editar la fila (sin upsert por nodo hijo: no traen id propio en el dato original).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "negocioId", "grupo", "sentido", "nombre", "unidad", "target", "value"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "negocioId": { "$ref": "#/$defs/slug", "description": "FK → negocios.id o plataformas.id." },
+          "grupo": { "type": "string", "minLength": 1, "description": "Agrupación temática (ej: 'Rentabilidad', 'Experiencia de Cliente')." },
+          "par": { "type": "string", "description": "Par de métrica opcional (ej: 'NMV', 'GMV') para vincular filas relacionadas." },
+          "sentido": { "enum": ["mayor", "menor"] },
+          "nombre": { "type": "string", "minLength": 1 },
+          "unidad": { "type": "string", "description": "Puede ser cadena vacía." },
+          "target": { "type": ["number", "null"] },
+          "value": { "$ref": "#/$defs/krValue" },
+          "children": {
+            "type": "array",
+            "description": "Desglose recursivo por canal/marca. Solo lectura desde el MCP: se reemplaza entero junto con el resto de la fila.",
+            "items": { "$ref": "#/$defs/onePagerNode" }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "description": "Identificador: letras, dígitos, guion y guion bajo."
+    },
+    "semaforo": {
+      "description": "Semáforo de riesgo/estado. null si todavía no está evaluado.",
+      "enum": ["verde", "amarillo", "rojo", null]
+    },
+    "onePagerNode": {
+      "type": "object",
+      "description": "Nodo de desglose recursivo (por canal, marca, etc.) dentro de una fila de onePager.",
+      "additionalProperties": false,
+      "required": ["nombre", "actual"],
+      "properties": {
+        "nombre": { "type": "string", "minLength": 1 },
+        "actual": { "type": ["number", "null"] },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/onePagerNode" }
+        }
+      }
+    },
+    "krValue": {
+      "description": "Valor actual de una medida (KR, KPI, hito de iniciativa o fila de onePager). Dos modos: 'literal' (cargado a mano, como hoy) o 'metric' (resuelto en vivo contra la capa semántica).",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "actual"],
+          "properties": {
+            "mode": { "const": "literal" },
+            "actual": { "type": ["number", "null"], "description": "Valor actual cargado a mano. null si aún no hay dato." },
+            "prev": { "type": ["number", "null"], "description": "Valor del período anterior (para el delta)." },
+            "as_of": { "type": "string", "format": "date", "description": "Fecha a la que corresponde el valor cargado a mano." }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "metric"],
+          "properties": {
+            "mode": { "const": "metric" },
+            "metric": { "type": "string", "minLength": 1, "description": "Referencia a una métrica gobernada de la capa semántica (ej: 'nmv', 'utilidad_gni')." },
+            "filter": {
+              "type": "object",
+              "description": "Parámetros pasados a la definición gobernada (ej: {\"period\":\"2026-YTD\"}). No hardcodear fechas de eventos; usar el catálogo gobernado.",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
