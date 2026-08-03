@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 26,
-    "updated_at": "2026-08-03T20:17:44.504Z",
+    "version": 27,
+    "updated_at": "2026-08-03T20:17:44.709Z",
     "access": "domain",
     "acl": [
       {
@@ -3773,16 +3773,6 @@
           "value": {
             "actual": null,
             "mode": "literal"
-          }
-        },
-        {
-          "texto": "Smoke test hito",
-          "sentido": "mayor",
-          "unidad": "",
-          "target": 1,
-          "value": {
-            "mode": "literal",
-            "actual": 1
           }
         }
       ],
