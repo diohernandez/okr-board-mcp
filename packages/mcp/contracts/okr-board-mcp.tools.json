@@ -155,6 +155,78 @@
       }
     },
     {
+      "name": "upsert_pilar",
+      "description": "Crea o actualiza un pilar estratégico por id, con merge parcial. 'okrIds' referencia objetivos.id; el pipeline valida que cada uno exista. Si el pilar es nuevo, el spec resultante debe validar contra el schema (nombre, desc y okrIds requeridos -- usá okrIds:[] si todavía no tiene objetivos asignados) o la operación se rechaza. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "pilar"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "pilar": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$" },
+              "nombre": { "type": "string", "minLength": 1 },
+              "desc": { "type": "string" },
+              "okrIds": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }, "description": "FK -> objetivos.id. Validado por el pipeline." }
+            }
+          },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
+      "name": "upsert_negocio",
+      "description": "Crea o actualiza una unidad de negocio por id, con merge parcial (solo 'nombre' además del id). Sin FKs propias -- es referenciada por 'negocioId' desde objetivos, kpis y onePager. Si el negocio es nuevo, el spec resultante debe validar (nombre requerido) o la operación se rechaza. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "negocio"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "negocio": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$" },
+              "nombre": { "type": "string", "minLength": 1 }
+            }
+          },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
+      "name": "upsert_plataforma",
+      "description": "Crea o actualiza una plataforma/área transversal por id, con merge parcial. Sin FKs propias -- es referenciada por 'negocioId' desde objetivos, kpis y onePager (el nombre del campo es histórico: acepta tanto negocio como plataforma). Si la plataforma es nueva, el spec resultante debe validar (nombre y area requeridos) o la operación se rechaza. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "plataforma"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "plataforma": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$" },
+              "nombre": { "type": "string", "minLength": 1 },
+              "area": { "type": "string", "minLength": 1 }
+            }
+          },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
       "name": "upsert_kpi",
       "description": "Crea o actualiza la METADATA de un KPI de pilar (nombre, pilarId, negocioId, sentido, unidad, target) con merge parcial. NO fija el valor: usar set_kpi_value para eso. A diferencia de un KR, un KPI cuelga directamente de un pilar + negocio/plataforma, no de un objetivo. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {

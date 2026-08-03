@@ -62,7 +62,7 @@ piezas sin motivo; construí sobre ellas.**
 El repo es un **monorepo con npm workspaces** (`packages/*`, `apps/*`), usando
 TypeScript project references (`tsc -b`, no un script de build a mano) para que el
 orden core→mcp/api se calcule solo. `npm install && npm run build && npm test` desde la
-raíz deja todo compilado y los 60 tests verdes.
+raíz deja todo compilado y los 76 tests verdes.
 
 - `packages/core/` — el núcleo, **una librería sin conocimiento de MCP ni HTTP**:
   - `src/pipeline.ts` — tipos del dominio, errores tipados, puertos (`SpecStore`,
@@ -86,13 +86,15 @@ raíz deja todo compilado y los 60 tests verdes.
     de verdad en vez de re-declarar Zod. Principal desde `OKR_MCP_PRINCIPAL` (env,
     default `@dionisio`). Raíz del repo resuelta con `git rev-parse --show-toplevel`
     (no contar `".."` a mano — ver §2.1).
-  - `contracts/okr-board-mcp.tools.json` — **11 tools**: las 7 originales (`get_board`,
+  - `contracts/okr-board-mcp.tools.json` — **14 tools**: las 7 originales (`get_board`,
     `validate_board`, `upsert_roca`, `set_kr_value`, `upsert_kr`, `upsert_objetivo`,
     `remove_entity`) más `upsert_kpi`, `set_kpi_value`, `upsert_iniciativa`,
-    `upsert_onepager_item`. Todas las de escritura aceptan `dry_run` opcional (M7).
-    **Hueco conocido, no de esta sesión:** no hay `upsert_pilar`/`upsert_negocio`/
-    `upsert_plataforma` — esas entidades solo se pueden *borrar* (`remove_entity`), no
-    crear ni editar vía MCP.
+    `upsert_onepager_item`, y (sesión 2026-08-03) `upsert_pilar`, `upsert_negocio`,
+    `upsert_plataforma` — cierran el hueco de CRUD que el MVP original dejó abierto
+    (solo `remove_entity` cubría estas tres entidades). Todas las de escritura
+    aceptan `dry_run` opcional (M7). Ya no hay hueco de CRUD conocido: las nueve
+    entidades del schema (pilar, negocio, plataforma, objetivo, kr, roca, kpi,
+    iniciativa, onepager_item) se pueden crear, editar y borrar vía MCP.
 - `packages/api/` — API HTTP de solo lectura (F1), envuelve el **mismo** `core` (no
   reimplementa validación):
   - `src/server.ts` — `node:http` puro (sin framework). `GET /api/boards/:id` →
@@ -440,10 +442,6 @@ final). Algunas conviene hacerlas en el MVP; otras son para después. Evaluá y 
   convención de escala/unidad si el campo es "%" y lo comparte un KR con un KPI.
 - **Confirmar el significado de `boards`** (`comite` / `direccion_general` / `okr2026`,
   hoy heredados de los flags `com`/`dg`/`okr2026` del HTML) con el equipo.
-- **Cerrar el hueco de CRUD de pilares/negocios/plataformas vía MCP:** hoy solo se
-  pueden borrar (`remove_entity`), nunca crear ni editar — reconfirmado durante la
-  auditoría de reconstrucción del 2026-07-31 (ver §2). Requeriría `upsert_pilar`/
-  `upsert_negocio`/`upsert_plataforma` + su change-op correspondiente en el pipeline.
 - **Tools granulares para sub-ítems:** `iniciativa.hitos[]`, `iniciativa.scopesQ[]` y
   `onePager[].children[]` hoy solo se editan como reemplazo del array completo vía el
   upsert del padre — no hay tool para editar un hito/scope/child individual sin mandar
@@ -477,9 +475,10 @@ un solo primitivo afilado (el spec) que crece por capas.
       (`packages/core/src/git-store.ts`, 10 tests.)
 - [x] `MetricCatalog` conectado a la capa semántica, con cache. (`packages/core/src/metric-catalog.ts`;
       snapshot sembrado a mano por ahora, no llamada en vivo — ver §2.1.)
-- [x] Servidor MCP stdio exponiendo las tools (11: las 7 originales + 4 nuevas de
-      kpis/iniciativas/onePager), cableadas al pipeline. Probado con un cliente JSON-RPC
-      real por stdio (`initialize` → `tools/list` → `tools/call`), no solo compilado.
+- [x] Servidor MCP stdio exponiendo las tools (14: las 7 originales + 4 de
+      kpis/iniciativas/onePager + 3 de pilares/negocios/plataformas, sesión 2026-08-03 —
+      ver §2), cableadas al pipeline. Probado con un cliente JSON-RPC real por stdio
+      (`initialize` → `tools/list` → `tools/call`), no solo compilado.
 - [x] `data/despliegue-estrategico-2026.json` bootstrapeado desde el HTML actual y
       validado contra el schema. (El nombre real es `data/<doc_id>.json`, no
       literalmente `spec.json` — `GitSpecStore` nombra por `docId`.)

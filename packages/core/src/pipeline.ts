@@ -94,6 +94,9 @@ export type Change =
   | { op: "set_kr_value"; krId: string; value: KrValue }
   | { op: "upsert_kr"; kr: Partial<Omit<Kr, "value">> & { id: string } }
   | { op: "upsert_objetivo"; objetivo: Partial<Objetivo> & { id: string } }
+  | { op: "upsert_pilar"; pilar: Partial<Pilar> & { id: string } }
+  | { op: "upsert_negocio"; negocio: Partial<Negocio> & { id: string } }
+  | { op: "upsert_plataforma"; plataforma: Partial<Plataforma> & { id: string } }
   | { op: "upsert_kpi"; kpi: Partial<Omit<Kpi, "value">> & { id: string } }
   | { op: "set_kpi_value"; kpiId: string; value: KrValue }
   | { op: "upsert_iniciativa"; iniciativa: Partial<Iniciativa> & { id: string } }
@@ -217,6 +220,15 @@ export function applyChange(spec: OkrBoardSpec, change: Change): OkrBoardSpec {
       return next;
     case "upsert_objetivo":
       next.objetivos = upsertById(next.objetivos, change.objetivo);
+      return next;
+    case "upsert_pilar":
+      next.pilares = upsertById(next.pilares, change.pilar);
+      return next;
+    case "upsert_negocio":
+      next.negocios = upsertById(next.negocios, change.negocio);
+      return next;
+    case "upsert_plataforma":
+      next.plataformas = upsertById(next.plataformas, change.plataforma);
       return next;
     case "upsert_kr":
       // merge de metadata; NO toca value (eso va por set_kr_value)
@@ -355,6 +367,9 @@ function describe(change: Change, principal: string): string {
     case "set_kr_value": return `valor de ${change.krId} (${change.value.mode}) por ${principal}`;
     case "upsert_kr": return `kr ${change.kr.id} (metadata) por ${principal}`;
     case "upsert_objetivo": return `objetivo ${change.objetivo.id} por ${principal}`;
+    case "upsert_pilar": return `pilar ${change.pilar.id} por ${principal}`;
+    case "upsert_negocio": return `negocio ${change.negocio.id} por ${principal}`;
+    case "upsert_plataforma": return `plataforma ${change.plataforma.id} por ${principal}`;
     case "upsert_kpi": return `kpi ${change.kpi.id} (metadata) por ${principal}`;
     case "set_kpi_value": return `valor de kpi ${change.kpiId} (${change.value.mode}) por ${principal}`;
     case "upsert_iniciativa": return `iniciativa ${change.iniciativa.id} actualizada por ${principal}`;

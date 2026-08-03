@@ -3,7 +3,7 @@
 //
 // Transporte stdio para consumo local desde Claude Desktop/Code (§3 M4: sin HTTP
 // ni auth de red todavía). Este archivo es puro wiring: NO conoce reglas de
-// negocio — cablea las 11 tools de contracts/okr-board-mcp.tools.json al pipeline
+// negocio — cablea las 14 tools de contracts/okr-board-mcp.tools.json al pipeline
 // compartido (runWrite / runDryRun / runValidate). Cualquier regla nueva va en
 // pipeline.ts, no acá.
 //
@@ -148,6 +148,12 @@ async function dispatch(name: string, args: Record<string, any>): Promise<CallTo
       return handleWrite(args.doc_id, args.base_version, { op: "upsert_kr", kr: args.kr }, !!args.dry_run);
     case "upsert_objetivo":
       return handleWrite(args.doc_id, args.base_version, { op: "upsert_objetivo", objetivo: args.objetivo }, !!args.dry_run);
+    case "upsert_pilar":
+      return handleWrite(args.doc_id, args.base_version, { op: "upsert_pilar", pilar: args.pilar }, !!args.dry_run);
+    case "upsert_negocio":
+      return handleWrite(args.doc_id, args.base_version, { op: "upsert_negocio", negocio: args.negocio }, !!args.dry_run);
+    case "upsert_plataforma":
+      return handleWrite(args.doc_id, args.base_version, { op: "upsert_plataforma", plataforma: args.plataforma }, !!args.dry_run);
     case "upsert_kpi":
       return handleWrite(args.doc_id, args.base_version, { op: "upsert_kpi", kpi: args.kpi }, !!args.dry_run);
     case "set_kpi_value":

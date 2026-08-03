@@ -266,6 +266,46 @@ async function main() {
     ok(stillHead.version === "1", "dry-run: cambio inválido tampoco commitea");
   }
 
+  // 28. upsert_pilar happy: merge parcial sobre un pilar existente
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_pilar", pilar: { id: "p1", desc: "Rentabilidad del grupo" } });
+    const { spec } = await store.readHead("board-2026");
+    ok(spec.pilares[0].desc === "Rentabilidad del grupo" && spec.pilares[0].nombre === "Rentabilidad",
+      "pilar: upsert_pilar merge parcial actualiza desc y preserva el resto");
+  }
+
+  // 29. upsert_negocio happy: crea uno nuevo (cierra el hueco de CRUD, §6 CLAUDE.md)
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_negocio", negocio: { id: "n2", nombre: "Ecommerce Brasil" } });
+    const { spec } = await store.readHead("board-2026");
+    ok(spec.negocios.some(n => n.id === "n2" && n.nombre === "Ecommerce Brasil"),
+      "negocio: upsert_negocio crea un negocio nuevo");
+  }
+
+  // 30. upsert_plataforma happy: crea una nueva (baseSpec arranca con plataformas: [])
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_plataforma", plataforma: { id: "pl1", nombre: "Tecnología", area: "Tech" } });
+    const { spec } = await store.readHead("board-2026");
+    ok(spec.plataformas.length === 1 && spec.plataformas[0].id === "pl1",
+      "plataforma: upsert_plataforma crea una plataforma nueva");
+  }
+
+  // 31. plataforma nueva incompleta: falta 'area' -> ValidationFailed (completitud exigida en creación, no en merge)
+  await expectReject(() => runWrite(deps(new InMemoryStore(baseSpec())), "@dionisio", "board-2026", "1",
+    { op: "upsert_plataforma", plataforma: { id: "pl2", nombre: "Finanzas" } as any }), ValidationFailed,
+    "plataforma nueva incompleta: falta area -> ValidationFailed");
+
+  // 32. upsert_pilar FK: okrIds apunta a un objetivo inexistente
+  await expectReject(() => runWrite(deps(new InMemoryStore(baseSpec())), "@dionisio", "board-2026", "1",
+    { op: "upsert_pilar", pilar: { id: "p1", okrIds: ["oZ"] } }), ValidationFailed,
+    "pilar FK: okrId inexistente -> ValidationFailed");
+
   console.log(`\n${pass} OK · ${fail} FALLO`);
   if (fail) process.exit(1);
 }
