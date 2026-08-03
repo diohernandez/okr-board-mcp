@@ -99,7 +99,7 @@
     },
     {
       "name": "upsert_kr",
-      "description": "Crea o actualiza la METADATA de un KR (desc, objId, sentido, unidad, target, boards) con merge parcial. NO fija el valor: el campo 'value' se maneja aparte con set_kr_value (por eso no se acepta acá). Si el KR es nuevo, el spec resultante debe validar (incluye tener un value; fijalo con set_kr_value en la misma tanda). Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "description": "Crea o actualiza la METADATA de un KR (desc, objId, sentido, unidad, target, boards) con merge parcial. NO fija el valor directamente: el campo 'value' se maneja aparte con set_kr_value (por eso no se acepta acá). Si el KR es nuevo, se crea con value:{mode:'literal',actual:null} por default (el schema exige que todo KR tenga un value) -- llamá a set_kr_value después si querés un valor real o gobernado. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -228,7 +228,7 @@
     },
     {
       "name": "upsert_kpi",
-      "description": "Crea o actualiza la METADATA de un KPI de pilar (nombre, pilarId, negocioId, sentido, unidad, target) con merge parcial. NO fija el valor: usar set_kpi_value para eso. A diferencia de un KR, un KPI cuelga directamente de un pilar + negocio/plataforma, no de un objetivo. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "description": "Crea o actualiza la METADATA de un KPI de pilar (nombre, pilarId, negocioId, sentido, unidad, target) con merge parcial. NO fija el valor directamente: usar set_kpi_value para eso. Si el KPI es nuevo, se crea con value:{mode:'literal',actual:null} por default (mismo criterio que upsert_kr). A diferencia de un KR, un KPI cuelga directamente de un pilar + negocio/plataforma, no de un objetivo. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,

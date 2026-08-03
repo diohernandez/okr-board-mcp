@@ -2518,12 +2518,10 @@ function kpiTableHtml(kpis){
       <tbody>${kpis.map(kpiRowHtml).join('')}</tbody>
     </table>`;
 }
-function updateKpi(id, field, value){
-  const k = data.kpis.find(x=>x.id===id);
-  if(!k) return;
-  if(field==='actual' || field==='target') k[field] = value===''? null : parseFloat(value);
-  else k[field] = value;
-  saveData(); renderPilares();
+async function updateKpi(id, field, value){
+  // Solo se llama con field='negocioId'|'unidad'|'sentido' (ver los onchange= en
+  // renderDatosView) -- 'actual'/'target' pasan por updateDatosField, no por acá.
+  await callTool('upsert_kpi', { kpi: { id, [field]: value } });
 }
 
 /* ============================================================
@@ -2543,17 +2541,22 @@ function toggleDatosView(){
   if(datosViewOpen) renderDatosView();
   closeTopMenu();
 }
-function updateDatosField(kind, id, field, value){
+async function updateDatosField(kind, id, field, value){
+  // field es siempre 'actual' o 'target' (ver renderDatosView). 'actual' escribe el
+  // valor gobernable (set_*_value / value dentro del item); 'target' es metadata.
+  // Si el item ya era mode:"metric", escribir 'actual' acá lo pisa a literal a
+  // propósito -- es una sobreescritura explícita (el usuario tipeó un número), no
+  // un bug silencioso.
   const val = value===''? null : parseFloat(value);
-  const collection = kind==='kr' ? data.krs : kind==='kpi' ? data.kpis : data.onePager;
-  const item = collection.find(x=>x.id===id);
-  if(item){
-    if(field==='actual' && item.actual !== val){
-      item.prevActual = (item.actual===undefined) ? null : item.actual;
-    }
-    item[field] = val;
+  if(field==='actual'){
+    if(kind==='kr') await callTool('set_kr_value', { kr_id: id, value: { mode: 'literal', actual: val } });
+    else if(kind==='kpi') await callTool('set_kpi_value', { kpi_id: id, value: { mode: 'literal', actual: val } });
+    else await callTool('upsert_onepager_item', { item: { id, value: { mode: 'literal', actual: val } } });
+  } else {
+    if(kind==='kr') await callTool('upsert_kr', { kr: { id, target: val } });
+    else if(kind==='kpi') await callTool('upsert_kpi', { kpi: { id, target: val } });
+    else await callTool('upsert_onepager_item', { item: { id, target: val } });
   }
-  saveData(); renderOkrTabs(); renderPilares(); renderOnePager();
 }
 function renderDatosView(){
   document.getElementById('datosOkrsTable').innerHTML = data.objetivos.map(o=>{
@@ -2639,12 +2642,10 @@ function renderDatosView(){
     </div>`;
   }).join('') || '<div class="empty-note">Todavía no hay métricas de One Pager cargadas.</div>';
 }
-function updateOnePager(id, field, value){
-  const op = data.onePager.find(x=>x.id===id);
-  if(!op) return;
-  if(field==='actual' || field==='target') op[field] = value===''? null : parseFloat(value);
-  else op[field] = value;
-  saveData(); renderOnePager();
+async function updateOnePager(id, field, value){
+  // Solo se llama con field='unidad'|'sentido' (ver renderDatosView) -- 'actual'/
+  // 'target' pasan por updateDatosField, no por acá.
+  await callTool('upsert_onepager_item', { item: { id, [field]: value } });
 }
 
 /* ============================================================
@@ -3026,14 +3027,13 @@ function renderPilares(){
   }).join('');
 }
 
-function addPilar(){
+async function addPilar(){
   const nombre = document.getElementById('newPilarName').value.trim();
   const desc = document.getElementById('newPilarDesc').value.trim();
   if(!nombre) return;
-  data.pilares.push({id:uid('p'), nombre, desc, okrIds:[]});
+  await callTool('upsert_pilar', { pilar: { id: uid('p'), nombre, desc, okrIds: [] } });
   document.getElementById('newPilarName').value='';
   document.getElementById('newPilarDesc').value='';
-  saveData(); renderPilares(); renderAgregarSelects();
 }
 
 /* ============================================================
@@ -3494,27 +3494,30 @@ function krHtml(kr){
   </div>`;
 }
 function toggleKr(id){ openKrId = (openKrId===id) ? null : id; renderOkrDetail(); }
-function updateKr(id, field, value){
+async function updateKr(id, field, value){
+  // Solo se llama con field='unidad'|'sentido' (ver renderDatosView) -- 'actual'/
+  // 'target' pasan por updateDatosField, no por acá.
+  await callTool('upsert_kr', { kr: { id, [field]: value } });
+}
+async function toggleKrDg(id, checked){
+  // 'dg' es el nombre legacy de "pertenece al board direccion_general" (ver
+  // boardsToLegacyFlags/adaptKr) -- hay que reconstruir el array 'boards' completo
+  // a partir de las OTRAS dos flags legacy (com, okr2026) más este cambio, porque
+  // upsert_kr reemplaza 'boards' entero, no lo mergea elemento a elemento.
   const kr = data.krs.find(k=>k.id===id);
   if(!kr) return;
-  if(field==='actual' || field==='target') kr[field] = value===''? null : parseFloat(value);
-  else kr[field] = value;
-  saveData();
-  renderOkrTabs();
+  const boards = [];
+  if(kr.com) boards.push('comite');
+  if(checked) boards.push('direccion_general');
+  if(kr.okr2026) boards.push('okr2026');
+  await callTool('upsert_kr', { kr: { id, boards } });
 }
-function toggleKrDg(id, checked){
-  const kr = data.krs.find(k=>k.id===id);
-  if(!kr) return;
-  kr.dg = checked;
-  saveData();
-  renderOkrTabs();
-}
-function toggleKpiDg(id, checked){
-  const k = data.kpis.find(x=>x.id===id);
-  if(!k) return;
-  k.dg = checked;
-  saveData();
-  renderPilares();
+async function toggleKpiDg(_id, _checked){
+  // Kpi no tiene campo 'boards' en el schema gobernado (adaptKpi nunca lo mapeó --
+  // a diferencia de Kr, este checkbox no sobrevivió al bootstrap M5 con nada real
+  // detrás). No hay nada que escribir acá sin antes decidir si se agrega 'boards' a
+  // Kpi -- no se resuelve solo, avisar en vez de fingir que guardó.
+  alert('Este campo no tiene equivalente en el modelo gobernado todavía (no se puede guardar).');
 }
 
 function estadoLabel(e){
@@ -3578,18 +3581,18 @@ function renderAsignar(){
     </div>`;
   }).join('');
 }
-function toggleRocaKr(rocaId, krId){
+async function toggleRocaKr(rocaId, krId){
   const r = data.rocas.find(x=>x.id===rocaId);
   if(!r) return;
-  r.krIds = r.krIds || [];
-  const i = r.krIds.indexOf(krId);
-  if(i>=0) r.krIds.splice(i,1);
-  else { if(r.krIds.length>=CAP_KRS_POR_ROCA) return; r.krIds.push(krId); }
-  saveData(); renderAsignar(); renderOkrDetail();
+  const krIds = r.krIds || [];
+  const i = krIds.indexOf(krId);
+  let next;
+  if(i>=0) next = krIds.filter(k=>k!==krId);
+  else { if(krIds.length>=CAP_KRS_POR_ROCA) return; next = [...krIds, krId]; }
+  await callTool('upsert_roca', { roca: { id: rocaId, krIds: next } });
 }
-function updateRocaEstado(id, estado){
-  const r = data.rocas.find(x=>x.id===id);
-  if(r){ r.estado = estado; saveData(); renderOkrDetail(); renderPilares(); renderRocasView(); }
+async function updateRocaEstado(id, estado){
+  await callTool('upsert_roca', { roca: { id, estado } });
 }
 
 /* ============================================================
@@ -3769,55 +3772,66 @@ function renderAgregarSelects(){
   const kpiNegocioSel = document.getElementById('newKpiNegocio');
   if(kpiNegocioSel) kpiNegocioSel.innerHTML = data.negocios.map(n=>`<option value="${n.id}" ${n.id===currentNegocio?'selected':''}>${n.nombre}</option>`).join('');
 }
-function addObjetivo(){
+async function addObjetivo(){
   const nombre = document.getElementById('newObjNombre').value.trim();
   const texto = document.getElementById('newObjTexto').value.trim();
   const pilarId = document.getElementById('newObjPilar').value;
   const negocioId = document.getElementById('newObjNegocio').value;
   if(!nombre || !negocioId) return;
   const id = uid('o');
-  data.objetivos.push({id, negocioId, nombre, texto});
+  await callTool('upsert_objetivo', { objetivo: { id, negocioId, nombre, texto } });
   if(pilarId){
+    // upsert_pilar reemplaza okrIds entero (no lo mergea) -- hay que leer el actual
+    // (data.pilares ya es el array real, pasa sin adaptar por adaptSpecToLegacy) y
+    // mandar la lista completa con el nuevo id agregado.
     const p = data.pilares.find(x=>x.id===pilarId);
-    if(p) p.okrIds.push(id);
+    await callTool('upsert_pilar', { pilar: { id: pilarId, okrIds: [...(p ? p.okrIds : []), id] } });
   }
   document.getElementById('newObjNombre').value='';
   document.getElementById('newObjTexto').value='';
-  saveData(); renderOkrTabs(); renderPilares(); renderAgregarSelects();
 }
-function addKR(){
+async function addKR(){
   const objId = document.getElementById('newKrObjetivo').value;
   const desc = document.getElementById('newKrDesc').value.trim();
   const sentido = document.getElementById('newKrSentido').value;
   const unidad = document.getElementById('newKrUnidad').value.trim();
   if(!objId || !desc) return;
-  data.krs.push({id:uid('k'), objId, desc, sentido, unidad, actual:null, target:null});
+  const id = uid('k');
+  // upsert_kr excluye 'value' a propósito (ver contrato de la tool) -- un KR nuevo
+  // necesita un segundo call, set_kr_value, para tener un value válido (el schema
+  // lo exige) antes de que el spec resultante pase la validación.
+  await callTool('upsert_kr', { kr: { id, objId, desc, sentido, unidad, target: null } });
+  await callTool('set_kr_value', { kr_id: id, value: { mode: 'literal', actual: null } });
   document.getElementById('newKrDesc').value='';
-  saveData(); renderOkrTabs();
 }
-function addRoca(){
+async function addRoca(){
   const nombre = document.getElementById('newRocaName').value.trim();
   const area = document.getElementById('newRocaArea').value.trim();
   const estado = document.getElementById('newRocaEstado').value;
   const detalle = document.getElementById('newRocaDetalle').value.trim();
   if(!nombre) return;
-  data.rocas.push({id:uid('r'), nombre, area, estado, detalle, krIds:[], pilarIds:[]});
+  // el form no pide equipo/trimestre/columna, pero el schema los exige en una roca
+  // nueva (completitud) -- se completan con defaults razonables, editables después
+  // desde la vista de Rocas.
+  await callTool('upsert_roca', { roca: { id: uid('r'), nombre, area, estado, detalle,
+    equipo: null, trimestre: null, columna: 'Pendientes', krIds: [], pilarIds: [] } });
   document.getElementById('newRocaName').value='';
   document.getElementById('newRocaArea').value='';
   document.getElementById('newRocaDetalle').value='';
-  saveData(); renderOkrTabs();
 }
-function addKpi(){
+async function addKpi(){
   const pilarId = document.getElementById('newKpiPilar').value;
   const negocioId = document.getElementById('newKpiNegocio').value;
   const nombre = document.getElementById('newKpiNombre').value.trim();
   const unidad = document.getElementById('newKpiUnidad').value.trim();
   const sentido = document.getElementById('newKpiSentido').value;
   if(!pilarId || !nombre) return;
-  data.kpis.push({id:uid('kpi'), pilarId, negocioId, nombre, unidad, sentido, actual:null, target:null});
+  const id = uid('kpi');
+  // mismo motivo que addKR: upsert_kpi excluye 'value', hace falta set_kpi_value.
+  await callTool('upsert_kpi', { kpi: { id, pilarId, negocioId, nombre, unidad, sentido, target: null } });
+  await callTool('set_kpi_value', { kpi_id: id, value: { mode: 'literal', actual: null } });
   document.getElementById('newKpiNombre').value='';
   document.getElementById('newKpiUnidad').value='';
-  saveData(); renderPilares();
 }
 
 /* ============================================================
@@ -3833,20 +3847,9 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   URL.revokeObjectURL(url);
 });
 document.getElementById('importFile').addEventListener('change', (e)=>{
-  if(!WRITE_ENABLED){ alert('Solo lectura por ahora — pedile el cambio a Claude (vía MCP).'); e.target.value=''; return; }
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev)=>{
-    try{
-      const parsed = JSON.parse(ev.target.result);
-      data = mergeWithDefaults(parsed);
-      saveData();
-      activeObjId = null; openKrId = null;
-      renderAll();
-    }catch(err){ alert('El archivo no es un JSON válido.'); }
-  };
-  reader.readAsText(file);
+  // Fuera de alcance de F4 a propósito (ver comentario junto a WRITE_ENABLED) --
+  // el input queda oculto siempre; esto es una red de seguridad si algo lo dispara igual.
+  alert('Importar JSON no está soportado: no es una operación 1:1 con ninguna tool del MCP. Pedile el cambio a Claude.');
   e.target.value = '';
 });
 
@@ -3862,19 +3865,61 @@ function renderAll(){
   renderAgregarSelects();
   setHorizon(currentNegocio);
 }
-// ---- solo lectura por ahora (F2): la escritura real llega en F4, recableada al API ----
-// No se borra la UI de carga manual (Cargar Datos / Agregar / Importar JSON): contra un
-// spec ahora gobernado por API+MCP, dejarla escribir a localStorage divergiría en
-// silencio del dato real en el próximo poll. Se oculta + se guardan las funciones que
-// de verdad mutan (llaman saveData()) para que ningún camino que no haya encontrado al
-// ocultar la UI pueda escribir igual. preguntaFeedback y Exportar JSON quedan afuera de
-// este gateo a propósito: ninguno de los dos toca dato gobernado.
-const WRITE_ENABLED = false;
+// ---- F4: escritura real desde la UI, vía POST /api/boards/:id/tools/:name ----
+// Las funciones de abajo (updateRocaEstado, addKR, etc.) ya NO mutan `data` a mano
+// ni llaman saveData()/localStorage: hacen uno o más callTool() reales, 1:1 con las
+// tools del MCP (mismo pipeline, misma validación, mismo commit a git). guardWrite
+// sigue existiendo como el mismo punto de gateo de antes -- ahora además maneja el
+// async/await y el re-render tras el write, y sigue funcionando como kill-switch
+// (WRITE_ENABLED=false) si algo de esto necesita apagarse rápido.
+//
+// "Importar JSON" (reemplazo masivo del documento entero) queda AFUERA de F4 a
+// propósito, con flag o sin flag: no es una operación 1:1 con ninguna tool del MCP
+// -- haría falta diffear contra el spec real y emitir N llamadas, o inventar una
+// tool de "replace" que rompería la gobernanza (nadie podría revisar un commit de
+// "todo cambió"). Ver applyWriteGate(): su label+input quedan ocultos siempre.
+//
+// preguntaFeedback y Exportar JSON siguen afuera de este gateo: ninguno de los dos
+// toca dato gobernado.
+const WRITE_ENABLED = true;
+
+// callTool: POST /api/boards/:id/tools/:name con el mismo shape de args que espera
+// la tool del MCP (ver packages/mcp/contracts/okr-board-mcp.tools.json), salvo
+// doc_id (va en la URL) y base_version (se toma de currentVersion, actualizada acá
+// mismo con la respuesta). Encadenar currentVersion así es necesario para acciones
+// que hacen más de un write (ej: addObjetivo también actualiza el pilar) -- si la
+// segunda llamada usara la base_version vieja, el pipeline la rechazaría con
+// ConcurrencyError (alguien "más" cambió el doc, aunque haya sido la primera
+// llamada de la misma acción).
+async function callTool(name, args){
+  const res = await fetch(`${API_BASE}/api/boards/${DOC_ID}/tools/${name}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ base_version: currentVersion, ...args }),
+  });
+  const body = await res.json();
+  if(!res.ok){
+    const msg = Array.isArray(body.issues) ? body.issues.map(i=>i.message).join('\n') : (body.error || `error ${res.status}`);
+    throw new Error(msg);
+  }
+  currentVersion = body.version;
+  return body;
+}
+// Trae el board real de nuevo y re-renderiza, preservando la sub-vista actual --
+// mismo criterio que pollForChanges/pollPreview. Se llama tras CUALQUIER intento de
+// write (éxito o error parcial): el server es la fuente de verdad, no `data`.
+async function reloadAfterWrite(){
+  const preservedNegocio = currentNegocio;
+  data = await loadData();
+  renderAll();
+  if(preservedNegocio && data.negocios.some(n => n.id === preservedNegocio)) setHorizon(preservedNegocio);
+}
 
 function guardWrite(fn){
-  return function(...args){
-    if(!WRITE_ENABLED){ alert('Solo lectura por ahora — pedile el cambio a Claude (vía MCP).'); return; }
-    return fn.apply(this, args);
+  return async function(...args){
+    if(!WRITE_ENABLED){ alert('Escritura deshabilitada -- pedile el cambio a Claude (vía MCP).'); return; }
+    try { await fn.apply(this, args); }
+    catch(e){ alert('No se pudo guardar: ' + (e && e.message ? e.message : e)); }
+    await reloadAfterWrite();
   };
 }
 updateRocaEstado = guardWrite(updateRocaEstado);
@@ -3892,11 +3937,12 @@ toggleKpiDg = guardWrite(toggleKpiDg);
 toggleRocaKr = guardWrite(toggleRocaKr);
 
 function applyWriteGate(){
-  if(WRITE_ENABLED) return;
   const hide = (el) => { if(el) el.style.display = 'none'; };
-  hide(document.getElementById('datosBtn'));
+  // Importar JSON: fuera de F4 siempre, con o sin WRITE_ENABLED (ver comentario de archivo).
   hide(document.querySelector('label[for="importFile"]'));
   hide(document.getElementById('importFile'));
+  if(WRITE_ENABLED) return;
+  hide(document.getElementById('datosBtn'));
   hide(document.getElementById('otrosElementosToggle'));
   hide(document.getElementById('otrosElementosPanel'));
 

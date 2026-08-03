@@ -62,7 +62,7 @@ piezas sin motivo; construí sobre ellas.**
 El repo es un **monorepo con npm workspaces** (`packages/*`, `apps/*`), usando
 TypeScript project references (`tsc -b`, no un script de build a mano) para que el
 orden core→mcp/api se calcule solo. `npm install && npm run build && npm test` desde la
-raíz deja todo compilado y los 85 tests verdes.
+raíz deja todo compilado y los 111 tests verdes.
 
 - `packages/core/` — el núcleo, **una librería sin conocimiento de MCP ni HTTP**:
   - `src/pipeline.ts` — tipos del dominio, errores tipados, puertos (`SpecStore`,
@@ -103,15 +103,17 @@ raíz deja todo compilado y los 85 tests verdes.
     canal/marca), no un checklist editable; ver §2.1. `iniciativa.rocaIds` tampoco
     tiene granular (se reemplaza entero vía `upsert_iniciativa`) — nadie lo pidió y
     no tiene el mismo patrón de "checklist que crece de a un ítem" que hitos/scopesQ.
-- `packages/api/` — API HTTP de solo lectura (F1), envuelve el **mismo** `core` (no
-  reimplementa validación):
+- `packages/api/` — API HTTP: lectura (F1) + escritura (F4, sesión 2026-08-03 — ver
+  §2.4), envuelve el **mismo** `core` (no reimplementa validación):
   - `src/server.ts` — `node:http` puro (sin framework). `GET /api/boards/:id` →
-    `{spec, resolved, version}`; `GET /api/boards/:id/version` (barata, para polling).
+    `{spec, resolved, version}`; `GET /api/boards/:id/version` (barata, para polling);
+    `POST /api/boards/:id/tools/:toolName` (F4) → `{version}` o
+    `{spec,valid,errors,resolved}` si `dry_run`, 1:1 con las tools de escritura del MCP.
     `resolved` usa el mismo path scheme que `collectValues()` (`"krs/k1/value"`, etc.)
     como clave — no metric+filter, porque dos entidades pueden compartir esa
     combinación. `version` es el token real de `SpecStore` (no un contador propio).
     CORS abierto (`*`) — MVP local sin auth de red. Mapea errores a HTTP
-    (401/409/422/404) aunque hoy solo 404 es alcanzable (F1 es de solo lectura).
+    (401/409/422/404); las cuatro son alcanzables desde F4.
   - `src/metric-resolver.ts` — puerto `MetricResolver` (**distinto** de
     `MetricCatalog.has()`: esto resuelve el VALOR, no solo existencia). Implementación
     MVP `SnapshotMetricResolver` sobre `data/metric-values-snapshot.json` — ver §2.1.
@@ -122,10 +124,14 @@ raíz deja todo compilado y los 85 tests verdes.
   `mode:"metric"` contra el mapa `resolved` (a diferencia de la portación M3 anterior,
   que quedó reemplazada — ver §2.1). Polling cada 5s (`POLL_MS`) contra
   `.../version`; si cambió, re-trae el spec completo y re-renderiza, preservando el
-  negocio seleccionado. **UI de escritura manual gateada** (`WRITE_ENABLED = false`):
-  oculta + las funciones que mutan de verdad quedan bloqueadas — ver §2.1 antes de
-  tocar esto. Verificado en navegador real (Playwright) tres veces: HTML servido,
-  métrica resuelta, y polling reflejando un write real del MCP sin recargar la página.
+  negocio seleccionado. **UI de escritura recableada al API real** (`WRITE_ENABLED =
+  true`, F4, sesión 2026-08-03 — ver §2.4): las funciones que antes mutaban `data` a
+  mano y llamaban `saveData()`/`localStorage` ahora hacen `callTool()` real contra
+  `POST /api/boards/:id/tools/:name`. Solo "Importar JSON" sigue oculto siempre (fuera
+  de alcance de F4 a propósito, ver §2.4). Verificado en navegador real (Playwright)
+  tres veces para F2/F3 (HTML servido, métrica resuelta, polling); **F4 se verificó
+  end-to-end contra el API real (sin browser — ver §2.4), no en navegador** — pendiente
+  si se quiere el mismo nivel de confianza que F2/F3.
 - `scripts/` (raíz, no es un package): `bootstrap.ts` (M5, sin cambios de fondo — solo
   pasó a importar `from "core"`), `serve-frontend.ts` (estático para `apps/frontend`,
   proceso separado de `packages/api` a propósito), `refresh-metrics.ts` (mecanismo de
@@ -203,12 +209,13 @@ re-auditar esto salvo que se vuelva a tocar el bootstrap o la portación del HTM
   eliminaron** (a pedido explícito del usuario) una vez que `apps/frontend` + el API
   los reemplazaron — ya no hay dos copias del HTML divergiendo.
 - **La UI de carga manual del HTML (Cargar Datos/Agregar/Importar JSON) se ocultó, no se
-  borró** (`WRITE_ENABLED = false` en `apps/frontend/index.html`): además de ocultar los
-  botones, las funciones que de verdad mutan (`saveData()` — verificado función por
-  función, no por nombre) quedan bloqueadas por si algún camino de UI no se encontró al
-  ocultar. `Exportar JSON` y `preguntaFeedback` quedan sin gatear (no escriben dato
-  gobernado). F4 (no implementada) es recablear estas mismas funciones al API, no
-  reconstruir la UI.
+  borró** (`WRITE_ENABLED = false` en `apps/frontend/index.html`, sesión F2): además de
+  ocultar los botones, las funciones que de verdad mutan (`saveData()` — verificado
+  función por función, no por nombre) quedaban bloqueadas por si algún camino de UI no
+  se encontró al ocultar. `Exportar JSON` y `preguntaFeedback` quedaron sin gatear (no
+  escriben dato gobernado). **Superado por F4 (sesión 2026-08-03, ver §2.4):**
+  `WRITE_ENABLED = true`, esas mismas funciones ahora escriben de verdad contra el API —
+  salvo "Importar JSON", que se quedó oculto para siempre (no es 1:1 con ninguna tool).
 
 ### 2.2 Migración literal→metric: piloto + primera pasada completa (sesión 2026-07-31)
 
@@ -381,6 +388,91 @@ dato real (`k22`, `kpi17`, `kpi28`, `k25`, `kpi1`, `kpi5`). Cero `mode:"metric"`
 pendiente — las dos preguntas de moneda/valor que lo causaban ya están resueltas. El resto
 sigue `literal` a propósito (sin equivalente gobernado limpio, ver exclusiones en §2.2).
 
+### 2.4 F4: escritura real desde el frontend + lock multi-proceso (sesión 2026-08-03)
+
+F4 estaba explícitamente marcada opcional y no implementada (§8.1). Se implementó
+completa: lock multi-proceso primero (prerequisito real, no cosmético), después los
+endpoints de escritura del API, después recablear la UI del frontend.
+
+**Lock multi-proceso (`packages/core/src/file-lock.ts`):** hasta esta sesión,
+`GitSpecStore` solo serializaba escrituras **en proceso** (`this.queue`) — correcto
+mientras el único escritor fuera el MCP. F4 agrega un segundo proceso escritor real (el
+API), así que la ventana entre "leer HEAD" y "commitear" necesitaba un lock real entre
+procesos. `withFileLock()` es una implementación propia (sin dependencia nueva) sobre
+`open(path,"wx")` (atómico, falla con `EEXIST` si ya existe) + detección de lock
+abandonado (`staleMs`, un holder que crasheó sin liberar) + timeout. Envuelve la sección
+crítica de `commit()`/`init()`, además del mutex en proceso existente (no en
+remplazo — el mutex evita tocar el filesystem para contención dentro del mismo
+proceso). Verificado con dos instancias de `GitSpecStore` en el mismo test (simula dos
+procesos) y, más importante, con **el MCP real (stdio) y el API real (HTTP) como
+procesos separados de verdad**, disparando un write cada uno contra el mismo doc con la
+misma `base_version` casi al mismo tiempo: exactamente uno ganó, el otro recibió un
+`ConcurrencyError`/409 limpio (no un error crudo de git tipo `Unable to create
+index.lock`). Sin este lock, ese mismo experimento podía perder una escritura en
+silencio o tirar el error crudo de git.
+
+**Endpoints (`packages/api/src/server.ts`):** `POST /api/boards/:id/tools/:toolName`,
+genérico para las 16 tools de escritura del contrato del MCP (no para `get_board`/
+`validate_board`, que ya tienen equivalente de lectura). `buildChange()` duplica a
+propósito el mapeo nombre→Change de `packages/mcp/src/server.ts::dispatch()` en vez de
+compartirlo — dos bordes de transporte distintos, ninguno debe depender del otro (§1.4).
+El API ahora construye un `PipelineDeps` completo (`store` + `catalog`, antes solo tenía
+`store`+`resolver` para F1). `dry_run` no necesita el slot de preview efímero (ese
+mecanismo sigue existiendo solo para que el MCP, sin superficie HTTP propia, publique
+sus propios dry-runs) — el resultado ya vuelve directo en la respuesta HTTP.
+
+**Identidad — límite conocido, aceptado a propósito:** el `principal` de F4 es fijo por
+env var (`OKR_API_PRINCIPAL`, default `@dionisio`), igual patrón que
+`OKR_MCP_PRINCIPAL`. El usuario eligió esto explícitamente sobre la alternativa (que el
+frontend mande qué principal está escribiendo en cada request) sabiendo que, a
+diferencia del MCP —un proceso por operador, cada uno con su propio principal—, el API
+es un servidor compartido: hoy técnicamente vuelve a ser "un token único" que el §4
+pide evitar, aceptable mientras haya un solo operador probando esto. Si en algún momento
+más de una persona escribe por el frontend, resolver esto (identidad real por request)
+antes de confiar en la autoría de esos commits.
+
+**Bug real encontrado (no introducido esta sesión, preexistente desde que `upsert_kr`/
+`upsert_kpi` existen) y corregido:** crear un KR o KPI nuevo era imposible con el diseño
+original de las tools. `upsert_kr`/`upsert_kpi` excluyen `value` a propósito (se maneja
+aparte con `set_kr_value`/`set_kpi_value`), pero el schema exige que **todo** KR/KPI
+tenga un `value` — así que el primer commit que introduce una entidad nueva sin value
+fallaba "must have required property 'value'" antes de que el segundo call pudiera
+correr (la entidad no existe todavía para `set_kr_value`). Nadie lo había pisado porque
+ningún flujo anterior intentó crear un KR/KPI desde cero vía las tools; `apps/frontend`
+`addKR()`/`addKpi()` fue el primero. Fix en `applyChange` (`packages/core/src/
+pipeline.ts`): si la entidad es nueva, `upsert_kr`/`upsert_kpi` le agregan
+`value:{mode:"literal",actual:null}` por default antes del merge. `set_kr_value`/
+`set_kpi_value` siguen funcionando igual para fijar un valor real o gobernado después.
+
+**Frontend (`apps/frontend/index.html`):** los 13 puntos gateados
+(`updateRocaEstado`, `updateKpi`, `updateDatosField`, `updateOnePager`, `addPilar`,
+`addObjetivo`, `addKR`, `addRoca`, `addKpi`, `updateKr`, `toggleKrDg`, `toggleKpiDg`,
+`toggleRocaKr`) se recablearon a `callTool()` (POST real, encadena `currentVersion`
+entre llamadas de la misma acción — necesario para acciones de 2 calls como
+`addObjetivo`+vincular al pilar, o `addKR`+`set_kr_value`). `guardWrite` pasó de
+bloquear-si-`WRITE_ENABLED=false` a también manejar el async/await + reload-tras-write;
+sigue funcionando como kill-switch. Dos exclusiones deliberadas:
+- **`toggleKpiDg`**: no tiene campo real detrás (`Kpi` nunca tuvo `boards` en el schema
+  — a diferencia de `Kr`, este checkbox no sobrevivió al bootstrap M5 con nada que
+  escribir). Muestra un alert explicando esto en vez de fingir que guardó.
+- **"Importar JSON"**: reemplazo masivo del documento entero, no 1:1 con ninguna tool —
+  haría falta diffear contra el spec real y emitir N calls, o una tool de "replace" que
+  rompería la gobernanza. Queda oculto siempre (no solo si `WRITE_ENABLED=false`).
+
+**Verificación real (no simulada) hecha esta sesión, con datos de prueba `zz_*`
+limpiados al final — mismo criterio que el resto del repo:**
+- Suite automatizada: 111 tests (`file-lock.test.ts` nuevo, `git-store.test.ts` con el
+  test de carrera, `pipeline.test.ts` con el fix de `upsert_kr`/`upsert_kpi`,
+  `write-endpoint.test.ts` nuevo en `packages/api`).
+- Los 13 flujos del frontend, simulados contra el **API real corriendo** (mismos
+  payloads que manda cada función de `apps/frontend`) — probó las 5 altas
+  (`addPilar`/`addObjetivo`/`addKR`/`addRoca`/`addKpi`), los toggles, las
+  actualizaciones de metadata/valor, y una edición+reversión sobre un onePager real.
+- El lock multi-proceso con el MCP y el API como procesos reales separados (ver arriba).
+- **No verificado en navegador real** (sin Playwright disponible esta sesión) — la
+  lectura del DOM (ids de los forms, `onchange=`) no se tocó, solo los cuerpos de las
+  funciones, pero si se quiere el mismo nivel de confianza que F2/F3, falta ese paso.
+
 ---
 
 ## 3. Alcance del MVP (lo que tenés que construir)
@@ -475,12 +567,6 @@ sustitución detrás de un puerto ya definido. Ese es el contrato con el futuro.
 Estas son mejoras que **sirven al objetivo** (decidir mejor, gobernanza, camino a la
 final). Algunas conviene hacerlas en el MVP; otras son para después. Evaluá y proponé.
 
-- **Commit atómico real en el git `SpecStore`, multi-proceso:** hoy `GitSpecStore` serializa
-  el check+commit con un mutex **en proceso** (`packages/core/src/git-store.ts`) — correcto
-  mientras el único escritor sea el servidor MCP. El día que un segundo proceso escriba
-  (ej: F4, API aceptando writes) el mutex en proceso ya no alcanza — hace falta un lock real
-  (flock de archivo) para que el check+commit siga siendo atómico entre procesos. No urgente
-  hoy (un solo escritor); si se encara F4, encarar esto primero o junto.
 - **Migración progresiva literal→metric:** arrancada 2026-07-31, preguntas abiertas
   cerradas 2026-08-03 (ver §2.2/§2.3) — de 205 valores gobernables, 6 ya son `metric` con
   dato real (`k22`, `kpi17`, `kpi28`, `k25`, `kpi1`, `kpi5`) y cero quedan sin dato. Se
@@ -540,9 +626,9 @@ un solo primitivo afilado (el spec) que crece por capas.
 
 ### 8.1 Definición de "API + frontend terminado" (plan aparte, mismo día)
 
-Fases F0–F3 del plan de monorepo completas y verificadas; **F4 (escritura desde el
-frontend) es opcional y no se implementó** — el plan explícitamente la deja para
-después. Ver §2 para dónde vive cada pieza.
+Fases F0–F4 del plan de monorepo completas y verificadas — F4 estaba marcada opcional
+("para después"), se encaró en la sesión 2026-08-03 (ver §2.4). Ver §2 para dónde vive
+cada pieza.
 
 - [x] F0: monorepo (`packages/core`, `packages/mcp`) con `tsc -b`, sin cambiar lógica.
       60 tests verdes, MCP relocalizado responde igual por stdio real.
@@ -554,8 +640,13 @@ después. Ver §2 para dónde vive cada pieza.
       §2.1), UI de escritura manual gateada. Verificado en navegador real.
 - [x] F3: polling cada 5s contra `.../version`. Verificado con un write real del MCP
       reflejado en el frontend SIN recargar la página.
-- [ ] F4 (opcional, no implementada): `POST /api/boards/:id/...` 1:1 con las tools del
-      MCP, recablear la UI gateada del frontend a esos endpoints.
+- [x] F4 (opcional, sesión 2026-08-03 — ver §2.4): `POST /api/boards/:id/tools/:name`
+      1:1 con las 16 tools de escritura del MCP + lock multi-proceso en
+      `GitSpecStore` (prerequisito real) + UI del frontend recableada. Verificado
+      contra el API real (simulando los 13 flujos del frontend) y con el MCP+API como
+      procesos reales compitiendo por el mismo doc. **No verificado en navegador real**
+      (sin Playwright esta sesión) — pendiente si se quiere el mismo nivel de
+      confianza que F2/F3.
 
 ---
 

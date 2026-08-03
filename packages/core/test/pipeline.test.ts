@@ -388,6 +388,40 @@ async function main() {
     ok(spec.iniciativas[0].scopesQ.length === 0, "scopeQ: remove_scope_q borra la nota por index");
   }
 
+  // 42. upsert_kr crea un KR nuevo SIN un set_kr_value posterior -- antes de este fix,
+  // esto fallaba "must have required property 'value'" porque el Change/inputSchema de
+  // upsert_kr excluyen 'value' a propósito, y no existía otra forma de crear uno.
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_kr", kr: { id: "k99", objId: "o1", desc: "KR nuevo", sentido: "mayor", unidad: "%", target: 50 } });
+    const { spec } = await store.readHead("board-2026");
+    const k99 = spec.krs.find(k => k.id === "k99");
+    ok(!!k99 && k99.value.mode === "literal" && (k99.value as any).actual === null,
+      "upsert_kr: kr nuevo se crea con value:{mode:'literal',actual:null} por default");
+  }
+
+  // 43. upsert_kr sobre un kr EXISTENTE no toca su value (el default es solo para creación)
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1", { op: "upsert_kr", kr: { id: "k1", unidad: "días" } });
+    const { spec } = await store.readHead("board-2026");
+    const k1 = spec.krs.find(k => k.id === "k1")!;
+    ok(k1.unidad === "días" && k1.value.mode === "literal" && (k1.value as any).actual === 7.66,
+      "upsert_kr: sobre un kr existente preserva su value tal cual");
+  }
+
+  // 44. upsert_kpi crea un KPI nuevo SIN un set_kpi_value posterior (mismo fix que upsert_kr)
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_kpi", kpi: { id: "kpi99", pilarId: "p1", negocioId: "n1", nombre: "KPI nuevo", sentido: "mayor", unidad: "%", target: 10 } });
+    const { spec } = await store.readHead("board-2026");
+    const kpi99 = spec.kpis.find(k => k.id === "kpi99");
+    ok(!!kpi99 && kpi99.value.mode === "literal" && (kpi99.value as any).actual === null,
+      "upsert_kpi: kpi nuevo se crea con value:{mode:'literal',actual:null} por default");
+  }
+
   console.log(`\n${pass} OK · ${fail} FALLO`);
   if (fail) process.exit(1);
 }

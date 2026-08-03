@@ -9,10 +9,15 @@
 //
 // Concurrencia optimista + atomicidad:
 //   - readHead devuelve el sha del blob en HEAD.
-//   - commit serializa las escrituras en proceso (mutex) y RE-VERIFICA que el HEAD
-//     del archivo siga siendo expectedVersion justo antes de commitear; si cambió,
-//     lanza ConcurrencyError. El MCP es un solo proceso, así que el mutex hace
-//     atómico el check+commit. (Multi-proceso: agregar un lock de archivo — flock.)
+//   - commit serializa las escrituras EN proceso (mutex, this.queue — barato, evita
+//     tocar el filesystem para contención dentro del mismo proceso) y además toma un
+//     lock de archivo ENTRE procesos (file-lock.ts, .git/okr-board-mcp.lock — F4 hizo
+//     que el API también pueda escribir al mismo repo que el MCP, dos procesos
+//     distintos). Recién con el lock tomado RE-VERIFICA que el HEAD del archivo siga
+//     siendo expectedVersion justo antes de commitear; si cambió, lanza
+//     ConcurrencyError. Sin el lock de archivo, dos procesos podían interlear su
+//     check+commit (perder una escritura en silencio) o pisarse en .git/index.lock
+//     (un error crudo de git, no un ConcurrencyError limpio).
 //
 // Cuando pasemos a Postgres en la versión final, esto se reemplaza por otra clase
 // que implemente el mismo puerto SpecStore. El pipeline no se entera.
@@ -23,6 +28,7 @@ import { promisify } from "node:util";
 import { writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { ConcurrencyError, NotFoundError, type OkrBoardSpec, type SpecStore } from "./pipeline";
+import { withFileLock } from "./file-lock";
 
 const execFileAsync = promisify(execFile);
 const SLUG = /^[A-Za-z0-9_-]+$/;
@@ -37,12 +43,14 @@ export class GitSpecStore implements SpecStore {
   private readonly repoDir: string;
   private readonly dataDir: string;
   private readonly committer: { name: string; email: string };
-  private queue: Promise<unknown> = Promise.resolve(); // mutex en proceso
+  private readonly lockPath: string;      // lock entre procesos (F4: API + MCP escribiendo al mismo repo)
+  private queue: Promise<unknown> = Promise.resolve(); // mutex en proceso (rápido; complementa al lock de archivo)
 
   constructor(opts: GitSpecStoreOptions) {
     this.repoDir = opts.repoDir;
     this.dataDir = opts.dataDir ?? "data";
     this.committer = opts.committer ?? { name: "okr-board-mcp", email: "mcp@bidcom.local" };
+    this.lockPath = join(this.repoDir, ".git", "okr-board-mcp.lock");
   }
 
   // --- lectura ---
@@ -54,10 +62,10 @@ export class GitSpecStore implements SpecStore {
     return { spec: JSON.parse(raw) as OkrBoardSpec, version };
   }
 
-  // --- escritura (concurrencia optimista + atomicidad por mutex) ---
+  // --- escritura (concurrencia optimista + atomicidad por mutex EN proceso + lock ENTRE procesos) ---
   async commit(docId: string, spec: OkrBoardSpec, message: string, expectedVersion: string): Promise<string> {
     const rel = this.relPath(docId);
-    return this.serialize(async () => {
+    return this.serialize(() => withFileLock(this.lockPath, async () => {
       const current = await this.blobSha(rel);
       if (current !== expectedVersion) {
         throw new ConcurrencyError(
@@ -68,17 +76,17 @@ export class GitSpecStore implements SpecStore {
       if (currentRaw === desired) return expectedVersion; // no-op: mismo contenido, no commiteamos
       await this.writeAndCommit(rel, desired, message);
       return (await this.blobSha(rel))!;
-    });
+    }));
   }
 
   // --- bootstrap (M5): crear un documento nuevo. No es parte del puerto SpecStore. ---
   async init(docId: string, spec: OkrBoardSpec, message?: string): Promise<string> {
     const rel = this.relPath(docId);
-    return this.serialize(async () => {
+    return this.serialize(() => withFileLock(this.lockPath, async () => {
       if ((await this.blobSha(rel)) !== null) throw new Error(`el documento ya existe: ${docId}`);
       await this.writeAndCommit(rel, this.serializeSpec(spec), message ?? `init ${docId}`);
       return (await this.blobSha(rel))!;
-    });
+    }));
   }
 
   // --- internos ---

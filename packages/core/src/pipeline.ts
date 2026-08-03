@@ -256,19 +256,32 @@ export function applyChange(spec: OkrBoardSpec, change: Change): OkrBoardSpec {
     case "upsert_plataforma":
       next.plataformas = upsertById(next.plataformas, change.plataforma);
       return next;
-    case "upsert_kr":
-      // merge de metadata; NO toca value (eso va por set_kr_value)
-      next.krs = upsertById(next.krs, change.kr as Partial<Kr> & { id: string });
+    case "upsert_kr": {
+      // merge de metadata; sobre un kr EXISTENTE no toca value (eso va por
+      // set_kr_value). Sobre uno NUEVO, el Change (y el inputSchema de la tool)
+      // excluyen 'value' a propósito -- pero el schema exige que todo kr tenga uno.
+      // Sin este default, crear un kr nuevo era imposible: el primer commit que lo
+      // introduce fallaría "must have required property 'value'" antes de que
+      // set_kr_value pudiera correr (no existe todavía) -- bug real, encontrado al
+      // cablear F4 (apps/frontend addKR()), no específico del frontend.
+      const isNew = !next.krs.some(k => k.id === change.kr.id);
+      const patch = isNew ? { ...change.kr, value: { mode: "literal" as const, actual: null } } : change.kr;
+      next.krs = upsertById(next.krs, patch as Partial<Kr> & { id: string });
       return next;
+    }
     case "set_kr_value": {
       const kr = next.krs.find(k => k.id === change.krId);
       if (!kr) throw new NotFoundError(`kr no encontrado: ${change.krId}`);
       kr.value = change.value;
       return next;
     }
-    case "upsert_kpi":
-      next.kpis = upsertById(next.kpis, change.kpi as Partial<Kpi> & { id: string });
+    case "upsert_kpi": {
+      // mismo default que upsert_kr para kpis nuevos -- ver ese comentario.
+      const isNew = !next.kpis.some(k => k.id === change.kpi.id);
+      const patch = isNew ? { ...change.kpi, value: { mode: "literal" as const, actual: null } } : change.kpi;
+      next.kpis = upsertById(next.kpis, patch as Partial<Kpi> & { id: string });
       return next;
+    }
     case "set_kpi_value": {
       const kpi = next.kpis.find(k => k.id === change.kpiId);
       if (!kpi) throw new NotFoundError(`kpi no encontrado: ${change.kpiId}`);

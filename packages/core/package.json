@@ -7,7 +7,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc -b",
-    "test": "tsc -b && node dist/test/pipeline.test.js && node dist/test/git-store.test.js && node dist/test/metric-catalog.test.js"
+    "test": "tsc -b && node dist/test/pipeline.test.js && node dist/test/git-store.test.js && node dist/test/metric-catalog.test.js && node dist/test/file-lock.test.js"
   },
   "dependencies": {
     "ajv": "^8.17.1",

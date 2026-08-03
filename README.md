@@ -26,8 +26,8 @@ que ordene los paquetes).
 |---|---|
 | `packages/core` | Núcleo sin conocimiento de MCP ni HTTP: tipos del dominio, pipeline (`runWrite`/`runDryRun`/`runValidate`), validación en cascada, puertos (`SpecStore`, `MetricCatalog`) y sus implementaciones (`GitSpecStore`, `CachedMetricCatalog`). `contracts/okr-board.schema.json` es el schema del spec. |
 | `packages/mcp` | Servidor MCP por **stdio** (consumido por Claude Desktop/Code local). `contracts/okr-board-mcp.tools.json` son las 18 tools expuestas; es la fuente de verdad de sus schemas, no se re-declaran en TS. |
-| `packages/api` | API HTTP de solo lectura sobre el mismo `core` (`GET /api/boards/:id`, `.../version`) más un endpoint de **preview efímero** (`.../preview`, ver más abajo) — nunca reimplementa validación. |
-| `apps/frontend` | El renderer: HTML vanilla que hace `fetch` al API, resuelve métricas, hace polling de cambios y tiene su UI de escritura manual deshabilitada a propósito (la edición real es vía Claude). |
+| `packages/api` | API HTTP sobre el mismo `core`: lectura (`GET /api/boards/:id`, `.../version`), **preview efímero** (`.../preview`, ver más abajo) y **escritura** (`POST .../tools/:name`, 1:1 con las tools del MCP) — nunca reimplementa validación. |
+| `apps/frontend` | El renderer: HTML vanilla que hace `fetch` al API, resuelve métricas, hace polling de cambios, y cuya UI de edición (Cargar Datos / Agregar) escribe de verdad contra el API — solo "Importar JSON" queda deshabilitado (no es 1:1 con ninguna tool). |
 | `scripts/` | `bootstrap.ts` (carga inicial del spec, ya corrido), `serve-frontend.ts` (sirve `apps/frontend` como estático), `refresh-metrics.ts` (ver abajo). |
 | `data/` | `despliegue-estrategico-2026.json` (el spec real, versionado en git — **esto es el dato que importa**), `metric-catalog.json` (qué métricas existen), `metric-values-snapshot.json` (valores resueltos de esas métricas). |
 
@@ -36,7 +36,7 @@ que ordene los paquetes).
 ```bash
 npm install
 npm run build   # tsc -b — compila core -> mcp/api en el orden correcto
-npm test        # corre los tests de core y api (85 casos)
+npm test        # corre los tests de core y api (111 casos)
 ```
 
 ## Correr todo localmente
@@ -66,7 +66,10 @@ equivalente) — usá una ruta **absoluta** al build compilado, no hay campo `cw
 
 Variables de entorno relevantes (todas opcionales, con default razonable):
 
-- `OKR_MCP_PRINCIPAL` (default `@dionisio`) — quién queda como autor en authz/commits.
+- `OKR_MCP_PRINCIPAL` (default `@dionisio`) — quién queda como autor en authz/commits del MCP.
+- `OKR_API_PRINCIPAL` (default `@dionisio`) — idem para los writes que llegan por el API
+  (F4). Fijo por proceso, no por request — ver CLAUDE.md §2.4 antes de asumir que esto
+  sirve con más de un operador escribiendo por el frontend a la vez.
 - `OKR_API_BASE` (default `http://localhost:8788`) — dónde publica el MCP los previews.
 - `OKR_FRONTEND_BASE` (default `http://localhost:8789`) — con qué base arma el `preview_url`.
 - `PORT` — puerto del API (`8788`) o del frontend (`8789`) según el proceso.
@@ -84,6 +87,12 @@ Flujo recomendado: **editar vía Claude → dry_run → mostrar el `preview_url`
 → commit real.** Si el API no está corriendo, el `dry_run` sigue funcionando igual, solo
 que `preview_url` vuelve `null` (no hay nada navegable, pero el JSON del resultado ya es
 útil).
+
+Además de ese flujo (editar vía Claude), `apps/frontend` también puede escribir
+**directo**: las vistas "Cargar Datos" y "Agregar" llaman `POST
+/api/boards/:id/tools/:name` sin pasar por Claude — útil para ediciones rápidas de
+alguien frente al tablero. Ambos caminos pasan por el mismo pipeline (misma validación,
+mismo commit a git); la diferencia es solo quién dispara el request.
 
 ## Refresh de métricas gobernadas
 
@@ -104,9 +113,12 @@ generar/validar SQL. `apply` solo mergea números ya resueltos.
 El detalle de qué está construido, qué decisiones de negocio quedan abiertas y qué
 mejoras están propuestas pero no implementadas vive en `CLAUDE.md` (secciones §2, §6 y
 §8) — para no mantener la misma información en dos lugares que se desincronizan. Como
-resumen de una línea: el núcleo (spec + pipeline + MCP + API + frontend + preview
-navegable) está construido y probado de punta a punta, con CRUD completo de las nueve
-entidades del schema más edición granular de hitos/scopesQ de iniciativas vía MCP, y sin
-decisiones de negocio pendientes sobre las métricas ya migradas; lo que falta es sobre
-todo escritura real desde el frontend (F4, opcional) y el lock multi-proceso de
-`GitSpecStore` si se encara F4.
+resumen de una línea: el núcleo (spec + pipeline + MCP + API con lectura **y
+escritura** + frontend recableado + preview navegable + lock multi-proceso) está
+construido y probado de punta a punta, con CRUD completo de las nueve entidades del
+schema más edición granular de hitos/scopesQ vía MCP **o** vía el frontend, y sin
+decisiones de negocio pendientes sobre las métricas ya migradas. Dos límites conocidos,
+aceptados a propósito por ahora: la escritura del API usa un principal fijo por proceso
+(no hay identidad real por request todavía — ver `OKR_API_PRINCIPAL` arriba) y F4 no se
+verificó en navegador real esta sesión (sí contra el API real end-to-end — ver
+CLAUDE.md §2.4).

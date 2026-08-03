@@ -87,6 +87,31 @@ async function main() {
   const commits = await countCommits(repo);
   ok(commits >= 4, `git tiene historial de versiones (${commits} commits): root + init + completada + set_kr_value`);
 
+  // 10. lock multi-proceso: dos instancias de GitSpecStore (cada una con su propio
+  // mutex EN proceso independiente, igual que dos procesos reales de MCP+API) compiten
+  // por el MISMO repo con el MISMO base_version. Sin el lock de archivo, esto puede
+  // interlear el check+commit de ambas (perder una escritura en silencio) o pisarse
+  // en .git/index.lock con un error crudo de git en vez de un ConcurrencyError limpio.
+  {
+    const before = await store.readHead("board-2026");
+    const storeA = new GitSpecStore({ repoDir: repo, committer: { name: "a", email: "a@a" } });
+    const storeB = new GitSpecStore({ repoDir: repo, committer: { name: "b", email: "b@b" } });
+    const specA = structuredClone(before.spec); specA.rocas[0].nombre = "Escrita por A";
+    const specB = structuredClone(before.spec); specB.rocas[0].nombre = "Escrita por B";
+    const results = await Promise.allSettled([
+      storeA.commit("board-2026", specA, "de A", before.version),
+      storeB.commit("board-2026", specB, "de B", before.version),
+    ]);
+    const fulfilled = results.filter(r => r.status === "fulfilled");
+    const rejected = results.filter(r => r.status === "rejected");
+    ok(fulfilled.length === 1, "lock multi-proceso: exactamente una de las dos escrituras concurrentes gana");
+    ok(rejected.length === 1 && (rejected[0] as PromiseRejectedResult).reason instanceof ConcurrencyError,
+      "lock multi-proceso: la otra recibe ConcurrencyError limpio (no un error crudo de git)");
+    const after = await store.readHead("board-2026");
+    ok(after.spec.rocas[0].nombre === "Escrita por A" || after.spec.rocas[0].nombre === "Escrita por B",
+      "lock multi-proceso: el repo no quedó corrupto, el cambio ganador se persistió bien");
+  }
+
   console.log(`\n${pass} OK · ${fail} FALLO`);
   await rm(repo, { recursive: true, force: true });
   if (fail) process.exit(1);

@@ -5,7 +5,7 @@
   "description": "API HTTP fina sobre core: lee el spec, resuelve métricas server-side. No reimplementa validación — llama al mismo runWrite/readHead que el MCP.",
   "scripts": {
     "build": "tsc -b",
-    "test": "tsc -b && node dist/test/metric-resolver.test.js && node dist/test/preview-endpoint.test.js",
+    "test": "tsc -b && node dist/test/metric-resolver.test.js && node dist/test/preview-endpoint.test.js && node dist/test/write-endpoint.test.js",
     "dev": "node dist/src/server.js"
   },
   "dependencies": {

@@ -1,8 +1,14 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { createRequestHandler } from "../src/server";
-import type { SpecStore, OkrBoardSpec } from "core";
+import type { SpecStore, OkrBoardSpec, MetricCatalog } from "core";
 import type { MetricResolver } from "../src/metric-resolver";
+
+// Catalog fake: las rutas de preview nunca deberían llamarlo (no escriben, no validan) —
+// si lo hacen, es un bug.
+const untouchedCatalog: MetricCatalog = {
+  async has() { throw new Error("preview no debería tocar el MetricCatalog"); },
+};
 
 let pass = 0, fail = 0;
 const ok = (c: boolean, l: string) => c ? (pass++, console.log("OK  " + l)) : (fail++, console.log("FALLO  " + l));
@@ -33,7 +39,9 @@ function baseSpec(): OkrBoardSpec {
 }
 
 async function withServer(resolver: MetricResolver, run: (base: string) => Promise<void>) {
-  const server = createServer(createRequestHandler({ store: untouchedStore, resolver }));
+  const server = createServer(createRequestHandler({
+    store: untouchedStore, resolver, catalog: untouchedCatalog, principal: "@dionisio",
+  }));
   await new Promise<void>((resolve) => server.listen(0, resolve));
   const port = (server.address() as AddressInfo).port;
   try {
@@ -102,7 +110,9 @@ async function main() {
       readHead: async (docId) => ({ spec: baseSpec(), version: "v1" }),
       commit: async () => { throw new Error("no usado en este test"); },
     };
-    const server = createServer(createRequestHandler({ store, resolver: fakeResolver({}) }));
+    const server = createServer(createRequestHandler({
+      store, resolver: fakeResolver({}), catalog: untouchedCatalog, principal: "@dionisio",
+    }));
     await new Promise<void>((resolve) => server.listen(0, resolve));
     const port = (server.address() as AddressInfo).port;
     try {
