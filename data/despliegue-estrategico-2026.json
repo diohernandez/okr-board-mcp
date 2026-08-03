@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 56,
-    "updated_at": "2026-08-03T21:26:18.993Z",
+    "version": 57,
+    "updated_at": "2026-08-03T21:26:19.130Z",
     "access": "domain",
     "acl": [
       {
@@ -2288,21 +2288,6 @@
       },
       "boards": [
         "okr2026"
-      ]
-    },
-    {
-      "id": "zz_f4_kr",
-      "objId": "zz_f4_obj",
-      "desc": "F4 test kr",
-      "sentido": "mayor",
-      "unidad": "días",
-      "target": null,
-      "value": {
-        "mode": "literal",
-        "actual": 42
-      },
-      "boards": [
-        "direccion_general"
       ]
     }
   ],
