@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 18,
-    "updated_at": "2026-07-31T20:31:39.903Z",
+    "version": 19,
+    "updated_at": "2026-08-03T19:53:40.056Z",
     "access": "domain",
     "acl": [
       {
@@ -79,6 +79,10 @@
     {
       "id": "agro",
       "nombre": "Bidcom Agro"
+    },
+    {
+      "id": "zz_smoke_negocio",
+      "nombre": "Smoke Test Negocio"
     }
   ],
   "plataformas": [
