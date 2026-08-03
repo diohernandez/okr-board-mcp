@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 73,
-    "updated_at": "2026-08-03T21:27:49.609Z",
+    "version": 74,
+    "updated_at": "2026-08-03T21:27:49.785Z",
     "access": "domain",
     "acl": [
       {
@@ -3779,7 +3779,7 @@
       "pilarId": "zz_f4_pilar",
       "negocioId": "ecommerce-ar",
       "nombre": "F4 test kpi",
-      "unidad": "%",
+      "unidad": "pts",
       "sentido": "mayor",
       "target": null,
       "value": {
