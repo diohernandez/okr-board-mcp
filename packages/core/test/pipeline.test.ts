@@ -1,6 +1,6 @@
 import {
   runWrite, runValidate, runDryRun, applyChange,
-  AuthzError, ConcurrencyError, ValidationFailed,
+  AuthzError, ConcurrencyError, ValidationFailed, NotFoundError,
   type OkrBoardSpec, type SpecStore, type MetricCatalog, type PipelineDeps,
 } from "../src/pipeline";
 
@@ -305,6 +305,88 @@ async function main() {
   await expectReject(() => runWrite(deps(new InMemoryStore(baseSpec())), "@dionisio", "board-2026", "1",
     { op: "upsert_pilar", pilar: { id: "p1", okrIds: ["oZ"] } }), ValidationFailed,
     "pilar FK: okrId inexistente -> ValidationFailed");
+
+  // 33. upsert_hito happy: agrega uno nuevo al final (index omitido) sin tocar el existente
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_hito", iniciativaId: "ini1",
+        hito: { texto: "Hito 2", sentido: "mayor", unidad: "", target: 1, value: { mode: "literal", actual: null } } });
+    const { spec } = await store.readHead("board-2026");
+    const hitos = spec.iniciativas[0].hitos;
+    ok(hitos.length === 2 && hitos[0].texto === "Hito 1" && hitos[1].texto === "Hito 2",
+      "hito: upsert_hito sin index agrega uno nuevo al final y preserva el existente");
+  }
+
+  // 34. upsert_hito happy: merge parcial por index sobre el hito existente
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_hito", iniciativaId: "ini1", index: 0, hito: { value: { mode: "literal", actual: 1 } } });
+    const { spec } = await store.readHead("board-2026");
+    const h0 = spec.iniciativas[0].hitos[0];
+    ok((h0.value as any).actual === 1 && h0.texto === "Hito 1",
+      "hito: upsert_hito con index hace merge parcial y preserva texto/target");
+  }
+
+  // 35. remove_hito happy: borra por index, no queda hueco
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1", { op: "remove_hito", iniciativaId: "ini1", index: 0 });
+    const { spec } = await store.readHead("board-2026");
+    ok(spec.iniciativas[0].hitos.length === 0, "hito: remove_hito borra el hito por index");
+  }
+
+  // 36. upsert_hito: index fuera de rango -> NotFoundError (no ValidationFailed: no es un problema de forma)
+  await expectReject(() => runWrite(deps(new InMemoryStore(baseSpec())), "@dionisio", "board-2026", "1",
+    { op: "upsert_hito", iniciativaId: "ini1", index: 5, hito: { texto: "x" } }), NotFoundError,
+    "hito: index fuera de rango -> NotFoundError");
+
+  // 37. upsert_hito: iniciativa inexistente -> NotFoundError
+  await expectReject(() => runWrite(deps(new InMemoryStore(baseSpec())), "@dionisio", "board-2026", "1",
+    { op: "upsert_hito", iniciativaId: "iniZ", index: 0, hito: { texto: "x" } }), NotFoundError,
+    "hito: iniciativa inexistente -> NotFoundError");
+
+  // 38. upsert_hito: métrica inexistente en un hito agregado por el path granular -> ValidationFailed
+  // (confirma que checkMetricExistence/collectValues cubren hitos agregados por index, no solo por upsert_iniciativa)
+  await expectReject(() => runWrite(deps(new InMemoryStore(baseSpec())), "@dionisio", "board-2026", "1",
+    { op: "upsert_hito", iniciativaId: "ini1",
+      hito: { texto: "Hito malo", sentido: "mayor", unidad: "", target: 1, value: { mode: "metric", metric: "no_existe" } } }),
+    ValidationFailed, "hito: métrica inexistente en hito agregado por index -> ValidationFailed");
+
+  // 39. upsert_scope_q happy: agrega uno nuevo (scopesQ arranca vacío en ini1)
+  {
+    const store = new InMemoryStore(baseSpec());
+    await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_scope_q", iniciativaId: "ini1", scope: { quarter: "Q3", texto: "Alcance inicial" } });
+    const { spec } = await store.readHead("board-2026");
+    ok(spec.iniciativas[0].scopesQ.length === 1 && spec.iniciativas[0].scopesQ[0].quarter === "Q3",
+      "scopeQ: upsert_scope_q sin index agrega uno nuevo");
+  }
+
+  // 40. upsert_scope_q happy: merge parcial por index (encadenado sobre el mismo store)
+  {
+    const store = new InMemoryStore(baseSpec());
+    const { version } = await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_scope_q", iniciativaId: "ini1", scope: { quarter: "Q3", texto: "borrador" } });
+    await runWrite(deps(store), "@dionisio", "board-2026", version,
+      { op: "upsert_scope_q", iniciativaId: "ini1", index: 0, scope: { texto: "texto final" } });
+    const { spec } = await store.readHead("board-2026");
+    const s0 = spec.iniciativas[0].scopesQ[0];
+    ok(s0.texto === "texto final" && s0.quarter === "Q3",
+      "scopeQ: upsert_scope_q con index hace merge parcial y preserva quarter");
+  }
+
+  // 41. remove_scope_q happy: borra por index
+  {
+    const store = new InMemoryStore(baseSpec());
+    const { version } = await runWrite(deps(store), "@dionisio", "board-2026", "1",
+      { op: "upsert_scope_q", iniciativaId: "ini1", scope: { quarter: "Q3", texto: "temporal" } });
+    await runWrite(deps(store), "@dionisio", "board-2026", version,
+      { op: "remove_scope_q", iniciativaId: "ini1", index: 0 });
+    const { spec } = await store.readHead("board-2026");
+    ok(spec.iniciativas[0].scopesQ.length === 0, "scopeQ: remove_scope_q borra la nota por index");
+  }
 
   console.log(`\n${pass} OK · ${fail} FALLO`);
   if (fail) process.exit(1);

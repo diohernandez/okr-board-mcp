@@ -297,7 +297,7 @@
     },
     {
       "name": "upsert_iniciativa",
-      "description": "Crea o actualiza una iniciativa (proyecto que sostiene una o más rocas) por id, con merge parcial. Los campos de array ('hitos', 'scopesQ', 'rocaIds') se reemplazan enteros cuando se envían, no se mergean elemento a elemento — no traen id propio en el modelo original. 'pilarId' es opcional (null si la iniciativa no está asignada a un pilar). Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "description": "Crea o actualiza una iniciativa (proyecto que sostiene una o más rocas) por id, con merge parcial. Los campos de array ('hitos', 'scopesQ', 'rocaIds') se reemplazan enteros cuando se envían acá, no se mergean elemento a elemento. Para editar UN hito o UN scope sin mandar el array completo, usar upsert_hito/remove_hito o upsert_scope_q/remove_scope_q en su lugar (direccionan por posición, no por id -- ni hitos ni scopesQ tienen id propio). 'rocaIds' no tiene tool granular: para eso sí hay que mandar el array completo acá. 'pilarId' es opcional (null si la iniciativa no está asignada a un pilar). Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -359,6 +359,96 @@
               "rocaIds": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }, "description": "FK -> rocas.id. Reemplaza el array entero. Validado por el pipeline." }
             }
           },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
+      "name": "upsert_hito",
+      "description": "Crea o actualiza UN hito de una iniciativa por posición (index), sin reemplazar hitos[] entero. Si se omite 'index', agrega un hito nuevo al final (debe venir completo: texto, sentido, unidad, target, value -- la completitud la exige la validación del spec, no este inputSchema). Si se incluye 'index' y es una posición existente, hace merge parcial sobre ese hito. 'index' es 0-based sobre el array 'hitos' tal como lo devolvió el último get_board -- no hay id propio en los hitos; si el array cambió entre la lectura y esta escritura, base_version ya lo habría invalidado (concurrencia optimista), así que el index sigue siendo seguro. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "iniciativa_id", "hito"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "iniciativa_id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$", "description": "FK -> iniciativas.id. La iniciativa debe existir." },
+          "index": { "type": "integer", "minimum": 0, "description": "Posición 0-based dentro de hitos[]. Si se omite, agrega un hito nuevo al final." },
+          "hito": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "texto": { "type": "string", "minLength": 1 },
+              "sentido": { "enum": ["mayor", "menor"] },
+              "unidad": { "type": "string" },
+              "target": { "type": ["number", "null"] },
+              "value": {
+                "oneOf": [
+                  { "type": "object", "additionalProperties": false, "required": ["mode", "actual"],
+                    "properties": { "mode": { "const": "literal" }, "actual": { "type": ["number", "null"] }, "prev": { "type": ["number", "null"] }, "as_of": { "type": "string", "format": "date" } } },
+                  { "type": "object", "additionalProperties": false, "required": ["mode", "metric"],
+                    "properties": { "mode": { "const": "metric" }, "metric": { "type": "string", "minLength": 1 }, "filter": { "type": "object", "additionalProperties": { "type": "string" } } } }
+                ]
+              }
+            }
+          },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
+      "name": "remove_hito",
+      "description": "Elimina UN hito de una iniciativa por posición (index), sin reemplazar hitos[] entero. Un hito no tiene entidades propias que dependan de él (no hay 'cascade' -- no aplica). OPERACIÓN DESTRUCTIVA: confirmar con el usuario antes de ejecutar. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "iniciativa_id", "index"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "iniciativa_id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$", "description": "FK -> iniciativas.id. La iniciativa debe existir." },
+          "index": { "type": "integer", "minimum": 0, "description": "Posición 0-based dentro de hitos[] a eliminar." },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
+      "name": "upsert_scope_q",
+      "description": "Crea o actualiza UNA nota de alcance por trimestre (scopesQ) de una iniciativa por posición (index), sin reemplazar scopesQ[] entero. Si se omite 'index', agrega una nueva al final (debe venir completa: quarter, texto). Si se incluye 'index' y es una posición existente, hace merge parcial. 'index' es 0-based sobre scopesQ tal como lo devolvió el último get_board -- mismo criterio de seguridad que upsert_hito (sin id propio, protegido por base_version). Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "iniciativa_id", "scope"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "iniciativa_id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$", "description": "FK -> iniciativas.id. La iniciativa debe existir." },
+          "index": { "type": "integer", "minimum": 0, "description": "Posición 0-based dentro de scopesQ[]. Si se omite, agrega una nota nueva al final." },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "quarter": { "type": "string", "minLength": 1 },
+              "texto": { "type": "string" }
+            }
+          },
+          "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
+        }
+      }
+    },
+    {
+      "name": "remove_scope_q",
+      "description": "Elimina UNA nota de alcance por trimestre (scopesQ) de una iniciativa por posición (index), sin reemplazar scopesQ[] entero. OPERACIÓN DESTRUCTIVA: confirmar con el usuario antes de ejecutar. Devuelve { version }, o { spec, valid, errors, preview_url } si dry_run=true.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "base_version", "iniciativa_id", "index"],
+        "properties": {
+          "doc_id": { "type": "string", "minLength": 1 },
+          "base_version": { "type": "string", "minLength": 1 },
+          "iniciativa_id": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$", "description": "FK -> iniciativas.id. La iniciativa debe existir." },
+          "index": { "type": "integer", "minimum": 0, "description": "Posición 0-based dentro de scopesQ[] a eliminar." },
           "dry_run": { "type": "boolean", "default": false, "description": "Si es true, valida y devuelve el spec resultante sin commitear. Si el API local (packages/api) está corriendo, además publica el resultado como preview real navegable en apps/frontend (ver 'preview_url' en la respuesta, null si el API no está disponible) -- mostrale ese link al usuario y recién después preguntá si confirma el commit real, en vez de preguntar por el commit de entrada." }
         }
       }

@@ -62,7 +62,7 @@ piezas sin motivo; construí sobre ellas.**
 El repo es un **monorepo con npm workspaces** (`packages/*`, `apps/*`), usando
 TypeScript project references (`tsc -b`, no un script de build a mano) para que el
 orden core→mcp/api se calcule solo. `npm install && npm run build && npm test` desde la
-raíz deja todo compilado y los 76 tests verdes.
+raíz deja todo compilado y los 85 tests verdes.
 
 - `packages/core/` — el núcleo, **una librería sin conocimiento de MCP ni HTTP**:
   - `src/pipeline.ts` — tipos del dominio, errores tipados, puertos (`SpecStore`,
@@ -86,15 +86,23 @@ raíz deja todo compilado y los 76 tests verdes.
     de verdad en vez de re-declarar Zod. Principal desde `OKR_MCP_PRINCIPAL` (env,
     default `@dionisio`). Raíz del repo resuelta con `git rev-parse --show-toplevel`
     (no contar `".."` a mano — ver §2.1).
-  - `contracts/okr-board-mcp.tools.json` — **14 tools**: las 7 originales (`get_board`,
+  - `contracts/okr-board-mcp.tools.json` — **18 tools**: las 7 originales (`get_board`,
     `validate_board`, `upsert_roca`, `set_kr_value`, `upsert_kr`, `upsert_objetivo`,
     `remove_entity`) más `upsert_kpi`, `set_kpi_value`, `upsert_iniciativa`,
     `upsert_onepager_item`, y (sesión 2026-08-03) `upsert_pilar`, `upsert_negocio`,
     `upsert_plataforma` — cierran el hueco de CRUD que el MVP original dejó abierto
-    (solo `remove_entity` cubría estas tres entidades). Todas las de escritura
+    (solo `remove_entity` cubría estas tres entidades) — más (misma sesión)
+    `upsert_hito`/`remove_hito` y `upsert_scope_q`/`remove_scope_q`, que editan UN
+    hito o UNA nota de alcance de una iniciativa por posición (`index`, 0-based; no
+    tienen id propio) sin reemplazar el array completo. Todas las de escritura
     aceptan `dry_run` opcional (M7). Ya no hay hueco de CRUD conocido: las nueve
     entidades del schema (pilar, negocio, plataforma, objetivo, kr, roca, kpi,
     iniciativa, onepager_item) se pueden crear, editar y borrar vía MCP.
+    **Deliberadamente sin tool granular:** `onePager[].children[]` — a diferencia de
+    hitos/scopesQ, los children son desglose de solo lectura conceptual (por
+    canal/marca), no un checklist editable; ver §2.1. `iniciativa.rocaIds` tampoco
+    tiene granular (se reemplaza entero vía `upsert_iniciativa`) — nadie lo pidió y
+    no tiene el mismo patrón de "checklist que crece de a un ítem" que hitos/scopesQ.
 - `packages/api/` — API HTTP de solo lectura (F1), envuelve el **mismo** `core` (no
   reimplementa validación):
   - `src/server.ts` — `node:http` puro (sin framework). `GET /api/boards/:id` →
@@ -426,11 +434,12 @@ sustitución detrás de un puerto ya definido. Ese es el contrato con el futuro.
 Estas son mejoras que **sirven al objetivo** (decidir mejor, gobernanza, camino a la
 final). Algunas conviene hacerlas en el MVP; otras son para después. Evaluá y proponé.
 
-- **Preview dry-run (M7):** separar "validar" de "commitear" para habilitar el loop
-  editar → previsualizar → confirmar → commitear que quiere el equipo. Recomendado en MVP.
-- **Cache en `MetricCatalog`:** evita consultar la capa semántica en cada validación.
-- **Commit atómico real en el git `SpecStore`:** manejar la ventana entre chequeo de
-  HEAD y commit (lock o retry). Es la única parte con cuidado de concurrencia real.
+- **Commit atómico real en el git `SpecStore`, multi-proceso:** hoy `GitSpecStore` serializa
+  el check+commit con un mutex **en proceso** (`packages/core/src/git-store.ts`) — correcto
+  mientras el único escritor sea el servidor MCP. El día que un segundo proceso escriba
+  (ej: F4, API aceptando writes) el mutex en proceso ya no alcanza — hace falta un lock real
+  (flock de archivo) para que el check+commit siga siendo atómico entre procesos. No urgente
+  hoy (un solo escritor); si se encara F4, encarar esto primero o junto.
 - **Migración progresiva literal→metric:** arrancada (sesión 2026-07-31, ver §2.2) — de
   205 valores gobernables, 4 ya son `metric` con dato real (`k22`, `kpi17`, `kpi28`,
   `k25`) y 2 más migrados sin dato pendientes de una decisión de negocio (`kpi1`
@@ -442,11 +451,6 @@ final). Algunas conviene hacerlas en el MVP; otras son para después. Evaluá y 
   convención de escala/unidad si el campo es "%" y lo comparte un KR con un KPI.
 - **Confirmar el significado de `boards`** (`comite` / `direccion_general` / `okr2026`,
   hoy heredados de los flags `com`/`dg`/`okr2026` del HTML) con el equipo.
-- **Tools granulares para sub-ítems:** `iniciativa.hitos[]`, `iniciativa.scopesQ[]` y
-  `onePager[].children[]` hoy solo se editan como reemplazo del array completo vía el
-  upsert del padre — no hay tool para editar un hito/scope/child individual sin mandar
-  el array entero.
-
 **Regla para mejoras:** antes de implementar algo fuera del alcance del §3, listalo como
 propuesta con su justificación y esperá confirmación. Mejoras que sirvan al objetivo,
 no features por agregar. No conviertas el MVP en un Notion interno; la disciplina es
@@ -475,10 +479,11 @@ un solo primitivo afilado (el spec) que crece por capas.
       (`packages/core/src/git-store.ts`, 10 tests.)
 - [x] `MetricCatalog` conectado a la capa semántica, con cache. (`packages/core/src/metric-catalog.ts`;
       snapshot sembrado a mano por ahora, no llamada en vivo — ver §2.1.)
-- [x] Servidor MCP stdio exponiendo las tools (14: las 7 originales + 4 de
-      kpis/iniciativas/onePager + 3 de pilares/negocios/plataformas, sesión 2026-08-03 —
-      ver §2), cableadas al pipeline. Probado con un cliente JSON-RPC real por stdio
-      (`initialize` → `tools/list` → `tools/call`), no solo compilado.
+- [x] Servidor MCP stdio exponiendo las tools (18: las 7 originales + 4 de
+      kpis/iniciativas/onePager + 3 de pilares/negocios/plataformas + 4 granulares de
+      hitos/scopesQ, sesión 2026-08-03 — ver §2), cableadas al pipeline. Probado con un
+      cliente JSON-RPC real por stdio (`initialize` → `tools/list` → `tools/call`), no
+      solo compilado.
 - [x] `data/despliegue-estrategico-2026.json` bootstrapeado desde el HTML actual y
       validado contra el schema. (El nombre real es `data/<doc_id>.json`, no
       literalmente `spec.json` — `GitSpecStore` nombra por `docId`.)

@@ -3,7 +3,7 @@
 //
 // Transporte stdio para consumo local desde Claude Desktop/Code (§3 M4: sin HTTP
 // ni auth de red todavía). Este archivo es puro wiring: NO conoce reglas de
-// negocio — cablea las 14 tools de contracts/okr-board-mcp.tools.json al pipeline
+// negocio — cablea las 18 tools de contracts/okr-board-mcp.tools.json al pipeline
 // compartido (runWrite / runDryRun / runValidate). Cualquier regla nueva va en
 // pipeline.ts, no acá.
 //
@@ -162,6 +162,18 @@ async function dispatch(name: string, args: Record<string, any>): Promise<CallTo
     case "upsert_iniciativa":
       return handleWrite(args.doc_id, args.base_version,
         { op: "upsert_iniciativa", iniciativa: args.iniciativa }, !!args.dry_run);
+    case "upsert_hito":
+      return handleWrite(args.doc_id, args.base_version,
+        { op: "upsert_hito", iniciativaId: args.iniciativa_id, index: args.index, hito: args.hito }, !!args.dry_run);
+    case "remove_hito":
+      return handleWrite(args.doc_id, args.base_version,
+        { op: "remove_hito", iniciativaId: args.iniciativa_id, index: args.index }, !!args.dry_run);
+    case "upsert_scope_q":
+      return handleWrite(args.doc_id, args.base_version,
+        { op: "upsert_scope_q", iniciativaId: args.iniciativa_id, index: args.index, scope: args.scope }, !!args.dry_run);
+    case "remove_scope_q":
+      return handleWrite(args.doc_id, args.base_version,
+        { op: "remove_scope_q", iniciativaId: args.iniciativa_id, index: args.index }, !!args.dry_run);
     case "upsert_onepager_item":
       return handleWrite(args.doc_id, args.base_version, { op: "upsert_onepager_item", item: args.item }, !!args.dry_run);
     case "remove_entity":

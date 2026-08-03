@@ -25,7 +25,7 @@ que ordene los paquetes).
 | Paquete | Qué es |
 |---|---|
 | `packages/core` | Núcleo sin conocimiento de MCP ni HTTP: tipos del dominio, pipeline (`runWrite`/`runDryRun`/`runValidate`), validación en cascada, puertos (`SpecStore`, `MetricCatalog`) y sus implementaciones (`GitSpecStore`, `CachedMetricCatalog`). `contracts/okr-board.schema.json` es el schema del spec. |
-| `packages/mcp` | Servidor MCP por **stdio** (consumido por Claude Desktop/Code local). `contracts/okr-board-mcp.tools.json` son las 14 tools expuestas; es la fuente de verdad de sus schemas, no se re-declaran en TS. |
+| `packages/mcp` | Servidor MCP por **stdio** (consumido por Claude Desktop/Code local). `contracts/okr-board-mcp.tools.json` son las 18 tools expuestas; es la fuente de verdad de sus schemas, no se re-declaran en TS. |
 | `packages/api` | API HTTP de solo lectura sobre el mismo `core` (`GET /api/boards/:id`, `.../version`) más un endpoint de **preview efímero** (`.../preview`, ver más abajo) — nunca reimplementa validación. |
 | `apps/frontend` | El renderer: HTML vanilla que hace `fetch` al API, resuelve métricas, hace polling de cambios y tiene su UI de escritura manual deshabilitada a propósito (la edición real es vía Claude). |
 | `scripts/` | `bootstrap.ts` (carga inicial del spec, ya corrido), `serve-frontend.ts` (sirve `apps/frontend` como estático), `refresh-metrics.ts` (ver abajo). |
@@ -36,7 +36,7 @@ que ordene los paquetes).
 ```bash
 npm install
 npm run build   # tsc -b — compila core -> mcp/api en el orden correcto
-npm test        # corre los tests de core y api (71 casos)
+npm test        # corre los tests de core y api (85 casos)
 ```
 
 ## Correr todo localmente
@@ -106,6 +106,6 @@ mejoras están propuestas pero no implementadas vive en `CLAUDE.md` (secciones �
 §8) — para no mantener la misma información en dos lugares que se desincronizan. Como
 resumen de una línea: el núcleo (spec + pipeline + MCP + API + frontend + preview
 navegable) está construido y probado de punta a punta, con CRUD completo de las nueve
-entidades del schema vía MCP; lo que falta es sobre todo escritura real desde el
-frontend (F4, opcional), tools granulares para sub-ítems (hitos/scopes/children), y
-decisiones de negocio puntuales sobre un par de métricas.
+entidades del schema más edición granular de hitos/scopesQ de iniciativas vía MCP; lo
+que falta es sobre todo escritura real desde el frontend (F4, opcional) y decisiones de
+negocio puntuales sobre un par de métricas.

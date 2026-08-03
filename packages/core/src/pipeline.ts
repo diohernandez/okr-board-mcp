@@ -100,6 +100,10 @@ export type Change =
   | { op: "upsert_kpi"; kpi: Partial<Omit<Kpi, "value">> & { id: string } }
   | { op: "set_kpi_value"; kpiId: string; value: KrValue }
   | { op: "upsert_iniciativa"; iniciativa: Partial<Iniciativa> & { id: string } }
+  | { op: "upsert_hito"; iniciativaId: string; index?: number; hito: Partial<Hito> }
+  | { op: "remove_hito"; iniciativaId: string; index: number }
+  | { op: "upsert_scope_q"; iniciativaId: string; index?: number; scope: Partial<ScopeQ> }
+  | { op: "remove_scope_q"; iniciativaId: string; index: number }
   | { op: "upsert_onepager_item"; item: Partial<OnePagerItem> & { id: string } }
   | { op: "remove_entity"; entityType: EntityType; id: string; cascade: boolean };
 
@@ -137,6 +141,28 @@ function upsertById<T extends { id: string }>(arr: T[], patch: Partial<T> & { id
   if (i === -1) return [...arr, patch as T];          // nuevo: la validación exige completitud
   const merged = { ...arr[i], ...patch };             // existente: merge parcial
   return arr.map((e, j) => (j === i ? merged : e));
+}
+
+// Homólogo de upsertById para sub-ítems SIN id propio (hitos, scopesQ): se
+// direccionan por posición en vez de por id. index=undefined -> agrega al final
+// (nuevo: la validación exige completitud, mismo criterio que upsertById); index
+// fuera de rango -> NotFoundError (no ValidationFailed: no es un problema de forma
+// del spec, es que la posición pedida no existe).
+function upsertAt<T>(arr: T[], index: number | undefined, patch: Partial<T>, label: string): T[] {
+  if (index === undefined) return [...arr, patch as T];
+  if (index < 0 || index >= arr.length)
+    throw new NotFoundError(`${label}: index fuera de rango (${index}), hay ${arr.length}`);
+  return arr.map((e, i) => (i === index ? { ...e, ...patch } : e));
+}
+function removeAt<T>(arr: T[], index: number, label: string): T[] {
+  if (index < 0 || index >= arr.length)
+    throw new NotFoundError(`${label}: index fuera de rango (${index}), hay ${arr.length}`);
+  return arr.filter((_, i) => i !== index);
+}
+function findIniciativa(spec: OkrBoardSpec, id: string): Iniciativa {
+  const ini = spec.iniciativas.find(i => i.id === id);
+  if (!ini) throw new NotFoundError(`iniciativa no encontrada: ${id}`);
+  return ini;
 }
 
 const collectionOf: Record<EntityType, keyof OkrBoardSpec> = {
@@ -252,6 +278,26 @@ export function applyChange(spec: OkrBoardSpec, change: Change): OkrBoardSpec {
     case "upsert_iniciativa":
       next.iniciativas = upsertById(next.iniciativas, change.iniciativa as Partial<Iniciativa> & { id: string });
       return next;
+    case "upsert_hito": {
+      const ini = findIniciativa(next, change.iniciativaId);
+      ini.hitos = upsertAt(ini.hitos, change.index, change.hito, `iniciativa ${ini.id} hitos`);
+      return next;
+    }
+    case "remove_hito": {
+      const ini = findIniciativa(next, change.iniciativaId);
+      ini.hitos = removeAt(ini.hitos, change.index, `iniciativa ${ini.id} hitos`);
+      return next;
+    }
+    case "upsert_scope_q": {
+      const ini = findIniciativa(next, change.iniciativaId);
+      ini.scopesQ = upsertAt(ini.scopesQ, change.index, change.scope, `iniciativa ${ini.id} scopesQ`);
+      return next;
+    }
+    case "remove_scope_q": {
+      const ini = findIniciativa(next, change.iniciativaId);
+      ini.scopesQ = removeAt(ini.scopesQ, change.index, `iniciativa ${ini.id} scopesQ`);
+      return next;
+    }
     case "upsert_onepager_item":
       next.onePager = upsertById(next.onePager, change.item as Partial<OnePagerItem> & { id: string });
       return next;
@@ -373,6 +419,13 @@ function describe(change: Change, principal: string): string {
     case "upsert_kpi": return `kpi ${change.kpi.id} (metadata) por ${principal}`;
     case "set_kpi_value": return `valor de kpi ${change.kpiId} (${change.value.mode}) por ${principal}`;
     case "upsert_iniciativa": return `iniciativa ${change.iniciativa.id} actualizada por ${principal}`;
+    case "upsert_hito":
+      return `hito ${change.index ?? "(nuevo)"} de iniciativa ${change.iniciativaId} por ${principal}`;
+    case "remove_hito": return `hito ${change.index} de iniciativa ${change.iniciativaId} borrado por ${principal}`;
+    case "upsert_scope_q":
+      return `scope Q ${change.index ?? "(nuevo)"} de iniciativa ${change.iniciativaId} por ${principal}`;
+    case "remove_scope_q":
+      return `scope Q ${change.index} de iniciativa ${change.iniciativaId} borrado por ${principal}`;
     case "upsert_onepager_item": return `one pager item ${change.item.id} actualizado por ${principal}`;
     case "remove_entity": return `borrado ${change.entityType}:${change.id}${change.cascade ? " (cascade)" : ""} por ${principal}`;
   }
