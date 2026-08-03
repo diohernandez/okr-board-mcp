@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 81,
-    "updated_at": "2026-08-03T21:27:51.004Z",
+    "version": 82,
+    "updated_at": "2026-08-03T21:27:51.187Z",
     "access": "domain",
     "acl": [
       {
@@ -74,9 +74,7 @@
       "id": "zz_f4_pilar",
       "nombre": "F4 test pilar",
       "desc": "temporal",
-      "okrIds": [
-        "zz_f4_obj"
-      ]
+      "okrIds": []
     }
   ],
   "negocios": [
