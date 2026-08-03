@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 27,
-    "updated_at": "2026-08-03T20:17:44.709Z",
+    "version": 28,
+    "updated_at": "2026-08-03T20:17:44.903Z",
     "access": "domain",
     "acl": [
       {
@@ -3780,6 +3780,10 @@
         {
           "quarter": "Q3 2026",
           "texto": "Excel batch para 10-20+ precios a la vez + recálculo masivo de premium vía central de variables.\n\nUnificar la lógica de negocio hoy repartida en 3 lugares (Pricing API, sheets comercial, cada módulo nuevo) + sistema de encolado.\n\nMapeo de precios WEB vs Marketplaces + reglas de precio por canal. Arranca en paralelo al motor v2 (S3): primero Web, después Marketplaces externos (MeLi siempre V1, Web/MKP externos = V2)."
+        },
+        {
+          "quarter": "QX",
+          "texto": "smoke"
         }
       ],
       "riesgos": "",
