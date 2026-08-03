@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 22,
-    "updated_at": "2026-08-03T19:53:40.604Z",
+    "version": 23,
+    "updated_at": "2026-08-03T19:53:40.773Z",
     "access": "domain",
     "acl": [
       {
@@ -105,11 +105,6 @@
       "id": "marketing",
       "nombre": "Marketing",
       "area": "Marketing"
-    },
-    {
-      "id": "zz_smoke_plataforma",
-      "nombre": "Smoke Test Plataforma",
-      "area": "QA"
     }
   ],
   "objetivos": [
