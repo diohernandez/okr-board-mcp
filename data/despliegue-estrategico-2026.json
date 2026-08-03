@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 82,
-    "updated_at": "2026-08-03T21:27:51.187Z",
+    "version": 83,
+    "updated_at": "2026-08-03T21:27:51.359Z",
     "access": "domain",
     "acl": [
       {
@@ -259,12 +259,6 @@
       "negocioId": "marketing",
       "nombre": "Social Commerce",
       "texto": "Impulsar el canal de Social Commerce con aporte del 10% de la facturación web de Gadnic."
-    },
-    {
-      "id": "zz_f4_obj",
-      "negocioId": "ecommerce-ar",
-      "nombre": "F4 test obj",
-      "texto": "..."
     }
   ],
   "krs": [
