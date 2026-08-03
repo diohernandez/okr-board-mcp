@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 76,
-    "updated_at": "2026-08-03T21:27:50.130Z",
+    "version": 77,
+    "updated_at": "2026-08-03T21:27:50.329Z",
     "access": "domain",
     "acl": [
       {
@@ -4071,7 +4071,7 @@
       "par": "NMV",
       "sentido": "mayor",
       "nombre": "NMV",
-      "unidad": "AR$ MM",
+      "unidad": "TEST",
       "target": 473195.28,
       "value": {
         "mode": "literal",
