@@ -106,6 +106,7 @@ mejoras están propuestas pero no implementadas vive en `CLAUDE.md` (secciones �
 §8) — para no mantener la misma información en dos lugares que se desincronizan. Como
 resumen de una línea: el núcleo (spec + pipeline + MCP + API + frontend + preview
 navegable) está construido y probado de punta a punta, con CRUD completo de las nueve
-entidades del schema más edición granular de hitos/scopesQ de iniciativas vía MCP; lo
-que falta es sobre todo escritura real desde el frontend (F4, opcional) y decisiones de
-negocio puntuales sobre un par de métricas.
+entidades del schema más edición granular de hitos/scopesQ de iniciativas vía MCP, y sin
+decisiones de negocio pendientes sobre las métricas ya migradas; lo que falta es sobre
+todo escritura real desde el frontend (F4, opcional) y el lock multi-proceso de
+`GitSpecStore` si se encara F4.

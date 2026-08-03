@@ -321,7 +321,8 @@ lo define la capa semántica — ninguna escala inventada) y agregando un ×100 
 `krValueToLegacy` **solo** para paths que empiezan con `krs/` y `unidad==='%'` (KPIs,
 hitos de iniciativas y onePager no se tocan).
 
-**Preguntas abiertas (no resolver sin el usuario):**
+**Preguntas abiertas — resueltas 2026-08-03, ver §2.3 (se dejan acá para el contexto de
+cómo se llegó a cada una):**
 - **Moneda de `kpi1`:** el catálogo gobernado solo tiene `GMV` en ARS (`GMV_%` en
   `onepager_kpi_values`) — no existe `GMV_USD` (a diferencia de `NMV`, que sí tiene
   `NMV_USD` vía `usd_ars_daily.selling_rate`). `kpi1` pide U$S, target 350M. Opciones
@@ -339,6 +340,46 @@ hitos de iniciativas y onePager no se tocan).
   los KRs/KPIs restantes que **todavía son `literal`** para confirmar que siguen el mismo
   patrón (entero en KRs, fracción en KPIs) antes de una futura migración de un campo "%"
   — sobre todo si lo comparte un KR y un KPI como en el caso ya resuelto.
+
+### 2.3 Cierre de las preguntas abiertas de §2.2 (sesión 2026-08-03)
+
+Las tres preguntas abiertas de §2.2 se resolvieron con el usuario (decisión de negocio,
+no técnica) y se aplicaron vía el servidor MCP real:
+
+- **`kpi1` (moneda):** el usuario eligió usar `NMV_USD` en vez de construir una conversión
+  GMV→USD nueva o redefinir el KPI en ARS. Renombrado de "GMV (Ventas Totales)" a "NMV
+  (Ventas Totales)" (`upsert_kpi` — ya no mide lo mismo, el nombre tenía que reflejarlo) y
+  migrado a `metric:"NMV_USD", filter:{period:"2026-YTD"}` (`set_kpi_value`). **Con dato
+  real**: USD 151.637.207, de `kpi_code LIKE 'NMV_USD%'` en `onepager_kpi_values`
+  (`sales_type='order'`, `year_month` 2026-01 a 2026-08), excluyendo `AGRO`/`OTHERS` por la
+  columna `channel` real (no por prefijo del `kpi_code`, que mezcla canal y marca en el
+  mismo string — confirmado revisando las 48 variantes reales de `NMV_USD_*`).
+- **`kpi5` (aging):** re-confirmado contra `get_data_context` que "mercadería parada" es
+  sinónimo exacto de `PCT_NMI_AGING` en el glosario del Analytics MCP (no una definición
+  distinta) — la duda de mismatch de alcance de §2.2 queda descartada, es la métrica
+  correcta. El usuario decidió publicar el dato real tal cual. **Con dato real**: 0.7824
+  (78,24%), re-consultado el mismo día (era 0.7807 tres días antes — es un snapshot
+  puntual de `onepager_kpi_aging`, se espera que se mueva día a día). Sigue muy por encima
+  del target (0.10) — es un gap real de negocio, no un error de definición.
+- **Convención "%" en el resto de literales:** auditados los ~85 KRs/KPIs `literal` con
+  `unidad:"%"` del spec real. La convención (entero en KRs, fracción en KPIs) se cumple en
+  todos salvo uno (ver fix de `k18` abajo). `k7`, `kf4` y `kmkt4` tienen targets `< 1` pero
+  son porcentajes genuinamente chicos (tasa de reclamos en garantía Gadnic, costos de
+  estructura de Finanzas sobre GMV, participación de un asistente virtual de ventas) — no
+  son excepciones a la convención, así que no hace falta tocarlos.
+
+**Segundo fix real encontrado y corregido (independiente de la migración a `metric` — `k18`
+sigue `literal`, ver exclusión en §2.2):** `k18` ("Incrementar el recupero de valor de
+logística inversa...", `sentido:"mayor"`, `target:65`) tenía `actual:0.97` — un valor casi
+con certeza guardado en fracción (0.97 = 97%) en un KR que usa entero en el resto de sus
+campos, mostrando en el tablero un fracaso casi total donde probablemente había una
+**superación** del target. El usuario confirmó corregirlo; ahora `actual:97` vía
+`set_kr_value`.
+
+**Estado de la migración tras esto:** 6 de 205 valores gobernables en `mode:"metric"` con
+dato real (`k22`, `kpi17`, `kpi28`, `k25`, `kpi1`, `kpi5`). Cero `mode:"metric"` sin dato
+pendiente — las dos preguntas de moneda/valor que lo causaban ya están resueltas. El resto
+sigue `literal` a propósito (sin equivalente gobernado limpio, ver exclusiones en §2.2).
 
 ---
 
@@ -440,15 +481,15 @@ final). Algunas conviene hacerlas en el MVP; otras son para después. Evaluá y 
   (ej: F4, API aceptando writes) el mutex en proceso ya no alcanza — hace falta un lock real
   (flock de archivo) para que el check+commit siga siendo atómico entre procesos. No urgente
   hoy (un solo escritor); si se encara F4, encarar esto primero o junto.
-- **Migración progresiva literal→metric:** arrancada (sesión 2026-07-31, ver §2.2) — de
-  205 valores gobernables, 4 ya son `metric` con dato real (`k22`, `kpi17`, `kpi28`,
-  `k25`) y 2 más migrados sin dato pendientes de una decisión de negocio (`kpi1`
-  moneda, `kpi5` valor sorprendente). Se hizo un escaneo completo de los 135 KRs + 35
-  KPIs restantes contra el catálogo real — el resto queda `literal` a propósito, sin
-  equivalente gobernado limpio (lista completa y por qué en §2.2). Mecanismo de refresh
-  on-demand en `scripts/refresh-metrics.ts`. Si la capa semántica gana cobertura nueva
-  (encuestas, marketing, Agro), vale repetir el escaneo — revisando primero la
-  convención de escala/unidad si el campo es "%" y lo comparte un KR con un KPI.
+- **Migración progresiva literal→metric:** arrancada 2026-07-31, preguntas abiertas
+  cerradas 2026-08-03 (ver §2.2/§2.3) — de 205 valores gobernables, 6 ya son `metric` con
+  dato real (`k22`, `kpi17`, `kpi28`, `k25`, `kpi1`, `kpi5`) y cero quedan sin dato. Se
+  hizo un escaneo completo de los 135 KRs + 35 KPIs contra el catálogo real — el resto
+  queda `literal` a propósito, sin equivalente gobernado limpio (lista completa y por qué
+  en §2.2). Mecanismo de refresh on-demand en `scripts/refresh-metrics.ts`. Si la capa
+  semántica gana cobertura nueva (encuestas, marketing, Agro), vale repetir el escaneo —
+  la convención de escala/unidad ("%" entero en KRs, fracción en KPIs) ya se auditó
+  completa en §2.3 y está sana salvo el fix de `k18` ya aplicado.
 - **Confirmar el significado de `boards`** (`comite` / `direccion_general` / `okr2026`,
   hoy heredados de los flags `com`/`dg`/`okr2026` del HTML) con el equipo.
 **Regla para mejoras:** antes de implementar algo fuera del alcance del §3, listalo como

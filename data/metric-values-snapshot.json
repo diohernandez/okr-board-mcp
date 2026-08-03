@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-07-31T20:32:20.041Z",
+  "fetched_at": "2026-08-03T20:41:37.432Z",
   "source": "Mixto. NMV, NMV|PERIOD=2026-06, GROSS_PROFIT_SIN_REFUSA_WEB y TRX_TOTAL son fixtures DEMO (packages/api/test/metric-resolver.test.ts verifica sus valores exactos — no tocar sin actualizar ese test). RETURN_RATE_QTY|PERIOD=2026-06 es un valor real, resuelto vía Bidcom Analytics MCP (lookup + query_analytics contra BigQuery, kpi_code='RETURN_RATE_QTY_BY_ORDER_DATE' en onepager.onepager_returns_by_order_date_monthly) durante el piloto de migración literal->metric de k22/kpi17. Refresco manual on-demand — ver scripts/refresh-metrics.ts.",
   "values": {
     "NMV": 207661.19,
@@ -8,6 +8,8 @@
     "TRX_TOTAL": 2068158,
     "RETURN_RATE_QTY|PERIOD=2026-06": 0.0217,
     "PCT_FF_NMV|PERIOD=2026-06": 0.2318,
-    "REVIEWS_AVG_RATE|PERIOD=2026-06": 4.77
+    "REVIEWS_AVG_RATE|PERIOD=2026-06": 4.77,
+    "NMV_USD|PERIOD=2026-YTD": 151637207.11285678,
+    "PCT_NMI_AGING": 0.7824
   }
 }
