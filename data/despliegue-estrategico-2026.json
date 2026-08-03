@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 45,
-    "updated_at": "2026-08-03T21:26:17.002Z",
+    "version": 46,
+    "updated_at": "2026-08-03T21:26:17.144Z",
     "access": "domain",
     "acl": [
       {
@@ -3302,7 +3302,9 @@
       "equipo": null,
       "trimestre": null,
       "columna": "Pendientes",
-      "krIds": [],
+      "krIds": [
+        "zz_f4_kr"
+      ],
       "pilarIds": []
     }
   ],
