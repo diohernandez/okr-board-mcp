@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 31,
-    "updated_at": "2026-08-03T20:41:26.595Z",
+    "version": 32,
+    "updated_at": "2026-08-03T20:41:26.814Z",
     "access": "domain",
     "acl": [
       {
@@ -3279,7 +3279,7 @@
       "target": 350000000,
       "value": {
         "mode": "metric",
-        "metric": "GMV",
+        "metric": "NMV_USD",
         "filter": {
           "period": "2026-YTD"
         }
