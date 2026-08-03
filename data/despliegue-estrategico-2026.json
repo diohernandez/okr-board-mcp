@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 44,
-    "updated_at": "2026-08-03T21:26:16.830Z",
+    "version": 45,
+    "updated_at": "2026-08-03T21:26:17.002Z",
     "access": "domain",
     "acl": [
       {
@@ -3297,7 +3297,7 @@
       "id": "zz_f4_roca",
       "nombre": "F4 test roca",
       "area": "QA",
-      "estado": "no_iniciada",
+      "estado": "completada",
       "detalle": "",
       "equipo": null,
       "trimestre": null,
