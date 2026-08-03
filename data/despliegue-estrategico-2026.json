@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 20,
-    "updated_at": "2026-08-03T19:53:40.223Z",
+    "version": 21,
+    "updated_at": "2026-08-03T19:53:40.398Z",
     "access": "domain",
     "acl": [
       {
@@ -68,6 +68,12 @@
       "id": "p8",
       "nombre": "Regionalización",
       "desc": "Elevar el valor de marca diversificando presencia en otros países.",
+      "okrIds": []
+    },
+    {
+      "id": "zz_smoke_pilar",
+      "nombre": "Smoke Test Pilar",
+      "desc": "temporal",
       "okrIds": []
     }
   ],
