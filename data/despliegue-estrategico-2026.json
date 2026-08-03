@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 30,
-    "updated_at": "2026-08-03T20:17:45.300Z",
+    "version": 31,
+    "updated_at": "2026-08-03T20:41:26.595Z",
     "access": "domain",
     "acl": [
       {
@@ -3273,7 +3273,7 @@
       "id": "kpi1",
       "pilarId": "p3",
       "negocioId": "ecommerce-ar",
-      "nombre": "GMV (Ventas Totales)",
+      "nombre": "NMV (Ventas Totales)",
       "sentido": "mayor",
       "unidad": "U$S",
       "target": 350000000,
