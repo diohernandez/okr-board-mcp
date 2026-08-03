@@ -3,8 +3,8 @@
     "id": "despliegue-estrategico-2026",
     "type": "okr-board",
     "title": "Despliegue Estratégico 2026",
-    "version": 33,
-    "updated_at": "2026-08-03T20:41:26.977Z",
+    "version": 34,
+    "updated_at": "2026-08-03T21:21:12.821Z",
     "access": "domain",
     "acl": [
       {
@@ -68,6 +68,12 @@
       "id": "p8",
       "nombre": "Regionalización",
       "desc": "Elevar el valor de marca diversificando presencia en otros países.",
+      "okrIds": []
+    },
+    {
+      "id": "zz_f4_pilar",
+      "nombre": "F4 test pilar",
+      "desc": "temporal",
       "okrIds": []
     }
   ],
