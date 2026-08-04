@@ -30,6 +30,7 @@ que ordene los paquetes).
 | `apps/frontend` | El renderer: HTML vanilla que hace `fetch` al API, resuelve métricas, hace polling de cambios, y cuya UI de edición (Cargar Datos / Agregar) escribe de verdad contra el API — solo "Importar JSON" queda deshabilitado (no es 1:1 con ninguna tool). |
 | `scripts/` | `bootstrap.ts` (carga inicial del spec, ya corrido), `serve-frontend.ts` (sirve `apps/frontend` como estático), `refresh-metrics.ts` (ver abajo). |
 | `data/` | `despliegue-estrategico-2026.json` (el spec real, versionado en git — **esto es el dato que importa**), `metric-catalog.json` (qué métricas existen), `metric-values-snapshot.json` (valores resueltos de esas métricas). |
+| `test/e2e/` | Suite de Playwright (navegador real) sobre un repo git aislado — nunca toca `data/`. Ver "Tests E2E" abajo. |
 
 ## Quickstart
 
@@ -108,6 +109,24 @@ npm run refresh-metrics -- apply values.json   # mergea {claveCanonica: numero} 
 `query_analytics` contra el Analytics MCP) la hace Claude a mano, porque requiere
 generar/validar SQL. `apply` solo mergea números ya resueltos.
 
+## Tests E2E (navegador real)
+
+```bash
+npm run test:e2e   # build + playwright test — abre Chromium de verdad
+```
+
+Corre contra un **repo git aislado** en `/tmp/okr-e2e-repo` (creado y destruido por
+`test/e2e/setup-repo.mjs` en cada corrida), nunca contra `data/despliegue-estrategico-2026.json`
+real — no hay riesgo de dejar un commit o un dato de prueba en el board real. Cubre los
+13 flujos de escritura del frontend (`test/e2e/agregar.spec.ts` y
+`test/e2e/datos-y-rocas.spec.ts`): alta de pilar/objetivo/KR/roca/kpi, edición de
+metadata y valores desde "Cargar Datos", y estado/asignación de rocas.
+
+Primera vez: `npx playwright install chromium` (una sola vez por máquina). Ver
+CLAUDE.md §2.5 si algo falla de forma rara — hay tres gotchas de Playwright ya
+documentados ahí (dónde vive el form de agregar pilar, `.blur()` vs `dispatchEvent`, y
+por qué "networkidle" no alcanza para acciones con dos writes seguidos).
+
 ## Estado y backlog
 
 El detalle de qué está construido, qué decisiones de negocio quedan abiertas y qué
@@ -117,8 +136,7 @@ resumen de una línea: el núcleo (spec + pipeline + MCP + API con lectura **y
 escritura** + frontend recableado + preview navegable + lock multi-proceso) está
 construido y probado de punta a punta, con CRUD completo de las nueve entidades del
 schema más edición granular de hitos/scopesQ vía MCP **o** vía el frontend, y sin
-decisiones de negocio pendientes sobre las métricas ya migradas. Dos límites conocidos,
-aceptados a propósito por ahora: la escritura del API usa un principal fijo por proceso
-(no hay identidad real por request todavía — ver `OKR_API_PRINCIPAL` arriba) y F4 no se
-verificó en navegador real esta sesión (sí contra el API real end-to-end — ver
-CLAUDE.md §2.4).
+decisiones de negocio pendientes sobre las métricas ya migradas, y verificado en
+navegador real (Playwright, ver "Tests E2E" arriba). Un límite conocido, aceptado a
+propósito por ahora: la escritura del API usa un principal fijo por proceso, no hay
+identidad real por request todavía (ver `OKR_API_PRINCIPAL` arriba).

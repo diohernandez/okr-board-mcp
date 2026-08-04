@@ -41,7 +41,11 @@ import {
 import { SnapshotMetricResolver, FileMetricValueSnapshotLoader, type MetricResolver } from "./metric-resolver";
 
 const execFileAsync = promisify(execFile);
+// OKR_REPO_ROOT: override para test/e2e (repo git temporal y aislado, no el real) —
+// sin esto, el auto-detect de abajo siempre encuentra ESTE repo, sea cual sea el cwd
+// desde donde se lance el proceso. Ver test/e2e/setup-repo.mjs.
 async function repoRoot(): Promise<string> {
+  if (process.env.OKR_REPO_ROOT) return process.env.OKR_REPO_ROOT;
   const { stdout } = await execFileAsync("git", ["rev-parse", "--show-toplevel"]);
   return stdout.trim();
 }

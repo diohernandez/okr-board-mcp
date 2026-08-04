@@ -4,3 +4,6 @@ dist/
 *.log
 .env
 .DS_Store
+test-results/
+playwright-report/
+blob-report/

@@ -62,7 +62,10 @@ piezas sin motivo; construí sobre ellas.**
 El repo es un **monorepo con npm workspaces** (`packages/*`, `apps/*`), usando
 TypeScript project references (`tsc -b`, no un script de build a mano) para que el
 orden core→mcp/api se calcule solo. `npm install && npm run build && npm test` desde la
-raíz deja todo compilado y los 111 tests verdes.
+raíz deja todo compilado y los 111 tests (unitarios + integración) verdes. Separado de
+eso, `npm run test:e2e` (Playwright, ver §2.5) corre 5 tests de browser real contra un
+repo git aislado — no está incluido en `npm test` a propósito: es más lento (levanta
+Chromium + dos servidores) y no hace falta correrlo en cada cambio chico.
 
 - `packages/core/` — el núcleo, **una librería sin conocimiento de MCP ni HTTP**:
   - `src/pipeline.ts` — tipos del dominio, errores tipados, puertos (`SpecStore`,
@@ -136,6 +139,12 @@ raíz deja todo compilado y los 111 tests verdes.
   pasó a importar `from "core"`), `serve-frontend.ts` (estático para `apps/frontend`,
   proceso separado de `packages/api` a propósito), `refresh-metrics.ts` (mecanismo de
   refresh on-demand para KRs/KPIs en `mode:"metric"`, ver §2.2).
+- `test/e2e/` + `playwright.config.ts` (raíz): suite de Playwright real (F4, sesión
+  2026-08-03 — ver §2.5). `setup-repo.mjs` bootstrapea un repo git aislado, nunca el
+  real. `npm run test:e2e`. `.mcp.json` en la raíz también quedó de esta sesión (un
+  MCP de Playwright para que Claude maneje un browser interactivo, evaluado antes de
+  la suite — ver §2.5) pero sin aprobar (`/mcp` pendiente) y sin usar; no se borró
+  porque sirve para otra cosa (exploración interactiva) que la suite no cubre.
 
 **Auditoría de fidelidad HTML→spec (sesión 2026-07-31):** se comparó el HTML original
 recuperado (nunca se commiteó a git; recuperado de un blob dangling vía `git fsck`)
@@ -469,9 +478,72 @@ limpiados al final — mismo criterio que el resto del repo:**
   (`addPilar`/`addObjetivo`/`addKR`/`addRoca`/`addKpi`), los toggles, las
   actualizaciones de metadata/valor, y una edición+reversión sobre un onePager real.
 - El lock multi-proceso con el MCP y el API como procesos reales separados (ver arriba).
-- **No verificado en navegador real** (sin Playwright disponible esta sesión) — la
-  lectura del DOM (ids de los forms, `onchange=`) no se tocó, solo los cuerpos de las
-  funciones, pero si se quiere el mismo nivel de confianza que F2/F3, falta ese paso.
+- **Verificado en navegador real** con una suite de Playwright de verdad, agregada
+  después en la misma sesión — ver §2.5. Ya no queda la brecha de confianza que sí
+  tenía F2/F3 en el momento en que se escribió el resto de esta sección.
+
+### 2.5 Suite E2E real con Playwright (sesión 2026-08-03, continuación)
+
+F4 se había verificado contra el API directo (§2.4), pero no en un navegador real —
+el `#newPilarName`-style de bug (un selector que apunta al lugar equivocado) es
+exactamente lo que ese tipo de verificación no detecta. Se agregó `@playwright/test`
+como devDependency (no un MCP de browser — se evaluó conectar uno vía `claude mcp add`
+primero, quedó declarado en `.mcp.json` pero sin aprobar; el usuario prefirió una
+suite real en el repo, reusable en CI y en futuras sesiones sin depender de qué esté
+conectado en cada una).
+
+**Aislamiento — nunca toca el board real:** `test/e2e/setup-repo.mjs` crea un repo git
+nuevo en `/tmp/okr-e2e-repo` (ruta fija a propósito: el script de setup y el server
+del API son dos procesos distintos que necesitan coincidir en la misma ruta sin
+pasársela por otro medio) con un spec mínimo pero válido, con el mismo `docId`
+(`despliegue-estrategico-2026`) que `apps/frontend/index.html` tiene hardcodeado como
+constante — no hay forma de parametrizarlo desde afuera. `packages/api/src/server.ts`
+ahora acepta `OKR_REPO_ROOT` como override de su auto-detect de `git rev-parse
+--show-toplevel` (si no está seteada, se comporta exactamente igual que antes). El
+comando del `webServer` de la API en `playwright.config.ts` encadena
+`setup-repo.mjs && node .../server.js` -- el orden (repo listo antes de que el server
+arranque) lo garantiza el shell, no un hook de Playwright (el orden de `globalSetup`
+respecto a `webServer` no está documentado, así que no vale la pena depender de él).
+
+**Cobertura:** `test/e2e/agregar.spec.ts` (un test encadenado: pilar → objetivo
+vinculado → KR bajo ese objetivo → roca → kpi, contra la UI real) y
+`test/e2e/datos-y-rocas.spec.ts` (4 tests sobre las entidades pre-seedeadas: KR
+actual/unidad/boards, KPI target/actual, onePager unidad, roca estado + asignar/
+desasignar KR). Los 13 puntos gateados quedan cubiertos. `npm run test:e2e` (raíz;
+corre el build primero).
+
+**Tres bugs reales encontrados corriendo esto de verdad (ninguno hipotético):**
+- **`addPilar` apuntaba al lugar equivocado.** El form de "+ Agregar Pilar" vive en la
+  pestaña de top-nav "Pilares Estratégicos" (`view-pilares-standalone`), NO dentro del
+  panel de "Iniciativas Estratégicas" (`otrosElementosPanel`, que solo tiene
+  Objetivo/KR/Roca/KPI) — un supuesto equivocado sobre la estructura del HTML que solo
+  un test contra el DOM real podía atrapar.
+- **`.fill()` + `dispatchEvent("change")` manual dispara el write DOS VECES.** El
+  dispatch manual corre el handler una vez, pero el input sigue con foco; al
+  interactuar después con OTRO campo, el browser dispara su PROPIO `change` nativo al
+  perder el foco, re-enviando el mismo write con una `base_version` ya vieja (esto es
+  lo que produjo, en un momento de esta sesión, dos commits `"valor de k1"` por una
+  sola acción de test). Fix: `.blur()` en vez de `dispatchEvent`, consume el foco de
+  inmediato y dispara el `change` nativo una sola vez.
+- **Cualquier navegación DESPUÉS de un write tiene que esperar el reload de ESE write
+  primero**, o corre el riesgo de un "element is not stable"/"not visible" contra un
+  nodo que un re-render tardío está reemplazando (pasó en `agregar.spec.ts` entre
+  altas encadenadas, y de nuevo en el test de Rocas entre `updateRocaEstado` y
+  `toggleRocaKr` — mismo patrón, dos lugares distintos). `waitForLoadState("networkidle")`
+  NO alcanza: entre dos writes secuenciales de una misma acción (ej. `addObjetivo`:
+  `upsert_objetivo` + `upsert_pilar` para vincularlo) hay un hueco sin requests en
+  vuelo que puede superar la ventana de "idle" de Playwright y resolver antes de que
+  el segundo write siquiera arranque. Fix uniforme: esperar explícitamente la
+  respuesta GET final de `reloadAfterWrite()` (`page.waitForResponse` apuntado al
+  board) después de CADA acción que escribe, no una heurística de inactividad de red
+  ni "esperar y ya" — ver `clickAndWaitForReload`/`actionAndWaitForReload` en los specs.
+
+**Un gap de nombres, no de la app:** los fixtures de `setup-repo.mjs` se llaman
+"... Fixture" (no "... E2E") a propósito — los tests que crean entidades dinámicas las
+nombran "... E2E `<sufijo>`", y como el repo temporal se comparte entre TODOS los
+tests de una misma corrida de `npm run test:e2e` (se resetea una vez al arrancar el
+`webServer`, no por test), un `hasText` por substring matcheaba tanto el fixture como
+los datos ya creados por un test anterior en la misma corrida.
 
 ---
 
@@ -643,10 +715,9 @@ cada pieza.
 - [x] F4 (opcional, sesión 2026-08-03 — ver §2.4): `POST /api/boards/:id/tools/:name`
       1:1 con las 16 tools de escritura del MCP + lock multi-proceso en
       `GitSpecStore` (prerequisito real) + UI del frontend recableada. Verificado
-      contra el API real (simulando los 13 flujos del frontend) y con el MCP+API como
-      procesos reales compitiendo por el mismo doc. **No verificado en navegador real**
-      (sin Playwright esta sesión) — pendiente si se quiere el mismo nivel de
-      confianza que F2/F3.
+      contra el API real (simulando los 13 flujos del frontend), con el MCP+API como
+      procesos reales compitiendo por el mismo doc, y con una suite de Playwright real
+      en navegador (`test/e2e/`, ver §2.5) — mismo nivel de confianza que F2/F3.
 
 ---
 

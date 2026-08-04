@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "Monorepo de autoría de documentos vivos (tablero OKR de Bidcom) — MVP",
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "build": "tsc -b",
     "test": "npm test --workspace=core && npm test --workspace=api",
@@ -11,12 +14,14 @@
     "refresh-metrics": "npm run build && node scripts/dist/refresh-metrics.js",
     "mcp": "npm run build && node packages/mcp/dist/src/server.js",
     "api": "npm run build && node packages/api/dist/src/server.js",
-    "frontend": "npm run build && node scripts/dist/serve-frontend.js"
+    "frontend": "npm run build && node scripts/dist/serve-frontend.js",
+    "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
     "core": "*"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/node": "^22.0.0",
     "typescript": "^5.6.3"
   }
